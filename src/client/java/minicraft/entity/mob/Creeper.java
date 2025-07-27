@@ -27,12 +27,16 @@ public class Creeper extends EnemyMob {
 	private static final int MAX_FUSE_TIME = 60;
 	private static final int TRIGGER_RADIUS = 64;
 	private static final int BLAST_DAMAGE = 50;
+	private static final int CREEPER_HEALTH = 10;
+	private static final int CREEPER_DETECT_DIST = 50;
+	private static final int MIN_GUNPOWDER = 1;
+	private static final int MAX_GUNPOWDER = 4;
 
 	private int fuseTime = 0;
 	private boolean fuseLit = false;
 
 	public Creeper(int lvl) {
-		super(lvl, sprites, 10, 50);
+		super(lvl, sprites, CREEPER_HEALTH, CREEPER_DETECT_DIST);
 	}
 
 	@Override
@@ -165,7 +169,7 @@ public class Creeper extends EnemyMob {
 
 	public void die() {
 		// Only drop items if the creeper has not exploded
-		if (!fuseLit) dropItem(1, 4 - Settings.getIdx("diff"), Items.get("Gunpowder"));
+		if (!fuseLit) dropItem(MIN_GUNPOWDER, MAX_GUNPOWDER - Settings.getIdx("diff"), Items.get("Gunpowder"));
 		super.die();
 	}
 }
