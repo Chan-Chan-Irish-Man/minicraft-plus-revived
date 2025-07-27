@@ -11,6 +11,7 @@ import minicraft.entity.mob.Player;
 import minicraft.gfx.Screen;
 import minicraft.gfx.SpriteLinker;
 import minicraft.item.Items;
+import minicraft.level.tile.Tile;
 import minicraft.level.tile.LavaTile;
 import minicraft.level.tile.Tiles;
 import minicraft.level.tile.WaterTile;
@@ -53,15 +54,17 @@ public class Boat extends Entity implements PlayerRideable {
 		int xo = x - BOAT_OFFSET; // Horizontal
 		int yo = y - BOAT_OFFSET; // Vertical
 
+		int spriteIndex = ((walkDist >> BOAT_DIST) & 1);
+
 		switch (dir) {
 			case UP: // if currently riding upwards...
-				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[0][((walkDist >> BOAT_DIST) & 1) + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[0][spriteIndex + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
 				break;
 			case LEFT: // Riding to the left... (Same as above)
-				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][((walkDist >> BOAT_DIST) & 1)].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][spriteIndex].getSprite());
 				break;
 			case RIGHT: // Riding to the right (Same as above)
-				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][((walkDist >> BOAT_DIST) & 1) + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][spriteIndex + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
 				break;
 			case DOWN: // Riding downwards (Same as above)
 				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[0][((walkDist >> BOAT_DIST) & 1)].getSprite());
@@ -74,10 +77,14 @@ public class Boat extends Entity implements PlayerRideable {
 			passenger.render(screen);
 	}
 
+	private Tile getCurrentTile() {
+		return level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE);
+	}
+
 	@Override
 	public void tick() {
 		if (isRemoved()) return;
-		if (level != null && level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE) == Tiles.get("lava")) {
+		if (level != null && getCurrentTile() == Tiles.get("lava")) {
 			hurt();
 			if (isRemoved()) return;
 		}
@@ -105,11 +112,11 @@ public class Boat extends Entity implements PlayerRideable {
 	}
 
 	public boolean isInWater() {
-		return level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE) instanceof WaterTile;
+		return getCurrentTile() instanceof WaterTile;
 	}
 
 	public boolean isInLava() {
-		return level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE) instanceof LavaTile;
+		return getCurrentTile() instanceof LavaTile;
 	}
 
 	@Override
