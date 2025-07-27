@@ -23,13 +23,13 @@ public class AirWizard extends EnemyMob {
 	public static boolean beaten = false;
 	public static boolean active = false;
 	public static AirWizard entity = null;
-	private static int WIZ_LVL = 1;
-	private static int WIZ_HP = 2000;
-	private static boolean WIZ_HP_AFFECTED_BY_DIFFICULTY = false;
-	private static int WIZ_DETECT_RADIUS = 16 * 8; // tile pixel size by amount of tiles
-	private static int WIZ_LIFETIME = -1; // does not despawn
-	private static int WIZ_RAND_WALK_DURATION = 10;
-	private static int WIZ_RAND_WALK_CHANCE = 50;
+	private static int LVL = 1;
+	private static int HEALTH = 2000;
+	private static boolean HEALTH_AFFECTED_BY_DIFFICULTY = false;
+	private static int DETECT_RADIUS = 16 * 8; // tile pixel size by amount of tiles
+	private static int LIFETIME = -1; // does not despawn
+	private static int RAND_WALK_DURATION = 10;
+	private static int RAND_WALK_CHANCE = 50;
 	private static int MIN_CLOUD_ORE = 5;
 	private static int MAX_CLOUD_ORE = 10;
 
@@ -48,7 +48,7 @@ public class AirWizard extends EnemyMob {
 	 * Constructor for the AirWizard.
 	 */
 	public AirWizard() {
-		super(WIZ_LVL, sprites, WIZ_HP, WIZ_HP_AFFECTED_BY_DIFFICULTY, WIZ_DETECT_RADIUS, WIZ_LIFETIME, WIZ_RAND_WALK_DURATION, WIZ_RAND_WALK_CHANCE);
+		super(LVL, sprites, HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
 
 		active = true;
 		speed = 2;

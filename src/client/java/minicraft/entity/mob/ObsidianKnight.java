@@ -33,9 +33,16 @@ public class ObsidianKnight extends EnemyMob {
 	};
 	public static ObsidianKnight entity = null;
 
-	public static final int MaxHealth = 5000;
+	public static final int maxHealth = 5000;
 	public static boolean beaten = false; // If the boss was beaten
 	public static boolean active = false; // If the boss is active
+
+	private static final int LVL = 1;
+	private static final boolean HEALTH_AFFECTED_BY_DIFFICULTY = false;
+	private static final int DETECT_RADIUS = 16 * 8;
+	private static final int LIFETIME = -1; // obsidian knight does not despawn
+	private static final int RAND_WALK_DURATION = 10;
+	private static final int RAND_WALK_CHANCE = 50;
 
 	@Range(from = 0, to = 1)
 	private int phase = 0; // The phase of the boss. {0, 1}
@@ -58,7 +65,7 @@ public class ObsidianKnight extends EnemyMob {
 	 * Constructor for the ObsidianKnight.
 	 */
 	public ObsidianKnight(int health) {
-		super(1, armored, MaxHealth, false, 16 * 8, -1, 10, 50);
+		super(LVL, armored, maxHealth, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
 
 		Updater.notifyAll(Localization.getLocalized("minicraft.notification.obsidian_knight_awoken")); // On spawn tell player.
 

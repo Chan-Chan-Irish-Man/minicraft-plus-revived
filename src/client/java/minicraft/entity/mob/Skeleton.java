@@ -14,6 +14,13 @@ public class Skeleton extends EnemyMob {
 		Mob.compileMobSpriteAnimations(0, 6, "skeleton")
 	};
 
+	private static final int HEALTH = 6;
+	private static final boolean HEALTH_AFFECTED_BY_DIFFICULTY = true;
+	private static final int DETECT_RADIUS = 100;
+	private static final int RAND_WALK_DURATION = 45;
+	private static final int RAND_WALK_CHANCE = 200;
+	private static final int BASE_ARROW_TIME = 500;
+
 	private int arrowtime;
 	private int artime;
 
@@ -22,9 +29,9 @@ public class Skeleton extends EnemyMob {
 	 * @param lvl The skeleton's level.
 	 */
 	public Skeleton(int lvl) {
-		super(lvl, sprites, 6, true, 100, 45, 200);
+		super(lvl, sprites, HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, RAND_WALK_DURATION, RAND_WALK_CHANCE);
 
-		arrowtime = 500 / (lvl + 5);
+		arrowtime = BASE_ARROW_TIME / (lvl + 5);
 		artime = arrowtime;
 	}
 

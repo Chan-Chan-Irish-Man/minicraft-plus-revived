@@ -13,8 +13,10 @@ public class Snake extends EnemyMob {
 		Mob.compileMobSpriteAnimations(0, 6, "snake")
 	};
 
+	private static final int DETECT_RADIUS = 100;
+
 	public Snake(int lvl) {
-		super(lvl, sprites, lvl > 1 ? 8 : 7, 100);
+		super(lvl, sprites, lvl > 1 ? 8 : 7, DETECT_RADIUS);
 	}
 
 	@Override

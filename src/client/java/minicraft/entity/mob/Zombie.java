@@ -12,12 +12,15 @@ public class Zombie extends EnemyMob {
 		Mob.compileMobSpriteAnimations(0, 6, "zombie")
 	};
 
+	private static final int ZOMBO_HEALTH = 5;
+	private static final int ZOMBO_DETECT_RADIUS = 100;
+
 	/**
 	 * Creates a zombie of the given level.
 	 * @param lvl Zombie's level.
 	 */
 	public Zombie(int lvl) {
-		super(lvl, sprites, 5, 100);
+		super(lvl, sprites, ZOMBO_HEALTH, ZOMBO_DETECT_RADIUS);
 	}
 
 	public void die() {
@@ -25,11 +28,11 @@ public class Zombie extends EnemyMob {
 		if (Settings.get("diff").equals("minicraft.settings.difficulty.normal")) dropItem(1, 3, Items.get("cloth"));
 		if (Settings.get("diff").equals("minicraft.settings.difficulty.hard")) dropItem(1, 2, Items.get("cloth"));
 
-		if (random.nextInt(60) == 2) {
+		if (random.nextInt(60) < 1) {
 			level.dropItem(x, y, Items.get("iron"));
 		}
 
-		if (random.nextInt(40) == 19) {
+		if (random.nextInt(40) < 1) {
 			int rand = random.nextInt(3);
 			if (rand == 0) {
 				level.dropItem(x, y, Items.get("green clothes"));

@@ -20,6 +20,8 @@ import java.util.HashMap;
 public class Sheep extends PassiveMob {
 	private static final HashMap<DyeItem.DyeColor, LinkedSprite[][]> sprites = new HashMap<>();
 	private static final HashMap<DyeItem.DyeColor, LinkedSprite[][]> cutSprites = new HashMap<>();
+	private static final int SPRITE_X_OFFSET = 8;
+	private static final int SPRITE_Y_OFFSET = 11;
 
 	static {
 		for (DyeItem.DyeColor color : DyeItem.DyeColor.values()) {
@@ -54,8 +56,8 @@ public class Sheep extends PassiveMob {
 
 	@Override
 	public void render(Screen screen) {
-		int xo = x - 8;
-		int yo = y - 11;
+		int xo = x - SPRITE_X_OFFSET;
+		int yo = y - SPRITE_Y_OFFSET;
 
 		LinkedSprite[][] curAnim = cut ? cutSprites.get(color) : sprites.get(color);
 

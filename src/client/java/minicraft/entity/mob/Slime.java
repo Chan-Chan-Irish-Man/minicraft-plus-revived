@@ -15,6 +15,12 @@ public class Slime extends EnemyMob {
 		new LinkedSprite[][] { Mob.compileSpriteList(0, 6, 2, 2, 0, 2, "slime") }
 	};
 
+	private static final int HEALTH = 1;
+	private static final boolean HEALTH_AFFECTED_BY_DIFFICULTY = true;
+	private static final int DETECT_RADIUS = 50;
+	private static final int RAND_WALK_DURATION = 60;
+	private static final int RAND_WALK_CHANCE = 40;
+
 	private int jumpTime = 0; // jumpTimer, also acts as a rest timer before the next jump
 
 	/**
@@ -22,7 +28,7 @@ public class Slime extends EnemyMob {
 	 * @param lvl Slime's level.
 	 */
 	public Slime(int lvl) {
-		super(lvl, sprites, 1, true, 50, 60, 40);
+		super(lvl, sprites, HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, RAND_WALK_DURATION, RAND_WALK_CHANCE);
 	}
 
 	@Override

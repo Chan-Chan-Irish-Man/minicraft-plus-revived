@@ -12,12 +12,15 @@ public class Knight extends EnemyMob {
 		Mob.compileMobSpriteAnimations(0, 6, "knight")
 	};
 
+	private static final int HEALTH = 9;
+	private static final int DETECT_RADIUS = 100;
+
 	/**
 	 * Creates a knight of a given level.
 	 * @param lvl The knights level.
 	 */
 	public Knight(int lvl) {
-		super(lvl, sprites, 9, 100);
+		super(lvl, sprites, HEALTH, DETECT_RADIUS);
 	}
 
 	public void die() {

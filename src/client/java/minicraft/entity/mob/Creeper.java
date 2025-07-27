@@ -27,8 +27,8 @@ public class Creeper extends EnemyMob {
 	private static final int MAX_FUSE_TIME = 60;
 	private static final int TRIGGER_RADIUS = 64;
 	private static final int BLAST_DAMAGE = 50;
-	private static final int CREEPER_HEALTH = 10;
-	private static final int CREEPER_DETECT_DIST = 50;
+	private static final int HEALTH = 10;
+	private static final int DETECT_DIST = 50;
 	private static final int MIN_GUNPOWDER = 1;
 	private static final int MAX_GUNPOWDER = 4;
 
@@ -36,7 +36,7 @@ public class Creeper extends EnemyMob {
 	private boolean fuseLit = false;
 
 	public Creeper(int lvl) {
-		super(lvl, sprites, CREEPER_HEALTH, CREEPER_DETECT_DIST);
+		super(lvl, sprites, HEALTH, DETECT_DIST);
 	}
 
 	@Override
