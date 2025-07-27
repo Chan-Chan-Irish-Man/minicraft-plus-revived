@@ -43,6 +43,8 @@ public class ObsidianKnight extends EnemyMob {
 	private static final int LIFETIME = -1; // obsidian knight does not despawn
 	private static final int RAND_WALK_DURATION = 10;
 	private static final int RAND_WALK_CHANCE = 50;
+	private static final int MIN_SHARD = 15;
+	private static final int MAX_SHARD = 25;
 
 	@Range(from = 0, to = 1)
 	private int phase = 0; // The phase of the boss. {0, 1}
@@ -256,8 +258,8 @@ public class ObsidianKnight extends EnemyMob {
 		if (players.length > 0) { // If the player is still here
 			for (Player p : players) {
 				p.addScore(300000); // Give the player 300K points.
-				dropItem(15, 25, Items.get("shard"));
-				dropItem(1, 1, Items.get("Obsidian Heart")); // Drop it's precious item.
+				dropItem(MIN_SHARD, MAX_SHARD, Items.get("shard"));
+				dropItem(1, 1, Items.get("Obsidian Heart")); // Drop its precious item.
 			}
 		}
 
