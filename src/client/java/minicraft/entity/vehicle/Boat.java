@@ -26,6 +26,16 @@ public class Boat extends Entity implements PlayerRideable {
 
 	private static final int MOVE_SPEED = 1;
 	private static final int STAMINA_COST_TIME = 45; // a unit of stamina is consumed per this amount of time of move
+	private static final int BOAT_OFFSET = 8;
+	private static final int SCREEN_RENDER_DIST = 4;
+	private static final int BOAT_DIST = 3;
+	private static final int LEVEL_BITWISE = 4;
+	private static final int UNIT_MOVE_DEFAULT = 0;
+	private static final int STAMINA_COST = 1;
+	private static final int SPRITE_INDEX_OFFSET_UP_RIGHT = 2;
+	private static final int PUSH_DELAY_WATER = 2;
+	private static final int PUSH_DELAY_LAVA = 4;
+	private static final int PUSH_DELAY_DEFAULT = 6;
 
 	private @Nullable Entity passenger;
 	private @NotNull Direction dir;
@@ -40,21 +50,21 @@ public class Boat extends Entity implements PlayerRideable {
 
 	@Override
 	public void render(Screen screen) {
-		int xo = x - 8; // Horizontal
-		int yo = y - 8; // Vertical
+		int xo = x - BOAT_OFFSET; // Horizontal
+		int yo = y - BOAT_OFFSET; // Vertical
 
 		switch (dir) {
 			case UP: // if currently riding upwards...
-				screen.render(xo - 4, yo - 4, boatSprites[0][((walkDist >> 3) & 1) + 2].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[0][((walkDist >> BOAT_DIST) & 1) + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
 				break;
 			case LEFT: // Riding to the left... (Same as above)
-				screen.render(xo - 4, yo - 4, boatSprites[1][((walkDist >> 3) & 1)].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][((walkDist >> BOAT_DIST) & 1)].getSprite());
 				break;
 			case RIGHT: // Riding to the right (Same as above)
-				screen.render(xo - 4, yo - 4, boatSprites[1][((walkDist >> 3) & 1) + 2].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][((walkDist >> BOAT_DIST) & 1) + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
 				break;
 			case DOWN: // Riding downwards (Same as above)
-				screen.render(xo - 4, yo - 4, boatSprites[0][((walkDist >> 3) & 1)].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[0][((walkDist >> BOAT_DIST) & 1)].getSprite());
 				break;
 			default:
 				throw new UnsupportedOperationException("dir must be defined when on world");
@@ -67,7 +77,7 @@ public class Boat extends Entity implements PlayerRideable {
 	@Override
 	public void tick() {
 		if (isRemoved()) return;
-		if (level != null && level.getTile(x >> 4, y >> 4) == Tiles.get("lava")) {
+		if (level != null && level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE) == Tiles.get("lava")) {
 			hurt();
 			if (isRemoved()) return;
 		}
@@ -95,16 +105,16 @@ public class Boat extends Entity implements PlayerRideable {
 	}
 
 	public boolean isInWater() {
-		return level.getTile(x >> 4, y >> 4) instanceof WaterTile;
+		return level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE) instanceof WaterTile;
 	}
 
 	public boolean isInLava() {
-		return level.getTile(x >> 4, y >> 4) instanceof LavaTile;
+		return level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE) instanceof LavaTile;
 	}
 
 	@Override
 	protected int getPushTimeDelay() {
-		return isInWater() ? 2 : isInLava() ? 4 : 6;
+		return isInWater() ? PUSH_DELAY_WATER : isInLava() ? PUSH_DELAY_LAVA : PUSH_DELAY_DEFAULT;
 	}
 
 	@Override
@@ -134,7 +144,7 @@ public class Boat extends Entity implements PlayerRideable {
 		if (this.passenger != passenger) return false;
 
 		if (unitMoveCounter >= STAMINA_COST_TIME) {
-			passenger.payStamina(1);
+			passenger.payStamina(STAMINA_COST);
 			unitMoveCounter -= STAMINA_COST_TIME;
 		}
 
@@ -153,7 +163,7 @@ public class Boat extends Entity implements PlayerRideable {
 		} else {
 			if (passenger.dir != this.dir) // Sync direction even not moved to render in consistent state
 				syncPassengerState(passenger);
-			if (unitMoveCounter > 0) // Simulation of resting
+			if (unitMoveCounter > UNIT_MOVE_DEFAULT) // Simulation of resting
 				unitMoveCounter--;
 		}
 		return true;
@@ -164,14 +174,14 @@ public class Boat extends Entity implements PlayerRideable {
 	}
 
 	public boolean isMoving() {
-		return unitMoveCounter > 0;
+		return unitMoveCounter > UNIT_MOVE_DEFAULT;
 	}
 
 	@Override
 	public boolean startRiding(Player player) {
 		if (passenger == null) {
 			passenger = player;
-			unitMoveCounter = 0;
+			unitMoveCounter = UNIT_MOVE_DEFAULT;
 			syncPassengerState(passenger);
 			return true;
 		} else
@@ -182,7 +192,7 @@ public class Boat extends Entity implements PlayerRideable {
 	public void stopRiding(Player player) {
 		if (passenger == player) {
 			passenger = null;
-			unitMoveCounter = 0; // reset counters
+			unitMoveCounter = UNIT_MOVE_DEFAULT; // reset counters
 		}
 	}
 }
