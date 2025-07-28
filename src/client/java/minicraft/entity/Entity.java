@@ -212,9 +212,9 @@ public abstract class Entity implements Tickable {
 		int maxFront = Level.calculateMaxFrontClosestTile(sgn, d, hitBoxLeft, hitBoxRight, hitBoxFront,
 			(front, horTile) -> level.getTile(front, horTile).mayPass(level, front, horTile, this)); // Maximum position can be reached with front hit box
 		if (maxFront == hitBoxFront) { // Bumping into the facing tile
-			int hitBoxRightTile = hitBoxRight >> 4;
-			int frontTile = (hitBoxFront + sgn) >> 4;
-			for (int horTile = hitBoxLeft >> 4; horTile <= hitBoxRightTile; horTile++) {
+			int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
+			int frontTile = (hitBoxFront + sgn) >> TILE_SIZE_SHIFT;
+			for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 				level.getTile(frontTile, horTile).bumpedInto(level, frontTile, horTile, this);
 			}
 			return false; // No movement can be made.
@@ -244,9 +244,9 @@ public abstract class Entity implements Tickable {
 		int maxFront = Level.calculateMaxFrontClosestTile(sgn, d, hitBoxLeft, hitBoxRight, hitBoxFront,
 			(front, horTile) -> level.getTile(horTile, front).mayPass(level, horTile, front, this)); // Maximum position can be reached with front hit box
 		if (maxFront == hitBoxFront) { // Bumping into the facing tile
-			int hitBoxRightTile = hitBoxRight >> 4;
-			int frontTile = (hitBoxFront + sgn) >> 4;
-			for (int horTile = hitBoxLeft >> 4; horTile <= hitBoxRightTile; horTile++) {
+			int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
+			int frontTile = (hitBoxFront + sgn) >> TILE_SIZE_SHIFT;
+			for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 				level.getTile(horTile, frontTile).bumpedInto(level, horTile, frontTile, this);
 			}
 			return false; // No movement can be made.
@@ -280,13 +280,13 @@ public abstract class Entity implements Tickable {
 
 		// These lists are named as if the entity has already moved-- it hasn't, though.
 		HashSet<Entity> wasInside = new HashSet<>(level.getEntitiesInRect(getBounds())); // Gets all the entities that are inside this entity (aka: colliding) before moving.
-		int frontTile = hitBoxFront << 4; // The original tile the front boundary hit box staying on
+		int frontTile = hitBoxFront << TILE_SIZE_SHIFT; // The original tile the front boundary hit box staying on
 		boolean handleSteppedOn = false; // Used together with frontTile
 		for (int front = hitBoxFront; sgn < 0 ? front > maxFront : front < maxFront; front += sgn) {
-			int newFrontTile = (front + sgn) >> 4;
+			int newFrontTile = (front + sgn) >> TILE_SIZE_SHIFT;
 			if (newFrontTile != frontTile) { // New tile touched
-				int hitBoxRightTile = hitBoxRight >> 4;
-				for (int horTile = hitBoxLeft >> 4; horTile <= hitBoxRightTile; horTile++) {
+				int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
+				for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 					bumpingHandler.accept(newFrontTile, horTile);
 				}
 				frontTile = newFrontTile;
@@ -309,8 +309,8 @@ public abstract class Entity implements Tickable {
 			if (blocked) break;
 			incrementMove.act(); // Movement successful
 			if (handleSteppedOn) { // When the movement to a new tile successes
-				int hitBoxRightTile = hitBoxRight >> 4;
-				for (int horTile = hitBoxLeft >> 4; horTile <= hitBoxRightTile; horTile++) {
+				int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
+				for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 					steppingHandler.accept(frontTile, horTile); // Calls the steppedOn() method in a tile's class. (used for tiles like sand (footprints) or lava (burning))
 				}
 			}
@@ -385,7 +385,7 @@ public abstract class Entity implements Tickable {
 
 		double distance = Math.abs(Math.hypot(x - other.x, y - other.y)); // Calculate the distance between the two entities, in entity coordinates.
 
-		return Math.round(distance) >> 4 <= tileRadius; // Compare the distance (converted to tile units) with the specified radius.
+		return Math.round(distance) >> TILE_SIZE_SHIFT <= tileRadius; // Compare the distance (converted to tile units) with the specified radius.
 	}
 
 	/**
