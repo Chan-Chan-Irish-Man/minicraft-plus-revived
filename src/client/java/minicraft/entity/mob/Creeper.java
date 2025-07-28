@@ -81,8 +81,8 @@ public class Creeper extends EnemyMob {
 				Sound.play("explode");
 
 				// Figure out which tile the mob died on
-				int xt = x >> 4;
-				int yt = (y - 2) >> 4;
+				int xt = x >> TILE_SIZE_SHIFT;
+				int yt = (y - 2) >> TILE_SIZE_SHIFT;
 
 				// Used for calculations
 				int radius = lvl;
@@ -107,7 +107,7 @@ public class Creeper extends EnemyMob {
 					}
 
 					if (entity == this) continue;
-					Point ePos = new Point(entity.x >> 4, entity.y >> 4);
+					Point ePos = new Point(entity.x >> TILE_SIZE_SHIFT, entity.y >> TILE_SIZE_SHIFT);
 					for (Point p : tilePositions) {
 						if (!p.equals(ePos)) continue;
 						if (!level.getTile(p.x, p.y).mayPass(level, p.x, p.y, entity))
@@ -117,7 +117,7 @@ public class Creeper extends EnemyMob {
 				for (Point tilePosition : tilePositions) { // Destroys tiles in range
 					boolean hasSpawner = false;
 					for (Entity spawner : spawners) {
-						if (spawner.x >> 4 == tilePosition.x && spawner.y >> 4 == tilePosition.y) { // Check if current tile has a spawner on it
+						if (spawner.x >> TILE_SIZE_SHIFT == tilePosition.x && spawner.y >> TILE_SIZE_SHIFT == tilePosition.y) { // Check if current tile has a spawner on it
 							hasSpawner = true;
 							break;
 						}

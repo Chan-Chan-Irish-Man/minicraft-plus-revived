@@ -52,8 +52,8 @@ public class Bed extends Furniture {
 		if (checkCanSleep(player)) { // If it is late enough in the day to sleep...
 
 			// Set the player spawn coord. to their current position, in tile coords (hence " >> 4")
-			player.spawnx = player.x >> 4;
-			player.spawny = player.y >> 4;
+			player.spawnx = player.x >> TILE_SIZE_SHIFT;
+			player.spawny = player.y >> TILE_SIZE_SHIFT;
 
 			sleepingPlayers.put(player, this);
 			player.remove();

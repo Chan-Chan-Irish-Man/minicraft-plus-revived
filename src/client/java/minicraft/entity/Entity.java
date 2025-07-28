@@ -43,6 +43,7 @@ public abstract class Entity implements Tickable {
 	private boolean removed; // If the entity is to be removed from the level.
 	protected Level level; // The level that the entity is on.
 	public int col; // Current color.
+	protected final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
 
 	// Numeric unique identifier for the entity.
 	public int eid;

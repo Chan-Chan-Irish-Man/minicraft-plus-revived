@@ -23,6 +23,11 @@ public class Sheep extends PassiveMob {
 	private static final int SPRITE_X_OFFSET = 8;
 	private static final int SPRITE_Y_OFFSET = 11;
 
+	private static final int GRAZE_RAND_RANGE = 1000;
+
+	private static final int MIN_SHEAR_WOOL = 1;
+	private static final int MAX_SHEAR_WOOL = 3;
+
 	static {
 		for (DyeItem.DyeColor color : DyeItem.DyeColor.values()) {
 			LinkedSprite[][] mobSprites = Mob.compileMobSpriteAnimations(0, 0, "sheep");
@@ -72,9 +77,9 @@ public class Sheep extends PassiveMob {
 	@Override
 	public void tick() {
 		super.tick();
-		Tile tile = level.getTile(x >> 4, y >> 4);
-		if (tile instanceof GrassTile && random.nextInt(1000) == 0) { // Grazing
-			level.setTile(x >> 4, y >> 4, Tiles.get("dirt"));
+		Tile tile = level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		if (tile instanceof GrassTile && random.nextInt(GRAZE_RAND_RANGE) == 0) { // Grazing
+			level.setTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT, Tiles.get("dirt"));
 			cut = false;
 		}
 	}
@@ -83,7 +88,7 @@ public class Sheep extends PassiveMob {
 		if (item instanceof ToolItem) {
 			if (!cut && ((ToolItem) item).type == ToolType.Shears) {
 				cut = true;
-				dropItem(1, 3, Items.get(color.toString().replace('_', ' ') + " Wool"));
+				dropItem(MIN_SHEAR_WOOL, MAX_SHEAR_WOOL, Items.get(color.toString().replace('_', ' ') + " Wool"));
 				((ToolItem) item).payDurability();
 				return true;
 			}

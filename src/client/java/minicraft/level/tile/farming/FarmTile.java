@@ -21,6 +21,11 @@ public class FarmTile extends Tile {
 	private static final SpriteAnimation sprite = new SpriteAnimation(SpriteType.Tile, "farmland");
 	private static final SpriteAnimation spriteMoist = new SpriteAnimation(SpriteType.Tile, "farmland_moist");
 
+	private static final int PLAYER_STAM_COST = 4;
+
+	private static final int UNDER_HYDRATION = 7;
+	private static final int RAND_MOIST_RANGE = 10;
+
 	public FarmTile(String name) {
 		super(name, sprite);
 	}
@@ -34,7 +39,7 @@ public class FarmTile extends Tile {
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
 			if (tool.type == ToolType.Shovel) {
-				if (player.payStamina(4 - tool.level) && tool.payDurability()) {
+				if (player.payStamina(PLAYER_STAM_COST - tool.level) && tool.payDurability()) {
 					int data = level.getData(xt, yt);
 					level.setTile(xt, yt, Tiles.get("Dirt"));
 					Sound.play("monsterhurt");
@@ -52,14 +57,14 @@ public class FarmTile extends Tile {
 	public boolean tick(Level level, int xt, int yt) {
 		int moisture = level.getData(xt, yt) & 0b111;
 		if (Arrays.stream(level.getAreaTiles(xt, yt, 4)).anyMatch(t -> t instanceof WaterTile)) { // Contains water.
-			if (moisture < 7 && random.nextInt(10) == 0) { // hydrating
+			if (moisture < UNDER_HYDRATION && random.nextInt(RAND_MOIST_RANGE) == 0) { // hydrating
 				level.setData(xt, yt, moisture + 1);
 				return true;
 			}
-		} else if (moisture > 0 && random.nextInt(10) == 0) { // drying
+		} else if (moisture > 0 && random.nextInt(RAND_MOIST_RANGE) == 0) { // drying
 			level.setData(xt, yt, moisture - 1);
 			return true;
-		} else if (moisture == 0 && random.nextInt(10) == 0) {
+		} else if (moisture == 0 && random.nextInt(RAND_MOIST_RANGE) == 0) {
 			level.setTile(xt, yt, Tiles.get("dirt"));
 			return true;
 		}

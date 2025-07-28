@@ -30,7 +30,6 @@ public class Boat extends Entity implements PlayerRideable {
 	private static final int BOAT_OFFSET = 8;
 	private static final int SCREEN_RENDER_DIST = 4;
 	private static final int BOAT_DIST = 3;
-	private static final int LEVEL_BITWISE = 4;
 	private static final int UNIT_MOVE_DEFAULT = 0;
 	private static final int STAMINA_COST = 1;
 	private static final int SPRITE_INDEX_OFFSET_UP_RIGHT = 2;
@@ -78,7 +77,7 @@ public class Boat extends Entity implements PlayerRideable {
 	}
 
 	private Tile getCurrentTile() {
-		return level.getTile(x >> LEVEL_BITWISE, y >> LEVEL_BITWISE);
+		return level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
 	}
 
 	@Override

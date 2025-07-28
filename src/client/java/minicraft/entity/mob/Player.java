@@ -295,7 +295,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// Ensure chunks generated around player
-		level.loadChunksAround(x >> 4, y >> 4);
+		level.loadChunksAround(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
 
 		super.tick(); // Ticks Mob.java
 
@@ -347,7 +347,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			questExpanding = 30;
 		}
 
-		Tile onTile = level.getTile(x >> 4, y >> 4); // Gets the current tile the player is on.
+		Tile onTile = level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT); // Gets the current tile the player is on.
 		if (onTile == Tiles.get("Stairs Down") || onTile == Tiles.get("Stairs Up")) {
 			if (onStairDelay <= 0) { // When the delay time has passed...
 				World.scheduleLevelChange((onTile == Tiles.get("Stairs Up")) ? 1 : -1); // Decide whether to go up or down.
@@ -633,8 +633,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 	private @Nullable Point findNearestLand() {
 		// Tiles nearby
-		int xt = x >> 4;
-		int yt = y >> 4;
+		int xt = x >> TILE_SIZE_SHIFT;
+		int yt = y >> TILE_SIZE_SHIFT;
 		if (dir.getX() != 0) { // x-axis
 			// orthogonal to the direction pointing to
 			if (isTileForLand(level, xt, yt - 1))
@@ -673,39 +673,39 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	}
 
 	private Point findAlternativeLandingPoint() {
-		int xt = x >> 4;
-		int yt = y >> 4;
+		int xt = x >> TILE_SIZE_SHIFT;
+		int yt = y >> TILE_SIZE_SHIFT;
 		// Right-hand-side or left-hand-side tile
 		switch (dir) {
 			case DOWN:
-				xt = (x - 12) >> 4;
+				xt = (x - 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x - 12, y);
-				xt = (x + 12) >> 4;
+				xt = (x + 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x + 12, y);
 				break;
 			case UP:
-				xt = (x + 12) >> 4;
+				xt = (x + 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x + 12, y);
-				xt = (x - 12) >> 4;
+				xt = (x - 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x - 12, y);
 				break;
 			case LEFT:
-				yt = (y - 12) >> 4;
+				yt = (y - 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y - 12);
-				yt = (y + 12) >> 4;
+				yt = (y + 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y + 12);
 				break;
 			case RIGHT:
-				yt = (y + 12) >> 4;
+				yt = (y + 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y + 12);
-				yt = (y - 12) >> 4;
+				yt = (y - 12) >> TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y - 12);
 				break;
@@ -852,7 +852,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		x += dir.getX() * INTERACT_DIST;
 		y += dir.getY() * INTERACT_DIST;
 
-		return new Point(x >> 4, y >> 4);
+		return new Point(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
 	}
 
 	private void goFishing() {
@@ -1004,7 +1004,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		// Renders swimming
 		if (isSwimming() && onFallDelay <= 0 && ride == null) {
 			yo += 4; // y offset is moved up by 4
-			if (level.getTile(x >> 4, y >> 4) == Tiles.get("water")) {
+			if (level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT) == Tiles.get("water")) {
 
 				// animation effect
 				if (tickTime / 8 % 2 == 0) {
@@ -1015,7 +1015,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 					screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
 				}
 
-			} else if (level.getTile(x >> 4, y >> 4) == Tiles.get("lava")) {
+			} else if (level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT) == Tiles.get("lava")) {
 
 				if (tickTime / 8 % 2 == 0) {
 					screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic

@@ -26,6 +26,10 @@ public class DeathChest extends Chest {
 		unlimited = true;
 	}}; // Implement the inventory locally instead.
 
+	private static final int EASY_EXPIRE_TIME = 450;
+	private static final int NORM_EXPIRE_TIME = 300;
+	private static final int HARD_EXPIRE_TIME = 150;
+
 	/**
 	 * Creates a custom chest with the name Death Chest
 	 */
@@ -35,11 +39,11 @@ public class DeathChest extends Chest {
 
 		/// Set the expiration time based on the world difficulty.
 		if (Settings.get("diff").equals("minicraft.settings.difficulty.easy")) {
-			time = 450 * Updater.normSpeed;
+			time = EASY_EXPIRE_TIME * Updater.normSpeed;
 		} else if (Settings.get("diff").equals("minicraft.settings.difficulty.normal")) {
-			time = 300 * Updater.normSpeed;
+			time = NORM_EXPIRE_TIME * Updater.normSpeed;
 		} else if (Settings.get("diff").equals("minicraft.settings.difficulty.hard")) {
-			time = 150 * Updater.normSpeed;
+			time = HARD_EXPIRE_TIME * Updater.normSpeed;
 		}
 	}
 

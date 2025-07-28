@@ -55,7 +55,7 @@ public class Arrow extends Entity implements ClientTickable {
 
 	@Override
 	public void tick() {
-		if (x < 0 || x >> 4 > level.w || y < 0 || y >> 4 > level.h) {
+		if (x < 0 || x >> TILE_SIZE_SHIFT > level.w || y < 0 || y >> TILE_SIZE_SHIFT > level.h) {
 			remove(); // Remove when out of bounds
 			return;
 		}
@@ -75,9 +75,9 @@ public class Arrow extends Entity implements ClientTickable {
 				mob.hurt(owner, damage, dir); //normal hurting to other mobs
 			}
 
-			if (!level.getTile(x >> 4, y >> 4).mayPass(level, x >> 4, y >> 4, this)
-				&& !level.getTile(x >> 4, y >> 4).connectsToFluid(level, x >> 4, y >> 4)
-				&& level.getTile(x >> 4, y >> 4).id != 16) {
+			if (!level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT).mayPass(level, x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT, this)
+				&& !level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT).connectsToFluid(level, x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT)
+				&& level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT).id != 16) {
 				this.remove();
 				try {
 					sprite.destroy();

@@ -14,6 +14,8 @@ public class Knight extends EnemyMob {
 
 	private static final int HEALTH = 9;
 	private static final int DETECT_RADIUS = 100;
+	private static final int MIN_SHARD = 0;
+	private static final int MAX_SHARD = 2;
 
 	/**
 	 * Creates a knight of a given level.
@@ -25,9 +27,9 @@ public class Knight extends EnemyMob {
 
 	public void die() {
 		if (Settings.get("diff").equals("minicraft.settings.difficulty.easy"))
-			dropItem(1, 3, Items.get("shard"));
+			dropItem(MIN_SHARD + 1, MAX_SHARD + 1, Items.get("shard"));
 		else
-			dropItem(0, 2, Items.get("shard")
+			dropItem(MIN_SHARD, MAX_SHARD, Items.get("shard")
 			);
 
 		if (random.nextInt(24 / lvl / (Settings.getIdx("diff") + 1)) == 0)
