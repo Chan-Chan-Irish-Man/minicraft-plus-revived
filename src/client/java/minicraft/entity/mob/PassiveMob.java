@@ -11,6 +11,7 @@ import minicraft.level.tile.Tiles;
 
 public class PassiveMob extends MobAi {
 	protected int color;
+	protected final int GRAZE_RAND_RANGE = 1000;
 
 	/**
 	 * Constructor for a non-hostile (passive) mob.

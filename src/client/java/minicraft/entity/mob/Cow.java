@@ -43,7 +43,7 @@ public class Cow extends PassiveMob {
 	public void tick() {
 		super.tick();
 		Tile tile = level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
-		if (tile instanceof GrassTile && random.nextInt(1000) == 0) { // Grazing without any benefits.
+		if (tile instanceof GrassTile && random.nextInt(GRAZE_RAND_RANGE) == 0) { // Grazing without any benefits.
 			level.setTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT, Tiles.get("dirt"));
 		}
 	}

@@ -39,7 +39,7 @@ public class ObsidianKnight extends EnemyMob {
 
 	private static final int LVL = 1;
 	private static final boolean HEALTH_AFFECTED_BY_DIFFICULTY = false;
-	private static final int DETECT_RADIUS = 16 * 8;
+	private static final int DETECT_RADIUS = TILE_PIXELS * 8;
 	private static final int LIFETIME = -1; // obsidian knight does not despawn
 	private static final int RAND_WALK_DURATION = 10;
 	private static final int RAND_WALK_CHANCE = 50;
@@ -156,7 +156,7 @@ public class ObsidianKnight extends EnemyMob {
 			if (player != null && randomWalkTime == 0) { // If there is a player around, and the walking is not random
 				int xd = player.x - x; // The horizontal distance between the player and the Obsidian Knight.
 				int yd = player.y - y; // The vertical distance between the player and the Obsidian Knight.
-				if (xd * xd + yd * yd < 16 * 16 * 2 * 2) {
+				if (xd * xd + yd * yd < TILE_PIXELS * TILE_PIXELS * 2 * 2) {
 					/// Move away from the player if less than 2 blocks away
 
 					this.xmov = 0; // Velocity
@@ -168,11 +168,11 @@ public class ObsidianKnight extends EnemyMob {
 					if (yd < 0) this.ymov = +1;
 					if (yd > 0) this.ymov = -1;
 
-				} else if (xd * xd + yd * yd > 16 * 16 * 15 * 15) {// 15 squares away
+				} else if (xd * xd + yd * yd > TILE_PIXELS * TILE_PIXELS * 15 * 15) {// 15 squares away
 					/// Drags the Obsidian Knight to the player, maintaining relative position.
 					double hypot = Math.sqrt(xd * xd + yd * yd);
-					int newxd = (int) (xd * Math.sqrt(16 * 16 * 15 * 15) / hypot);
-					int newyd = (int) (yd * Math.sqrt(16 * 16 * 15 * 15) / hypot);
+					int newxd = (int) (xd * Math.sqrt(TILE_PIXELS * TILE_PIXELS * 15 * 15) / hypot);
+					int newyd = (int) (yd * Math.sqrt(TILE_PIXELS * TILE_PIXELS * 15 * 15) / hypot);
 					x = player.x - newxd;
 					y = player.y - newyd;
 				}

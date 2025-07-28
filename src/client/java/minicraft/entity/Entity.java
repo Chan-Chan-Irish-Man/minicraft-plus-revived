@@ -43,7 +43,9 @@ public abstract class Entity implements Tickable {
 	private boolean removed; // If the entity is to be removed from the level.
 	protected Level level; // The level that the entity is on.
 	public int col; // Current color.
-	protected final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
+	protected static final int TILE_PIXELS = 16; // Amount of pixels in a tile.
+	protected static final int TILE_CENTER = TILE_PIXELS / 2; // For finding the center of a tile.
+	protected static final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
 
 	// Numeric unique identifier for the entity.
 	public int eid;
@@ -185,8 +187,8 @@ public abstract class Entity implements Tickable {
 		if (xd != 0 && moveX(xd)) stopped = false; // Becomes false if horizontal movement was successful.
 		if (yd != 0 && moveY(yd)) stopped = false; // Becomes false if vertical movement was successful.
 		if (!stopped) {
-			int xt = x >> 4; // The x tile coordinate that the entity is standing on.
-			int yt = y >> 4; // The y tile coordinate that the entity is standing on.
+			int xt = x >> TILE_SIZE_SHIFT; // The x tile coordinate that the entity is standing on.
+			int yt = y >> TILE_SIZE_SHIFT; // The y tile coordinate that the entity is standing on.
 			level.getTile(xt, yt).steppedOn(level, xt, yt, this); // Calls the steppedOn() method in a tile's class. (used for tiles like sand (footprints) or lava (burning))
 		}
 		return !stopped;

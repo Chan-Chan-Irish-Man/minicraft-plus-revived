@@ -617,8 +617,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		((PlayerRideable) ride).stopRiding(this);
 		this.ride = null;
 		if (p != null) {
-			x = p.x * 16 + 8;
-			y = p.y * 16 + 8;
+			x = p.x * TILE_PIXELS + TILE_CENTER;
+			y = p.y * TILE_PIXELS + TILE_CENTER;
 		} else {
 			p = findAlternativeLandingPoint();
 			x = p.x;
@@ -1030,10 +1030,10 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		// Renders indicator for what tile the item will be placed on
 		if (activeItem instanceof TileItem && !isSwimming()) {
 			Point t = getInteractionTile();
-			screen.render(t.x * 16, t.y * 16, 3, 2, 0, hudSheet.getSheet());
-			screen.render(t.x * 16 + 8, t.y * 16, 3, 2, 1, hudSheet.getSheet());
-			screen.render(t.x * 16, t.y * 16 + 8, 3, 2, 2, hudSheet.getSheet());
-			screen.render(t.x * 16 + 8, t.y * 16 + 8, 3, 2, 3, hudSheet.getSheet());
+			screen.render(t.x * TILE_PIXELS, t.y * TILE_PIXELS, 3, 2, 0, hudSheet.getSheet());
+			screen.render(t.x * TILE_PIXELS + TILE_CENTER, t.y * TILE_PIXELS, 3, 2, 1, hudSheet.getSheet());
+			screen.render(t.x * TILE_PIXELS, t.y * TILE_PIXELS + TILE_CENTER, 3, 2, 2, hudSheet.getSheet());
+			screen.render(t.x * TILE_PIXELS + TILE_CENTER, t.y * TILE_CENTER + TILE_PIXELS, 3, 2, 3, hudSheet.getSheet());
 		}
 
 		// Makes the player white if they have just gotten hurt
@@ -1229,8 +1229,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// Set (entity) coordinates of player to the center of the tile.
-		this.x = spawnPos.x * 16 + 8; // conversion from tile coords to entity coords.
-		this.y = spawnPos.y * 16 + 8;
+		this.x = spawnPos.x * TILE_PIXELS + TILE_CENTER; // conversion from tile coords to entity coords.
+		this.y = spawnPos.y * TILE_PIXELS + TILE_CENTER;
 	}
 
 	/**
@@ -1243,8 +1243,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// Move the player to the spawn point
-		this.x = spawnx * 16 + 8;
-		this.y = spawny * 16 + 8;
+		this.x = spawnx * TILE_PIXELS + TILE_CENTER;
+		this.y = spawny * TILE_PIXELS + TILE_CENTER;
 	}
 
 	/**

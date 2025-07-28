@@ -71,7 +71,7 @@ public class Furniture extends Entity {
 	 * Draws the furniture on the screen.
 	 */
 	public void render(Screen screen) {
-		screen.render(x - 8, y - 8, sprite);
+		screen.render(x - TILE_CENTER, y - TILE_CENTER, sprite);
 	}
 
 	/**

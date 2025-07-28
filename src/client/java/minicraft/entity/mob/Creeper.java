@@ -25,7 +25,7 @@ public class Creeper extends EnemyMob {
 	};
 
 	private static final int MAX_FUSE_TIME = 60;
-	private static final int TRIGGER_RADIUS = 64;
+	private static final int TRIGGER_RADIUS = TILE_PIXELS * 4;
 	private static final int BLAST_DAMAGE = 50;
 	private static final int HEALTH = 10;
 	private static final int DETECT_DIST = 50;

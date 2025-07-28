@@ -23,8 +23,6 @@ public class Sheep extends PassiveMob {
 	private static final int SPRITE_X_OFFSET = 8;
 	private static final int SPRITE_Y_OFFSET = 11;
 
-	private static final int GRAZE_RAND_RANGE = 1000;
-
 	private static final int MIN_SHEAR_WOOL = 1;
 	private static final int MAX_SHEAR_WOOL = 3;
 
