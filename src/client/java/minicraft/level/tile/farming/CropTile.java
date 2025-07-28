@@ -24,6 +24,41 @@ public class CropTile extends FarmTile {
 
 	protected int maxAge = 0b111; // Must be a bit mask.
 
+	private static final int MAX_WATER_DIST = 4;
+	private static final int UNDER_HYDRATION = 7;
+	private static final int RAND_MOIST_RANGE = 10;
+
+	private static final double CARDINAL_MULTIPLIER = 0.75;
+	private static final double SUBCARDINAL_MULTIPLIER = 0.85;
+	private static final double HALFCARDINAL_MULTIPLIER = 0.9;
+	private static final double SINGLE_DIAGONAL_MULTIPLIER = 0.98125;
+
+	private static final int TILE_PIXELS = 16; // for now; this should be defined higher up
+											   // as a lot of different files use 16 in this
+											   // exact way
+	private static final int SCATTER_FACTOR = 8;
+
+	private static final int PARTICLE_LIFETIME_MEAN = 120;
+	private static final int PARTICLE_LIFETIME_VARIANCE = 40;
+
+	private static final int MIN_HARVEST_DROPS = 2;
+	private static final int HARVEST_DROP_VARIATION = 3;
+
+	private static final int LOWEST_FERT = 100;
+	private static final int LOW_FERT = 200;
+	private static final int MED_FERT = 300;
+	private static final int HIGH_FERT = 400;
+
+	private static final int MOST_AMOUNT = 40;
+	private static final int HIGH_AMOUNT = 30;
+	private static final int MED_AMOUNT = 25;
+	private static final int LOW_AMOUNT = 20;
+	private static final int LOWEST_AMOUNT = 10;
+
+	private static final int PLAYER_SCORE_RANGE = 5;
+
+	private static final int MAX_FERTILIZATION = 511;
+
 	protected CropTile(String name, @Nullable String seed) {
 		super(name, null);
 		this.seed = seed;
@@ -40,12 +75,12 @@ public class CropTile extends FarmTile {
 		int data = level.getData(xt, yt);
 		int moisture = data & 0b111;
 		boolean successful = false;
-		if (Arrays.stream(level.getAreaTiles(xt, yt, 4)).anyMatch(t -> t instanceof WaterTile)) { // Contains water.
-			if (moisture < 7 && random.nextInt(10) == 0) { // hydrating
+		if (Arrays.stream(level.getAreaTiles(xt, yt, MAX_WATER_DIST)).anyMatch(t -> t instanceof WaterTile)) { // Contains water.
+			if (moisture < UNDER_HYDRATION && random.nextInt(RAND_MOIST_RANGE) == 0) { // hydrating
 				level.setData(xt, yt, data = (data & ~0b111) + moisture++);
 				successful = true;
 			}
-		} else if (moisture > 0 && random.nextInt(10) == 0) { // drying
+		} else if (moisture > 0 && random.nextInt(RAND_MOIST_RANGE) == 0) { // drying
 			level.setData(xt, yt, data = (data & ~0b111) + moisture--);
 			successful = true;
 		}
@@ -75,15 +110,15 @@ public class CropTile extends FarmTile {
 				points /= 2;
 			else {
 				if (up && down && left && right)
-					points *= 0.75;
+					points *= CARDINAL_MULTIPLIER;
 				if (up && (down && (left || right) || left && right) || down && left && right) // Either 3 of 4 directions.
-					points *= 0.85;
+					points *= SUBCARDINAL_MULTIPLIER;
 				if (upLeft && (downRight || downLeft || upRight) || downLeft && (upRight || downRight) || upRight && downRight) // Either 2 of 4 directions.
-					points *= 0.9;
-				if (upLeft) points *= 0.98125;
-				if (downLeft) points *= 0.98125;
-				if (upRight) points *= 0.98125;
-				if (downRight) points *= 0.98125;
+					points *= HALFCARDINAL_MULTIPLIER;
+				if (upLeft) points *= SINGLE_DIAGONAL_MULTIPLIER;
+				if (downLeft) points *= SINGLE_DIAGONAL_MULTIPLIER;
+				if (upRight) points *= SINGLE_DIAGONAL_MULTIPLIER;
+				if (downRight) points *= SINGLE_DIAGONAL_MULTIPLIER;
 			}
 
 			if (random.nextInt((int) (100 / points) + 1) < (fertilization / 30 + 1)) // fertilization >= 0
@@ -107,21 +142,21 @@ public class CropTile extends FarmTile {
 			((StackableItem) item).count--;
 			Random random = new Random();
 			for (int i = 0; i < 2; ++i) {
-				double x = (double) xt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
-				double y = (double) yt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
-				level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, particleSprite));
+				double x = (double) xt * TILE_PIXELS + SCATTER_FACTOR + (random.nextGaussian() * 0.5) * SCATTER_FACTOR;
+				double y = (double) yt * TILE_PIXELS + SCATTER_FACTOR + (random.nextGaussian() * 0.5) * SCATTER_FACTOR;
+				level.add(new Particle((int) x, (int) y, PARTICLE_LIFETIME_MEAN + random.nextInt(21) - PARTICLE_LIFETIME_VARIANCE, particleSprite));
 			}
 			int fertilization = getFertilization(level.getData(xt, yt));
-			if (fertilization < 100) { // More fertilization, lower the buffer is applied.
-				fertilize(level, xt, yt, 40);
-			} else if (fertilization < 200) {
-				fertilize(level, xt, yt, 30);
-			} else if (fertilization < 300) {
-				fertilize(level, xt, yt, 25);
-			} else if (fertilization < 400) {
-				fertilize(level, xt, yt, 20);
+			if (fertilization < LOWEST_FERT) { // More fertilization, lower the buffer is applied.
+				fertilize(level, xt, yt, MOST_AMOUNT);
+			} else if (fertilization < LOW_FERT) {
+				fertilize(level, xt, yt, HIGH_AMOUNT);
+			} else if (fertilization < MED_FERT) {
+				fertilize(level, xt, yt, MED_AMOUNT);
+			} else if (fertilization < HIGH_FERT) {
+				fertilize(level, xt, yt, LOW_AMOUNT);
 			} else {
-				fertilize(level, xt, yt, 10);
+				fertilize(level, xt, yt, LOWEST_AMOUNT);
 			}
 
 			return true;
@@ -138,16 +173,16 @@ public class CropTile extends FarmTile {
 		int age = (data >> 3) & maxAge;
 
 		if (seed != null)
-			level.dropItem(x * 16 + 8, y * 16 + 8, 1, Items.get(seed));
+			level.dropItem(x * TILE_PIXELS + SCATTER_FACTOR, y * TILE_PIXELS + SCATTER_FACTOR, 1, Items.get(seed));
 
 		if (age == maxAge) {
-			level.dropItem(x * 16 + 8, y * 16 + 8, random.nextInt(3) + 2, Items.get(name));
+			level.dropItem(x * TILE_PIXELS + SCATTER_FACTOR, y * TILE_PIXELS + SCATTER_FACTOR, random.nextInt(HARVEST_DROP_VARIATION) + MIN_HARVEST_DROPS, Items.get(name));
 		} else if (seed == null) {
-			level.dropItem(x * 16 + 8, y * 16 + 8, 1, Items.get(name));
+			level.dropItem(x * TILE_PIXELS + SCATTER_FACTOR, y * TILE_PIXELS + SCATTER_FACTOR, 1, Items.get(name));
 		}
 
 		if (age == maxAge && entity instanceof Player) {
-			((Player) entity).addScore(random.nextInt(5) + 1);
+			((Player) entity).addScore(random.nextInt(PLAYER_SCORE_RANGE) + 1);
 		}
 
 		// Play sound.
@@ -170,7 +205,7 @@ public class CropTile extends FarmTile {
 		int fertilization = getFertilization(data);
 		fertilization += amount;
 		if (fertilization < 0) fertilization = 0;
-		if (fertilization > 511) fertilization = 511; // The maximum possible value to be reached.
+		if (fertilization > MAX_FERTILIZATION) fertilization = MAX_FERTILIZATION; // The maximum possible value to be reached.
 		// If this value exceeds 511, the final value would be greater than the hard maximum value that short can be.
 		level.setData(x, y, (data & (0b111 + (maxAge << 3))) + (fertilization << (3 + (maxAge + 1) / 2)));
 	}
