@@ -33,11 +33,6 @@ public class CropTile extends FarmTile {
 	private static final double HALFCARDINAL_MULTIPLIER = 0.9;
 	private static final double SINGLE_DIAGONAL_MULTIPLIER = 0.98125;
 
-	private static final int TILE_PIXELS = 16; // for now; this should be defined higher up
-											   // as a lot of different files use 16 in this
-											   // exact way
-	private static final int SCATTER_FACTOR = 8;
-
 	private static final int PARTICLE_LIFETIME_MEAN = 120;
 	private static final int PARTICLE_LIFETIME_VARIANCE = 40;
 
@@ -142,8 +137,8 @@ public class CropTile extends FarmTile {
 			((StackableItem) item).count--;
 			Random random = new Random();
 			for (int i = 0; i < 2; ++i) {
-				double x = (double) xt * TILE_PIXELS + SCATTER_FACTOR + (random.nextGaussian() * 0.5) * SCATTER_FACTOR;
-				double y = (double) yt * TILE_PIXELS + SCATTER_FACTOR + (random.nextGaussian() * 0.5) * SCATTER_FACTOR;
+				double x = (double) (xt << TILE_SIZE_SHIFT) + TILE_CENTER + (random.nextGaussian() * 0.5) * TILE_CENTER;
+				double y = (double) (yt << TILE_SIZE_SHIFT) + TILE_CENTER + (random.nextGaussian() * 0.5) * TILE_CENTER;
 				level.add(new Particle((int) x, (int) y, PARTICLE_LIFETIME_MEAN + random.nextInt(21) - PARTICLE_LIFETIME_VARIANCE, particleSprite));
 			}
 			int fertilization = getFertilization(level.getData(xt, yt));
@@ -173,12 +168,12 @@ public class CropTile extends FarmTile {
 		int age = (data >> 3) & maxAge;
 
 		if (seed != null)
-			level.dropItem(x * TILE_PIXELS + SCATTER_FACTOR, y * TILE_PIXELS + SCATTER_FACTOR, 1, Items.get(seed));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 1, Items.get(seed));
 
 		if (age == maxAge) {
-			level.dropItem(x * TILE_PIXELS + SCATTER_FACTOR, y * TILE_PIXELS + SCATTER_FACTOR, random.nextInt(HARVEST_DROP_VARIATION) + MIN_HARVEST_DROPS, Items.get(name));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, random.nextInt(HARVEST_DROP_VARIATION) + MIN_HARVEST_DROPS, Items.get(name));
 		} else if (seed == null) {
-			level.dropItem(x * TILE_PIXELS + SCATTER_FACTOR, y * TILE_PIXELS + SCATTER_FACTOR, 1, Items.get(name));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 1, Items.get(name));
 		}
 
 		if (age == maxAge && entity instanceof Player) {

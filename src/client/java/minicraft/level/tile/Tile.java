@@ -18,6 +18,9 @@ public abstract class Tile {
 	public static int tickCount = 0; // A global tickCount used in the Lava & water tiles.
 	protected Random random = new Random();
 
+	protected static final int TILE_PIXELS = 16; // Amount of pixels in a tile.
+	protected static final int TILE_CENTER = TILE_PIXELS / 2; // For finding the center of a tile.
+	protected static final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
 	/**
 	 * This is used by wall tiles to get what material they're made of.
 	 */

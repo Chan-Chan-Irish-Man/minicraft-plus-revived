@@ -83,27 +83,27 @@ public class TreeTile extends Tile {
 		Sprite spriteFull = level.getTreeType(x, y).treeSpriteFull.getSprite();
 
 		if (isUpTileSame && isUpLeftTileSame && isLeftTileSame) {
-			screen.render((x << 4) + 0, (y << 4) + 0, spriteFull.spritePixels[0][1]);
+			screen.render((x << TILE_SIZE_SHIFT) + 0, (y << TILE_SIZE_SHIFT) + 0, spriteFull.spritePixels[0][1]);
 		} else {
-			screen.render((x << 4) + 0, (y << 4) + 0, sprite.spritePixels[0][0]);
+			screen.render((x << TILE_SIZE_SHIFT) + 0, (y << TILE_SIZE_SHIFT) + 0, sprite.spritePixels[0][0]);
 		}
 
 		if (isUpTileSame && isUpRightTileSame && isRightTileSame) {
-			screen.render((x << 4) + 8, (y << 4) + 0, spriteFull.spritePixels[0][0]);
+			screen.render((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + 0, spriteFull.spritePixels[0][0]);
 		} else {
-			screen.render((x << 4) + 8, (y << 4) + 0, sprite.spritePixels[0][1]);
+			screen.render((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + 0, sprite.spritePixels[0][1]);
 		}
 
 		if (isDownTileSame && isDownLeftTileSame && isLeftTileSame) {
-			screen.render((x << 4) + 0, (y << 4) + 8, spriteFull.spritePixels[1][1]);
+			screen.render((x << TILE_SIZE_SHIFT) + 0, (y << TILE_SIZE_SHIFT) + TILE_CENTER, spriteFull.spritePixels[1][1]);
 		} else {
-			screen.render((x << 4) + 0, (y << 4) + 8, sprite.spritePixels[1][0]);
+			screen.render((x << TILE_SIZE_SHIFT) + 0, (y << TILE_SIZE_SHIFT) + TILE_CENTER, sprite.spritePixels[1][0]);
 		}
 
 		if (isDownTileSame && isDownRightTileSame && isRightTileSame) {
-			screen.render((x << 4) + 8, (y << 4) + 8, spriteFull.spritePixels[1][0]);
+			screen.render((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, spriteFull.spritePixels[1][0]);
 		} else {
-			screen.render((x << 4) + 8, (y << 4) + 8, sprite.spritePixels[1][1]);
+			screen.render((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, sprite.spritePixels[1][1]);
 		}
 	}
 
@@ -148,19 +148,19 @@ public class TreeTile extends Tile {
 
 	public void hurt(Level level, int x, int y, int dmg) {
 		if (random.nextInt(100) == 0)
-			level.dropItem(x * 16 + 8, y * 16 + 8, Items.get("Apple"));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Items.get("Apple"));
 
 		int damage = level.getData(x, y) + dmg;
 		int treeHealth = 20;
 		if (Game.isMode("minicraft.settings.mode.creative")) dmg = damage = treeHealth;
 
-		level.add(new SmashParticle(x * 16, y * 16));
+		level.add(new SmashParticle((x << TILE_SIZE_SHIFT), (y << TILE_SIZE_SHIFT)));
 		Sound.play("monsterhurt");
 
-		level.add(new TextParticle("" + dmg, x * 16 + 8, y * 16 + 8, Color.RED));
+		level.add(new TextParticle("" + dmg, (x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Color.RED));
 		if (damage >= treeHealth) {
-			level.dropItem(x * 16 + 8, y * 16 + 8, 1, 3, Items.get("Wood"));
-			level.dropItem(x * 16 + 8, y * 16 + 8, 0, 2, Items.get("Acorn"));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 1, 3, Items.get("Wood"));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 0, 2, Items.get("Acorn"));
 			level.setTile(x, y, Tiles.get("Grass"));
 			AchievementsDisplay.setAchievement("minicraft.achievement.woodcutter", true);
 		} else {

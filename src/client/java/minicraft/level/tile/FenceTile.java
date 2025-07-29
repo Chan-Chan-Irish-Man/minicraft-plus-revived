@@ -116,7 +116,7 @@ public class FenceTile extends Tile {
 				if (player.payStamina(4 - tool.level) && tool.payDurability()) {
 					int data = level.getData(xt, yt);
 					Sound.play("monsterhurt");
-					level.dropItem(xt * 16 + 8, yt * 16 + 8, Items.get(name));
+					level.dropItem(xt * TILE_PIXELS + TILE_CENTER, yt * TILE_PIXELS + TILE_CENTER, Items.get(name));
 					level.setTile(xt, yt, Tiles.get((short) level.getData(xt, yt)));
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(
 						new AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.ItemUsedOnTileTriggerConditionHandler.ItemUsedOnTileTriggerConditions(
@@ -130,9 +130,9 @@ public class FenceTile extends Tile {
 
 	public void hurt(Level level, int x, int y, int dmg) {
 		if (Game.isMode("minicraft.settings.mode.creative")) {
-			level.add(new SmashParticle(x * 16, y * 16));
+			level.add(new SmashParticle(x * TILE_PIXELS, y * TILE_PIXELS));
 			Sound.play("monsterhurt");
-			level.dropItem(x * 16 + 8, y * 16 + 8, Items.get(name));
+			level.dropItem(x * TILE_PIXELS + TILE_CENTER, y * TILE_PIXELS + TILE_CENTER, Items.get(name));
 			level.setTile(x, y, Tiles.get((short) level.getData(x, y)));
 		}
 	}

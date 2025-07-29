@@ -93,10 +93,10 @@ public class WallTile extends Tile {
 		int sbwHealth = 100;
 		if (Game.isMode("minicraft.settings.mode.creative")) dmg = damage = sbwHealth;
 
-		level.add(new SmashParticle(x << 4, y << 4));
+		level.add(new SmashParticle(x << TILE_SIZE_SHIFT, y << TILE_SIZE_SHIFT));
 		Sound.play("monsterhurt");
 
-		level.add(new TextParticle("" + dmg, (x << 4) + 8, (y << 4) + 8, Color.RED));
+		level.add(new TextParticle("" + dmg, (x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Color.RED));
 		if (damage >= sbwHealth) {
 			String itemName = "", tilename = "";
 			switch (type) { // Get what tile to set and what item to drop
@@ -117,7 +117,7 @@ public class WallTile extends Tile {
 				}
 			}
 
-			level.dropItem((x << 4) + 8, (y << 4) + 8, 1, 3 - type.ordinal(), Items.get(itemName));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 1, 3 - type.ordinal(), Items.get(itemName));
 			level.setTile(x, y, Tiles.get(tilename));
 		} else {
 			level.setData(x, y, damage);

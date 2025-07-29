@@ -21,8 +21,8 @@ public class SignTileEntity extends Entity {
 
 	@Override
 	public void tick() {
-		int xt = x >> 4, yt = y >> 4;
-		if (Game.player.x >> 4 == xt && Game.player.y >> 4 == yt) {
+		int xt = (x >> TILE_SIZE_SHIFT), yt = (y >> TILE_SIZE_SHIFT);
+		if (Game.player.x >> TILE_SIZE_SHIFT == xt && Game.player.y >> TILE_SIZE_SHIFT == yt) {
 			if (Renderer.signDisplayMenu == null || Renderer.signDisplayMenu.differsFrom(level.depth, xt, yt)) {
 				Renderer.signDisplayMenu = new SignDisplayMenu(level, xt, yt);
 			}

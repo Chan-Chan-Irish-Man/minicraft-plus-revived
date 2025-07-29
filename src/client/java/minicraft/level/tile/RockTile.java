@@ -76,10 +76,10 @@ public class RockTile extends Tile {
 			dropCoal = true;
 		}
 
-		level.add(new SmashParticle(x << 4, y << 4));
+		level.add(new SmashParticle(x << TILE_SIZE_SHIFT, y << TILE_SIZE_SHIFT));
 		Sound.play("monsterhurt");
 
-		level.add(new TextParticle("" + dmg, (x << 4) + 8, (y << 4) + 8, Color.RED));
+		level.add(new TextParticle("" + dmg, (x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Color.RED));
 		if (damage >= maxHealth) {
 			int stone = 1;
 			if (dropCoal) {
@@ -90,10 +90,10 @@ public class RockTile extends Tile {
 					coal += 1;
 				}
 
-				level.dropItem((x << 4) + 8, (y << 4) + 8, 0, coal, Items.get("Coal"));
+				level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 0, coal, Items.get("Coal"));
 			}
 
-			level.dropItem((x << 4) + 8, (y << 4) + 8, stone, Items.get("Stone"));
+			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, stone, Items.get("Stone"));
 			level.setTile(x, y, Tiles.get("Dirt"));
 		} else {
 			level.setData(x, y, damage);

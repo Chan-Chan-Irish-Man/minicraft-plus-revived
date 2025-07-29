@@ -88,7 +88,7 @@ public class FlowerTile extends Tile {
 					int data = level.getData(x, y);
 					level.setTile(x, y, Tiles.get("Grass"));
 					Sound.play("monsterhurt");
-					level.dropItem((x << 4) + 8, (y << 4) + 8, Items.get(FlowerVariant.values()[level.getData(x, y)].name));
+					level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Items.get(FlowerVariant.values()[level.getData(x, y)].name));
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(
 						new AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.ItemUsedOnTileTriggerConditionHandler.ItemUsedOnTileTriggerConditions(
 							item, this, data, x, y, level.depth));
@@ -100,7 +100,7 @@ public class FlowerTile extends Tile {
 	}
 
 	public boolean hurt(Level level, int x, int y, Mob source, int dmg, Direction attackDir) {
-		level.dropItem((x << 4) + 8, (y << 4) + 8, Items.get(FlowerVariant.values()[level.getData(x, y)].name));
+		level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Items.get(FlowerVariant.values()[level.getData(x, y)].name));
 		level.setTile(x, y, Tiles.get("Grass"));
 		return true;
 	}
