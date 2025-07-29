@@ -36,6 +36,8 @@ public class Updater extends Game {
 	public static final int sleepEndTime = dayLength / 8; // This value determines when the player "wakes up" in the morning.
 	public static final int sleepStartTime = dayLength / 2 + dayLength / 8; // This value determines when the player allowed to sleep.
 	//public static int noon = 32400; // This value determines when the sky switches from getting lighter to getting darker.
+	private static final int NORMAL_SPEED = 1; // Tick speed when awake.
+	private static final int SLEEP_SPEED = 20; // Tick speed when asleep.
 
 	public static int gameTime = 0; // This stores the total time (number of ticks) you've been playing your
 	public static boolean pastDay1 = true; // Used to prevent mob spawn on surface on day 1.
@@ -129,8 +131,8 @@ public class Updater extends Game {
 		Level level = levels[currentLevel];
 		if (Bed.sleeping()) {
 			// IN BED
-			if (gamespeed != 20) {
-				gamespeed = 20;
+			if (gamespeed != SLEEP_SPEED) {
+				gamespeed = SLEEP_SPEED;
 			}
 			if (tickCount > sleepEndTime) {
 				Logging.WORLD.trace("Passing midnight in bed.");
@@ -139,7 +141,7 @@ public class Updater extends Game {
 			}
 			if (tickCount <= sleepStartTime && tickCount >= sleepEndTime) { // It has reached morning.
 				Logging.WORLD.trace("Reached morning, getting out of bed.");
-				gamespeed = 1;
+				gamespeed = NORMAL_SPEED;
 				Bed.restorePlayers();
 			}
 		}
@@ -227,7 +229,7 @@ public class Updater extends Game {
 					} else if (isMode("minicraft.settings.mode.creative") && input.getMappedKey("SHIFT-W").isClicked()) {
 						Game.setDisplay(new LevelTransitionDisplay(1));
 					}
-					
+
 					if (input.getMappedKey("F3-L").isClicked()) {
 						// Print all players on all levels, and their coordinates.
 						Logging.WORLD.info("Printing players on all levels.");
@@ -286,10 +288,10 @@ public class Updater extends Game {
 						player.moveSpeed--; // -= 0.5D;
 
 					if (input.getMappedKey("F3-u").isClicked()) {
-						levels[currentLevel].setTile(player.x >> 4, player.y >> 4, Tiles.get("Stairs Up"));
+						levels[currentLevel].setTile(player.x >> TILE_SIZE_SHIFT, player.y >> TILE_SIZE_SHIFT, Tiles.get("Stairs Up"));
 					}
 					if (input.getMappedKey("F3-d").isClicked()) {
-						levels[currentLevel].setTile(player.x >> 4, player.y >> 4, Tiles.get("Stairs Down"));
+						levels[currentLevel].setTile(player.x >> TILE_SIZE_SHIFT, player.y >> TILE_SIZE_SHIFT, Tiles.get("Stairs Down"));
 					}
 				} // End debug only cond.
 			} // End "menu-null" conditional

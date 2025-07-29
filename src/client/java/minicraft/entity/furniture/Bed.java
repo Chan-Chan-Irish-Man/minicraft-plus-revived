@@ -125,7 +125,6 @@ public class Bed extends Furniture {
 
 		sleepingPlayers.clear();
 
-
 		playersAwake = 1;
 	}
 }

@@ -37,6 +37,10 @@ public class Game {
 	static Display currentDisplay = null;
 	static final ArrayDeque<Display> displayQuery = new ArrayDeque<>();
 
+	protected static final int TILE_PIXELS = 16; // Amount of pixels in a tile.
+	protected static final int TILE_CENTER = TILE_PIXELS / 2; // For finding the center of a tile.
+	protected static final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
+
 	public static void setDisplay(@Nullable Display display) {
 		if (display == null)
 			displayQuery.clear();

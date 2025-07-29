@@ -504,10 +504,10 @@ public class Renderer extends Game {
 			info.add((Updater.normSpeed * Updater.gamespeed) + " tps");
 
 			info.add("walk spd: " + player.moveSpeed);
-			info.add("X: " + (player.x >> 4) + "-" + (player.x % 16));
-			info.add("Y: " + (player.y >> 4) + "-" + (player.y % 16));
+			info.add("X: " + (player.x >> TILE_SIZE_SHIFT) + "-" + (player.x % TILE_PIXELS));
+			info.add("Y: " + (player.y >> TILE_SIZE_SHIFT) + "-" + (player.y % TILE_PIXELS));
 			if (levels[currentLevel] != null)
-				info.add("Tile: " + levels[currentLevel].getTile(player.x >> 4, player.y >> 4).name);
+				info.add("Tile: " + levels[currentLevel].getTile(player.x >> TILE_SIZE_SHIFT, player.y >> TILE_SIZE_SHIFT).name);
 			if (isMode("minicraft.settings.mode.score")) info.add("Score: " + player.getScore());
 
 			if (levels[currentLevel] != null) {

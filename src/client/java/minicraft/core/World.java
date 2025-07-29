@@ -29,6 +29,7 @@ public class World extends Game {
 	public static final int minLevelDepth, maxLevelDepth;
 
 	static int worldSize = 128; // The size of the world
+	private static final int LEVEL_AMOUNT = 6; // Amount of levels generated.
 
 	static int playerDeadTime; // The time after you die before the dead menu shows up.
 	static int pendingLevelChange; // Used to determine if the player should change levels or not.
@@ -117,7 +118,7 @@ public class World extends Game {
 		Updater.changeTimeOfDay(Updater.Time.Morning); // Resets tickCount; game starts in the day, so that it's nice and bright.
 		gameOver = false;
 
-		levels = new Level[6];
+		levels = new Level[LEVEL_AMOUNT];
 
 		Updater.scoreTime = (Integer) Settings.get("scoretime") * 60 * Updater.normSpeed;
 
@@ -209,8 +210,8 @@ public class World extends Game {
 		Logging.WORLD.trace("Setting level from {} to {}", currentLevel, nextLevel);
 		currentLevel = nextLevel;
 
-		player.x = (player.x >> 4) * 16 + 8; // Sets the player's x coord (to center yourself on the stairs)
-		player.y = (player.y >> 4) * 16 + 8; // Sets the player's y coord (to center yourself on the stairs)
+		player.x = (player.x >> TILE_SIZE_SHIFT) * TILE_PIXELS + TILE_CENTER; // Sets the player's x coord (to center yourself on the stairs)
+		player.y = (player.y >> TILE_SIZE_SHIFT) * TILE_PIXELS + TILE_CENTER; // Sets the player's y coord (to center yourself on the stairs)
 
 		levels[currentLevel].add(player); // Adds the player to the level.
 
