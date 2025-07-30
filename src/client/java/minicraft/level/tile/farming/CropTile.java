@@ -137,8 +137,8 @@ public class CropTile extends FarmTile {
 			((StackableItem) item).count--;
 			Random random = new Random();
 			for (int i = 0; i < 2; ++i) {
-				double x = (double) (xt << TILE_SIZE_SHIFT) + TILE_CENTER + (random.nextGaussian() * 0.5) * TILE_CENTER;
-				double y = (double) (yt << TILE_SIZE_SHIFT) + TILE_CENTER + (random.nextGaussian() * 0.5) * TILE_CENTER;
+				double x = (double) (xt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER + (random.nextGaussian() * 0.5) * Tile.TILE_CENTER;
+				double y = (double) (yt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER + (random.nextGaussian() * 0.5) * Tile.TILE_CENTER;
 				level.add(new Particle((int) x, (int) y, PARTICLE_LIFETIME_MEAN + random.nextInt(21) - PARTICLE_LIFETIME_VARIANCE, particleSprite));
 			}
 			int fertilization = getFertilization(level.getData(xt, yt));
@@ -168,12 +168,12 @@ public class CropTile extends FarmTile {
 		int age = (data >> 3) & maxAge;
 
 		if (seed != null)
-			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 1, Items.get(seed));
+			level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, 1, Items.get(seed));
 
 		if (age == maxAge) {
-			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, random.nextInt(HARVEST_DROP_VARIATION) + MIN_HARVEST_DROPS, Items.get(name));
+			level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, random.nextInt(HARVEST_DROP_VARIATION) + MIN_HARVEST_DROPS, Items.get(name));
 		} else if (seed == null) {
-			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 1, Items.get(name));
+			level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, 1, Items.get(name));
 		}
 
 		if (age == maxAge && entity instanceof Player) {

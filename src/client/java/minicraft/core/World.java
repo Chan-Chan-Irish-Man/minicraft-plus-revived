@@ -4,6 +4,7 @@ import minicraft.core.io.Settings;
 import minicraft.entity.furniture.Bed;
 import minicraft.entity.mob.Player;
 import minicraft.level.Level;
+import minicraft.level.tile.Tile;
 import minicraft.saveload.Load;
 import minicraft.screen.AchievementsDisplay;
 import minicraft.screen.CraftingDisplay;
@@ -210,8 +211,8 @@ public class World extends Game {
 		Logging.WORLD.trace("Setting level from {} to {}", currentLevel, nextLevel);
 		currentLevel = nextLevel;
 
-		player.x = (player.x >> TILE_SIZE_SHIFT) * TILE_PIXELS + TILE_CENTER; // Sets the player's x coord (to center yourself on the stairs)
-		player.y = (player.y >> TILE_SIZE_SHIFT) * TILE_PIXELS + TILE_CENTER; // Sets the player's y coord (to center yourself on the stairs)
+		player.x = (player.x >> Tile.TILE_SIZE_SHIFT) * Tile.TILE_PIXELS + Tile.TILE_CENTER; // Sets the player's x coord (to center yourself on the stairs)
+		player.y = (player.y >> Tile.TILE_SIZE_SHIFT) * Tile.TILE_PIXELS + Tile.TILE_CENTER; // Sets the player's y coord (to center yourself on the stairs)
 
 		levels[currentLevel].add(player); // Adds the player to the level.
 

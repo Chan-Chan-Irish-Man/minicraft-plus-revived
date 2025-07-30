@@ -9,6 +9,7 @@ import minicraft.gfx.SpriteLinker.LinkedSprite;
 import minicraft.item.FurnitureItem;
 import minicraft.item.Item;
 import minicraft.item.PowerGloveItem;
+import minicraft.level.tile.Tile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +72,7 @@ public class Furniture extends Entity {
 	 * Draws the furniture on the screen.
 	 */
 	public void render(Screen screen) {
-		screen.render(x - TILE_CENTER, y - TILE_CENTER, sprite);
+		screen.render(x - Tile.TILE_CENTER, y - Tile.TILE_CENTER, sprite);
 	}
 
 	/**

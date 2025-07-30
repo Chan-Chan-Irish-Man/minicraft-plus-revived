@@ -295,7 +295,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// Ensure chunks generated around player
-		level.loadChunksAround(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		level.loadChunksAround(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 
 		super.tick(); // Ticks Mob.java
 
@@ -347,7 +347,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			questExpanding = 30;
 		}
 
-		Tile onTile = level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT); // Gets the current tile the player is on.
+		Tile onTile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT); // Gets the current tile the player is on.
 		if (onTile == Tiles.get("Stairs Down") || onTile == Tiles.get("Stairs Up")) {
 			if (onStairDelay <= 0) { // When the delay time has passed...
 				World.scheduleLevelChange((onTile == Tiles.get("Stairs Up")) ? 1 : -1); // Decide whether to go up or down.
@@ -617,8 +617,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		((PlayerRideable) ride).stopRiding(this);
 		this.ride = null;
 		if (p != null) {
-			x = p.x * TILE_PIXELS + TILE_CENTER;
-			y = p.y * TILE_PIXELS + TILE_CENTER;
+			x = p.x * Tile.TILE_PIXELS + Tile.TILE_CENTER;
+			y = p.y * Tile.TILE_PIXELS + Tile.TILE_CENTER;
 		} else {
 			p = findAlternativeLandingPoint();
 			x = p.x;
@@ -633,8 +633,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 	private @Nullable Point findNearestLand() {
 		// Tiles nearby
-		int xt = x >> TILE_SIZE_SHIFT;
-		int yt = y >> TILE_SIZE_SHIFT;
+		int xt = x >> Tile.TILE_SIZE_SHIFT;
+		int yt = y >> Tile.TILE_SIZE_SHIFT;
 		if (dir.getX() != 0) { // x-axis
 			// orthogonal to the direction pointing to
 			if (isTileForLand(level, xt, yt - 1))
@@ -673,39 +673,39 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	}
 
 	private Point findAlternativeLandingPoint() {
-		int xt = x >> TILE_SIZE_SHIFT;
-		int yt = y >> TILE_SIZE_SHIFT;
+		int xt = x >> Tile.TILE_SIZE_SHIFT;
+		int yt = y >> Tile.TILE_SIZE_SHIFT;
 		// Right-hand-side or left-hand-side tile
 		switch (dir) {
 			case DOWN:
-				xt = (x - 12) >> TILE_SIZE_SHIFT;
+				xt = (x - 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x - 12, y);
-				xt = (x + 12) >> TILE_SIZE_SHIFT;
+				xt = (x + 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x + 12, y);
 				break;
 			case UP:
-				xt = (x + 12) >> TILE_SIZE_SHIFT;
+				xt = (x + 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x + 12, y);
-				xt = (x - 12) >> TILE_SIZE_SHIFT;
+				xt = (x - 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x - 12, y);
 				break;
 			case LEFT:
-				yt = (y - 12) >> TILE_SIZE_SHIFT;
+				yt = (y - 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y - 12);
-				yt = (y + 12) >> TILE_SIZE_SHIFT;
+				yt = (y + 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y + 12);
 				break;
 			case RIGHT:
-				yt = (y + 12) >> TILE_SIZE_SHIFT;
+				yt = (y + 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y + 12);
-				yt = (y - 12) >> TILE_SIZE_SHIFT;
+				yt = (y - 12) >> Tile.TILE_SIZE_SHIFT;
 				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
 					return new Point(x, y - 12);
 				break;
@@ -852,7 +852,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		x += dir.getX() * INTERACT_DIST;
 		y += dir.getY() * INTERACT_DIST;
 
-		return new Point(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		return new Point(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 	}
 
 	private void goFishing() {
@@ -1004,7 +1004,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		// Renders swimming
 		if (isSwimming() && onFallDelay <= 0 && ride == null) {
 			yo += 4; // y offset is moved up by 4
-			if (level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT) == Tiles.get("water")) {
+			if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("water")) {
 
 				// animation effect
 				if (tickTime / 8 % 2 == 0) {
@@ -1015,7 +1015,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 					screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
 				}
 
-			} else if (level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT) == Tiles.get("lava")) {
+			} else if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("lava")) {
 
 				if (tickTime / 8 % 2 == 0) {
 					screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic
@@ -1030,10 +1030,10 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		// Renders indicator for what tile the item will be placed on
 		if (activeItem instanceof TileItem && !isSwimming()) {
 			Point t = getInteractionTile();
-			screen.render(t.x * TILE_PIXELS, t.y * TILE_PIXELS, 3, 2, 0, hudSheet.getSheet());
-			screen.render(t.x * TILE_PIXELS + TILE_CENTER, t.y * TILE_PIXELS, 3, 2, 1, hudSheet.getSheet());
-			screen.render(t.x * TILE_PIXELS, t.y * TILE_PIXELS + TILE_CENTER, 3, 2, 2, hudSheet.getSheet());
-			screen.render(t.x * TILE_PIXELS + TILE_CENTER, t.y * TILE_CENTER + TILE_PIXELS, 3, 2, 3, hudSheet.getSheet());
+			screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS, 3, 2, 0, hudSheet.getSheet());
+			screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_PIXELS, 3, 2, 1, hudSheet.getSheet());
+			screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS + Tile.TILE_CENTER, 3, 2, 2, hudSheet.getSheet());
+			screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_CENTER + Tile.TILE_PIXELS, 3, 2, 3, hudSheet.getSheet());
 		}
 
 		// Makes the player white if they have just gotten hurt
@@ -1229,8 +1229,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// Set (entity) coordinates of player to the center of the tile.
-		this.x = spawnPos.x * TILE_PIXELS + TILE_CENTER; // conversion from tile coords to entity coords.
-		this.y = spawnPos.y * TILE_PIXELS + TILE_CENTER;
+		this.x = spawnPos.x * Tile.TILE_PIXELS + Tile.TILE_CENTER; // conversion from tile coords to entity coords.
+		this.y = spawnPos.y * Tile.TILE_PIXELS + Tile.TILE_CENTER;
 	}
 
 	/**
@@ -1243,8 +1243,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// Move the player to the spawn point
-		this.x = spawnx * TILE_PIXELS + TILE_CENTER;
-		this.y = spawny * TILE_PIXELS + TILE_CENTER;
+		this.x = spawnx * Tile.TILE_PIXELS + Tile.TILE_CENTER;
+		this.y = spawny * Tile.TILE_PIXELS + Tile.TILE_CENTER;
 	}
 
 	/**

@@ -5,6 +5,7 @@ import minicraft.core.Renderer;
 import minicraft.entity.Entity;
 import minicraft.gfx.Screen;
 import minicraft.screen.SignDisplayMenu;
+import minicraft.level.tile.Tile;
 
 public class SignTileEntity extends Entity {
 	public SignTileEntity() {
@@ -21,8 +22,8 @@ public class SignTileEntity extends Entity {
 
 	@Override
 	public void tick() {
-		int xt = (x >> TILE_SIZE_SHIFT), yt = (y >> TILE_SIZE_SHIFT);
-		if (Game.player.x >> TILE_SIZE_SHIFT == xt && Game.player.y >> TILE_SIZE_SHIFT == yt) {
+		int xt = (x >> Tile.TILE_SIZE_SHIFT), yt = (y >> Tile.TILE_SIZE_SHIFT);
+		if (Game.player.x >> Tile.TILE_SIZE_SHIFT == xt && Game.player.y >> Tile.TILE_SIZE_SHIFT == yt) {
 			if (Renderer.signDisplayMenu == null || Renderer.signDisplayMenu.differsFrom(level.depth, xt, yt)) {
 				Renderer.signDisplayMenu = new SignDisplayMenu(level, xt, yt);
 			}

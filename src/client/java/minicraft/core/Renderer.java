@@ -25,6 +25,7 @@ import minicraft.item.ToolItem;
 import minicraft.item.ToolType;
 import minicraft.item.WateringCanItem;
 import minicraft.level.Level;
+import minicraft.level.tile.Tile;
 import minicraft.screen.LoadingDisplay;
 import minicraft.screen.Menu;
 import minicraft.screen.QuestsDisplay;
@@ -504,10 +505,10 @@ public class Renderer extends Game {
 			info.add((Updater.normSpeed * Updater.gamespeed) + " tps");
 
 			info.add("walk spd: " + player.moveSpeed);
-			info.add("X: " + (player.x >> TILE_SIZE_SHIFT) + "-" + (player.x % TILE_PIXELS));
-			info.add("Y: " + (player.y >> TILE_SIZE_SHIFT) + "-" + (player.y % TILE_PIXELS));
+			info.add("X: " + (player.x >> Tile.TILE_SIZE_SHIFT) + "-" + (player.x % Tile.TILE_PIXELS));
+			info.add("Y: " + (player.y >> Tile.TILE_SIZE_SHIFT) + "-" + (player.y % Tile.TILE_PIXELS));
 			if (levels[currentLevel] != null)
-				info.add("Tile: " + levels[currentLevel].getTile(player.x >> TILE_SIZE_SHIFT, player.y >> TILE_SIZE_SHIFT).name);
+				info.add("Tile: " + levels[currentLevel].getTile(player.x >> Tile.TILE_SIZE_SHIFT, player.y >> Tile.TILE_SIZE_SHIFT).name);
 			if (isMode("minicraft.settings.mode.score")) info.add("Score: " + player.getScore());
 
 			if (levels[currentLevel] != null) {

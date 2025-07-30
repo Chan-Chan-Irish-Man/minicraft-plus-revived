@@ -76,10 +76,10 @@ public class RockTile extends Tile {
 			dropCoal = true;
 		}
 
-		level.add(new SmashParticle(x << TILE_SIZE_SHIFT, y << TILE_SIZE_SHIFT));
+		level.add(new SmashParticle(x << Tile.TILE_SIZE_SHIFT, y << Tile.TILE_SIZE_SHIFT));
 		Sound.play("monsterhurt");
 
-		level.add(new TextParticle("" + dmg, (x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Color.RED));
+		level.add(new TextParticle("" + dmg, (x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, Color.RED));
 		if (damage >= maxHealth) {
 			int stone = 1;
 			if (dropCoal) {
@@ -90,10 +90,10 @@ public class RockTile extends Tile {
 					coal += 1;
 				}
 
-				level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 0, coal, Items.get("Coal"));
+				level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, 0, coal, Items.get("Coal"));
 			}
 
-			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, stone, Items.get("Stone"));
+			level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, stone, Items.get("Stone"));
 			level.setTile(x, y, Tiles.get("Dirt"));
 		} else {
 			level.setData(x, y, damage);

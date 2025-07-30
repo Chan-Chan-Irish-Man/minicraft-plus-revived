@@ -12,6 +12,7 @@ import minicraft.gfx.Font;
 import minicraft.gfx.Screen;
 import minicraft.gfx.SpriteLinker.LinkedSprite;
 import minicraft.item.Items;
+import minicraft.level.tile.Tile;
 import minicraft.screen.AchievementsDisplay;
 
 public class AirWizard extends EnemyMob {
@@ -26,7 +27,7 @@ public class AirWizard extends EnemyMob {
 	private static int LVL = 1;
 	private static int HEALTH = 2000;
 	private static boolean HEALTH_AFFECTED_BY_DIFFICULTY = false;
-	private static int DETECT_RADIUS = TILE_PIXELS * 8; // tile pixel size by amount of tiles
+	private static int DETECT_RADIUS = Tile.TILE_PIXELS * 8; // tile pixel size by amount of tiles
 	private static int LIFETIME = -1; // does not despawn
 	private static int RAND_WALK_DURATION = 10;
 	private static int RAND_WALK_CHANCE = 50;
@@ -95,7 +96,7 @@ public class AirWizard extends EnemyMob {
 		if (player != null && randomWalkTime == 0) { // If there is a player around, and the walking is not random
 			int xd = player.x - x; // The horizontal distance between the player and the air wizard.
 			int yd = player.y - y; // The vertical distance between the player and the air wizard.
-			if (xd * xd + yd * yd < TILE_PIXELS * TILE_PIXELS * 2 * 2) {
+			if (xd * xd + yd * yd < Tile.TILE_PIXELS * Tile.TILE_PIXELS * 2 * 2) {
 				/// Move away from the player if less than 2 blocks away
 
 				this.xmov = 0; // Accelerations
@@ -106,12 +107,12 @@ public class AirWizard extends EnemyMob {
 				if (xd > 0) this.xmov = -1;
 				if (yd < 0) this.ymov = +1;
 				if (yd > 0) this.ymov = -1;
-			} else if (xd * xd + yd * yd > TILE_PIXELS * TILE_PIXELS * 15 * 15) {// 15 squares away
+			} else if (xd * xd + yd * yd > Tile.TILE_PIXELS * Tile.TILE_PIXELS * 15 * 15) {// 15 squares away
 
 				/// Drags the airwizard to the player, maintaining relative position.
 				double hypot = Math.sqrt(xd * xd + yd * yd);
-				int newxd = (int) (xd * Math.sqrt(TILE_PIXELS * TILE_PIXELS * 15 * 15) / hypot);
-				int newyd = (int) (yd * Math.sqrt(TILE_PIXELS * TILE_PIXELS * 15 * 15) / hypot);
+				int newxd = (int) (xd * Math.sqrt(Tile.TILE_PIXELS * Tile.TILE_PIXELS * 15 * 15) / hypot);
+				int newyd = (int) (yd * Math.sqrt(Tile.TILE_PIXELS * Tile.TILE_PIXELS * 15 * 15) / hypot);
 				x = player.x - newxd;
 				y = player.y - newyd;
 			}

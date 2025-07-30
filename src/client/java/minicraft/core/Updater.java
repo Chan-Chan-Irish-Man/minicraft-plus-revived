@@ -288,10 +288,10 @@ public class Updater extends Game {
 						player.moveSpeed--; // -= 0.5D;
 
 					if (input.getMappedKey("F3-u").isClicked()) {
-						levels[currentLevel].setTile(player.x >> TILE_SIZE_SHIFT, player.y >> TILE_SIZE_SHIFT, Tiles.get("Stairs Up"));
+						levels[currentLevel].setTile(player.x >> Tile.TILE_SIZE_SHIFT, player.y >> Tile.TILE_SIZE_SHIFT, Tiles.get("Stairs Up"));
 					}
 					if (input.getMappedKey("F3-d").isClicked()) {
-						levels[currentLevel].setTile(player.x >> TILE_SIZE_SHIFT, player.y >> TILE_SIZE_SHIFT, Tiles.get("Stairs Down"));
+						levels[currentLevel].setTile(player.x >> Tile.TILE_SIZE_SHIFT, player.y >> Tile.TILE_SIZE_SHIFT, Tiles.get("Stairs Down"));
 					}
 				} // End debug only cond.
 			} // End "menu-null" conditional

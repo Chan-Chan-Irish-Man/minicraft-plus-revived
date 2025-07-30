@@ -11,6 +11,7 @@ import minicraft.gfx.Point;
 import minicraft.gfx.Screen;
 import minicraft.gfx.SpriteLinker.LinkedSprite;
 import minicraft.item.Items;
+import minicraft.level.tile.Tile;
 import minicraft.level.tile.Tiles;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Creeper extends EnemyMob {
 	};
 
 	private static final int MAX_FUSE_TIME = 60;
-	private static final int TRIGGER_RADIUS = TILE_PIXELS * 4;
+	private static final int TRIGGER_RADIUS = Tile.TILE_PIXELS * 4;
 	private static final int BLAST_DAMAGE = 50;
 	private static final int HEALTH = 10;
 	private static final int DETECT_DIST = 50;
@@ -81,8 +82,8 @@ public class Creeper extends EnemyMob {
 				Sound.play("explode");
 
 				// Figure out which tile the mob died on
-				int xt = x >> TILE_SIZE_SHIFT;
-				int yt = (y - 2) >> TILE_SIZE_SHIFT;
+				int xt = x >> Tile.TILE_SIZE_SHIFT;
+				int yt = (y - 2) >> Tile.TILE_SIZE_SHIFT;
 
 				// Used for calculations
 				int radius = lvl;
@@ -107,7 +108,7 @@ public class Creeper extends EnemyMob {
 					}
 
 					if (entity == this) continue;
-					Point ePos = new Point(entity.x >> TILE_SIZE_SHIFT, entity.y >> TILE_SIZE_SHIFT);
+					Point ePos = new Point(entity.x >> Tile.TILE_SIZE_SHIFT, entity.y >> Tile.TILE_SIZE_SHIFT);
 					for (Point p : tilePositions) {
 						if (!p.equals(ePos)) continue;
 						if (!level.getTile(p.x, p.y).mayPass(level, p.x, p.y, entity))
@@ -117,7 +118,7 @@ public class Creeper extends EnemyMob {
 				for (Point tilePosition : tilePositions) { // Destroys tiles in range
 					boolean hasSpawner = false;
 					for (Entity spawner : spawners) {
-						if (spawner.x >> TILE_SIZE_SHIFT == tilePosition.x && spawner.y >> TILE_SIZE_SHIFT == tilePosition.y) { // Check if current tile has a spawner on it
+						if (spawner.x >> Tile.TILE_SIZE_SHIFT == tilePosition.x && spawner.y >> Tile.TILE_SIZE_SHIFT == tilePosition.y) { // Check if current tile has a spawner on it
 							hasSpawner = true;
 							break;
 						}

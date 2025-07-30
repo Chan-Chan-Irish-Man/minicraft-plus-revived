@@ -69,8 +69,8 @@ public class Tnt extends Furniture {
 					}
 				}
 
-				int xt = x >> TILE_SIZE_SHIFT;
-				int yt = (y - 2) >> TILE_SIZE_SHIFT;
+				int xt = x >> Tile.TILE_SIZE_SHIFT;
+				int yt = (y - 2) >> Tile.TILE_SIZE_SHIFT;
 
 				// Get the tiles that have been exploded.
 				Tile[] affectedTiles = level.getAreaTiles(xt, yt, 1);

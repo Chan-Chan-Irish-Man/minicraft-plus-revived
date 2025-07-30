@@ -36,14 +36,14 @@ public class CactusTile extends Tile {
 		int damage = level.getData(x, y) + dmg;
 		int cHealth = 10;
 		if (Game.isMode("minicraft.settings.mode.creative")) dmg = damage = cHealth;
-		level.add(new SmashParticle(x << TILE_SIZE_SHIFT, y << TILE_SIZE_SHIFT));
-		level.add(new TextParticle("" + dmg, (x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Color.RED));
+		level.add(new SmashParticle(x << Tile.TILE_SIZE_SHIFT, y << Tile.TILE_SIZE_SHIFT));
+		level.add(new TextParticle("" + dmg, (x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, Color.RED));
 
 		if (damage >= cHealth) {
 			//int count = random.nextInt(2) + 2;
 			level.setTile(x, y, Tiles.get("sand"));
 			Sound.play("monsterhurt");
-			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 2, 4, Items.get("Cactus"));
+			level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, 2, 4, Items.get("Cactus"));
 		} else {
 			level.setData(x, y, damage);
 		}

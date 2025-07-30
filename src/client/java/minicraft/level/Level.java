@@ -84,10 +84,6 @@ public class Level {
 	private final List<Entity> entitiesToAdd = new ArrayList<>(); /// entities that will be added to the level on next tick are stored here. This is for the sake of multithreading optimization. (hopefully)
 	private final List<Entity> entitiesToRemove = new ArrayList<>(); /// entities that will be removed from the level on next tick are stored here. This is for the sake of multithreading optimization. (hopefully)
 
-	protected static final int TILE_PIXELS = 16; // Amount of pixels in a tile.
-	protected static final int TILE_CENTER = TILE_PIXELS / 2; // For finding the center of a tile.
-	protected static final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
-
 	// Creates a sorter for all the entities to be rendered.
 	//private static Comparator<Entity> spriteSorter = Comparator.comparingInt(e -> e.y); // Broken
 	@SuppressWarnings("Convert2Lambda")
@@ -132,7 +128,7 @@ public class Level {
 		int numfound = 0;
 		for (Entity entity : getEntityArray()) {
 			if (c.isAssignableFrom(entity.getClass())) {
-				printLevelLoc(entity.toString(), entity.x >> TILE_SIZE_SHIFT, entity.y >> TILE_SIZE_SHIFT);
+				printLevelLoc(entity.toString(), entity.x >> Tile.TILE_SIZE_SHIFT, entity.y >> Tile.TILE_SIZE_SHIFT);
 				numfound++;
 			}
 		}
@@ -392,15 +388,15 @@ public class Level {
 						}
 					}
 					if (d.x == 0 && d.y == 0) {
-						d.x = (x2 << TILE_SIZE_SHIFT) - TILE_CENTER;
-						d.y = (y2 << TILE_SIZE_SHIFT) - TILE_CENTER;
+						d.x = (x2 << Tile.TILE_SIZE_SHIFT) - Tile.TILE_CENTER;
+						d.y = (y2 << Tile.TILE_SIZE_SHIFT) - Tile.TILE_CENTER;
 					}
 
 					// Target place may not exist a dungeon chest
-					if (!getEntitiesInTiles(d.x >> TILE_SIZE_SHIFT, d.y >> TILE_SIZE_SHIFT, 0, true, DungeonChest.class).isEmpty()) continue;
+					if (!getEntitiesInTiles(d.x >> Tile.TILE_SIZE_SHIFT, d.y >> Tile.TILE_SIZE_SHIFT, 0, true, DungeonChest.class).isEmpty()) continue;
 					// If target place is blocking wall, remove it
-					if (getTile(d.x >> TILE_SIZE_SHIFT, d.y >> TILE_SIZE_SHIFT) == Tiles.get("Obsidian Wall"))
-						setTile(d.x >> TILE_SIZE_SHIFT, d.y >> TILE_SIZE_SHIFT, Tiles.get("Raw Obsidian"));
+					if (getTile(d.x >> Tile.TILE_SIZE_SHIFT, d.y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("Obsidian Wall"))
+						setTile(d.x >> Tile.TILE_SIZE_SHIFT, d.y >> Tile.TILE_SIZE_SHIFT, Tiles.get("Raw Obsidian"));
 
 					add(d);
 					chestCount++;
@@ -550,7 +546,7 @@ public class Level {
 		for (String search : searching) {
 			try {
 				if (Class.forName("minicraft.entity." + search).isAssignableFrom(entity.getClass())) {
-					printLevelLoc(entityMessage + clazz, entity.x >> TILE_SIZE_SHIFT, entity.y >> TILE_SIZE_SHIFT, ": " + entity);
+					printLevelLoc(entityMessage + clazz, entity.x >> Tile.TILE_SIZE_SHIFT, entity.y >> Tile.TILE_SIZE_SHIFT, ": " + entity);
 					break;
 				}
 			} catch (ClassNotFoundException ex) {
@@ -579,17 +575,17 @@ public class Level {
 		do {
 			ranx = x + random.nextInt(11) - 5;
 			rany = y + random.nextInt(11) - 5;
-		} while (ranx >> TILE_SIZE_SHIFT != x >> TILE_SIZE_SHIFT || rany >> TILE_SIZE_SHIFT != y >> TILE_SIZE_SHIFT);
+		} while (ranx >> Tile.TILE_SIZE_SHIFT != x >> Tile.TILE_SIZE_SHIFT || rany >> Tile.TILE_SIZE_SHIFT != y >> Tile.TILE_SIZE_SHIFT);
 		ItemEntity ie = new ItemEntity(i, ranx, rany);
 		add(ie);
 		return ie;
 	}
 
 	public void renderBackground(Screen screen, int xScroll, int yScroll) {
-		int xo = xScroll >> TILE_SIZE_SHIFT; // Latches to the nearest tile coordinate
-		int yo = yScroll >> TILE_SIZE_SHIFT;
-		int w = (Screen.w) >> TILE_SIZE_SHIFT; // There used to be a "+15" as in below method
-		int h = (Screen.h) >> TILE_SIZE_SHIFT;
+		int xo = xScroll >> Tile.TILE_SIZE_SHIFT; // Latches to the nearest tile coordinate
+		int yo = yScroll >> Tile.TILE_SIZE_SHIFT;
+		int w = (Screen.w) >> Tile.TILE_SIZE_SHIFT; // There used to be a "+15" as in below method
+		int h = (Screen.h) >> Tile.TILE_SIZE_SHIFT;
 		screen.setOffset(xScroll, yScroll);
 		for (int y = yo; y <= h + yo; y++) {
 			for (int x = xo; x <= w + xo; x++) {
@@ -600,10 +596,10 @@ public class Level {
 	}
 
 	public void renderSprites(Screen screen, int xScroll, int yScroll) {
-		int xo = xScroll >> TILE_SIZE_SHIFT; // Latches to the nearest tile coordinate
-		int yo = yScroll >> TILE_SIZE_SHIFT;
-		int w = (Screen.w + 15) >> TILE_SIZE_SHIFT;
-		int h = (Screen.h + 15) >> TILE_SIZE_SHIFT;
+		int xo = xScroll >> Tile.TILE_SIZE_SHIFT; // Latches to the nearest tile coordinate
+		int yo = yScroll >> Tile.TILE_SIZE_SHIFT;
+		int w = (Screen.w + 15) >> Tile.TILE_SIZE_SHIFT;
+		int h = (Screen.h + 15) >> Tile.TILE_SIZE_SHIFT;
 
 		screen.setOffset(xScroll, yScroll);
 		sortAndRender(screen, getEntitiesInTiles(xo - 1, yo - 1, xo + w + 1, yo + h + 1));
@@ -612,10 +608,10 @@ public class Level {
 	}
 
 	public void renderLight(Screen screen, int xScroll, int yScroll, int brightness) {
-		int xo = xScroll >> TILE_SIZE_SHIFT;
-		int yo = yScroll >> TILE_SIZE_SHIFT;
-		int w = (Screen.w + 15) >> TILE_SIZE_SHIFT;
-		int h = (Screen.h + 15) >> TILE_SIZE_SHIFT;
+		int xo = xScroll >> Tile.TILE_SIZE_SHIFT;
+		int yo = yScroll >> Tile.TILE_SIZE_SHIFT;
+		int w = (Screen.w + 15) >> Tile.TILE_SIZE_SHIFT;
+		int h = (Screen.h + 15) >> Tile.TILE_SIZE_SHIFT;
 
 		screen.setOffset(xScroll, yScroll);
 
@@ -633,7 +629,7 @@ public class Level {
 				if (x < 0 || y < 0 || x >= this.w || y >= this.h) continue;
 
 				int lr = getTile(x, y).getLightRadius(this, x, y);
-				if (lr > 0) screen.renderLight((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, lr * brightness);
+				if (lr > 0) screen.renderLight((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, lr * brightness);
 			}
 		}
 		screen.setOffset(0, 0);
@@ -704,8 +700,8 @@ public class Level {
 	public void add(Entity entity, int x, int y, boolean tileCoords) {
 		if (entity == null) return;
 		if (tileCoords) {
-			x = (x << TILE_SIZE_SHIFT) + TILE_CENTER;
-			y = (y << TILE_SIZE_SHIFT) + TILE_CENTER;
+			x = (x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER;
+			y = (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER;
 		}
 		entity.setLevel(this, x, y);
 
@@ -734,8 +730,8 @@ public class Level {
 			int lvl = -MyUtils.clamp(player.getLevel().depth, -4, 0);
 			for (int i = 0; i < 30 && !spawned; i++) {
 				int rnd = random.nextInt(100);
-				int nx = (random.nextInt(ChunkManager.CHUNK_SIZE * 2) - ChunkManager.CHUNK_SIZE) * TILE_PIXELS + player.x,
-					ny = (random.nextInt(ChunkManager.CHUNK_SIZE * 2) - ChunkManager.CHUNK_SIZE) * TILE_PIXELS + player.y;
+				int nx = (random.nextInt(ChunkManager.CHUNK_SIZE * 2) - ChunkManager.CHUNK_SIZE) * Tile.TILE_PIXELS + player.x,
+					ny = (random.nextInt(ChunkManager.CHUNK_SIZE * 2) - ChunkManager.CHUNK_SIZE) * Tile.TILE_PIXELS + player.y;
 
 				//System.out.println("trySpawn on level " + depth + " of lvl " + lvl + " mob w/ rand " + rnd + " at tile " + nx + "," + ny);
 
@@ -848,8 +844,8 @@ public class Level {
 	public final List<Entity> getEntitiesInTiles(int xt0, int yt0, int xt1, int yt1, boolean includeGiven, Class<? extends Entity>... entityClasses) {
 		List<Entity> contained = new ArrayList<>();
 		for (Entity e : getEntityArray()) {
-			int xt = e.x >> TILE_SIZE_SHIFT;
-			int yt = e.y >> TILE_SIZE_SHIFT;
+			int xt = e.x >> Tile.TILE_SIZE_SHIFT;
+			int yt = e.y >> Tile.TILE_SIZE_SHIFT;
 
 			// Check if entity is in area.
 			if (xt >= xt0 && xt <= xt1 && yt >= yt0 && yt <= yt1) {
@@ -878,8 +874,8 @@ public class Level {
 	 */
 	public final boolean isEntityOnTile(int x, int y) {
 		for (Entity e : getEntityArray()) {
-			int xt = e.x >> TILE_SIZE_SHIFT;
-			int yt = e.y >> TILE_SIZE_SHIFT;
+			int xt = e.x >> Tile.TILE_SIZE_SHIFT;
+			int yt = e.y >> Tile.TILE_SIZE_SHIFT;
 
 			if (xt == x && yt == y) {
 				return true;
@@ -957,10 +953,10 @@ public class Level {
 	public static int calculateMaxFrontClosestTile(int sgn, int d, int hitBoxLeft, int hitBoxRight, int hitBoxFront,
 	                                               BiPredicate<Integer, Integer> frontTilePassableCheck) {
 		int hitBoxFront1 = hitBoxFront + d; // After maximum movement
-		int hitBoxLeftTile = hitBoxLeft >> TILE_SIZE_SHIFT;
-		int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
-		int hitBoxFrontTile = hitBoxFront >> TILE_SIZE_SHIFT;
-		int hitBoxFrontTile1 = hitBoxFront1 >> TILE_SIZE_SHIFT;
+		int hitBoxLeftTile = hitBoxLeft >> Tile.TILE_SIZE_SHIFT;
+		int hitBoxRightTile = hitBoxRight >> Tile.TILE_SIZE_SHIFT;
+		int hitBoxFrontTile = hitBoxFront >> Tile.TILE_SIZE_SHIFT;
+		int hitBoxFrontTile1 = hitBoxFront1 >> Tile.TILE_SIZE_SHIFT;
 		int maxFrontTile = hitBoxFrontTile1; // Value for full tile movement
 		// Skips the current tile by adding 1.
 		mainLoop:
@@ -974,7 +970,7 @@ public class Level {
 		}
 
 		return hitBoxFront +
-			(sgn > 0 ? Math.min(d, (maxFrontTile << TILE_SIZE_SHIFT) - hitBoxFront + (1 << TILE_SIZE_SHIFT) - 1) : Math.max(d, (maxFrontTile << TILE_SIZE_SHIFT) - hitBoxFront));
+			(sgn > 0 ? Math.min(d, (maxFrontTile << Tile.TILE_SIZE_SHIFT) - hitBoxFront + (1 << Tile.TILE_SIZE_SHIFT) - 1) : Math.max(d, (maxFrontTile << Tile.TILE_SIZE_SHIFT) - hitBoxFront));
 	}
 
 	public Point[] getAreaTilePositions(int x, int y, int r) {
@@ -1059,7 +1055,7 @@ public class Level {
 			if (t instanceof TorchTile)
 				return true;
 		for (Entity e : getEntitiesInRect(e -> e instanceof Lantern, new Rectangle(x, y, 8, 8, Rectangle.CENTER_DIMS))) {
-			int xx = (e.x >> TILE_SIZE_SHIFT) - x, yy = (e.y >> TILE_SIZE_SHIFT) - y, rr = e.getLightRadius() - 1;
+			int xx = (e.x >> Tile.TILE_SIZE_SHIFT) - x, yy = (e.y >> Tile.TILE_SIZE_SHIFT) - y, rr = e.getLightRadius() - 1;
 			if (xx * xx + yy * yy < rr * rr)
 				return true;
 		}
@@ -1084,49 +1080,49 @@ public class Level {
 				}
 
 				Spawner sp = new Spawner(m);
-				int x3 = random.nextInt(TILE_PIXELS * w) / TILE_PIXELS;
-				int y3 = random.nextInt(TILE_PIXELS * h) / TILE_PIXELS;
+				int x3 = random.nextInt(Tile.TILE_PIXELS * w) / Tile.TILE_PIXELS;
+				int y3 = random.nextInt(Tile.TILE_PIXELS * h) / Tile.TILE_PIXELS;
 				if (getTile(x3, y3) == Tiles.get("dirt")) {
 					boolean xaxis2 = random.nextBoolean();
 
 					if (xaxis2) {
 						for (int s2 = x3; s2 < w - s2; s2++) {
 							if (getTile(s2, y3) == Tiles.get("rock")) {
-								sp.x = (s2 << TILE_SIZE_SHIFT) - 24;
-								sp.y = (y3 << TILE_SIZE_SHIFT) - 24;
+								sp.x = (s2 << Tile.TILE_SIZE_SHIFT) - 24;
+								sp.y = (y3 << Tile.TILE_SIZE_SHIFT) - 24;
 							}
 						}
 					} else {
 						for (int s2 = y3; s2 < h - s2; s2++) {
 							if (getTile(x3, s2) == Tiles.get("rock")) {
-								sp.x = x3 * TILE_PIXELS - 24;
-								sp.y = s2 * TILE_PIXELS - 24;
+								sp.x = x3 * Tile.TILE_PIXELS - 24;
+								sp.y = s2 * Tile.TILE_PIXELS - 24;
 							}
 						}
 					}
 
 					if (sp.x == 0 && sp.y == 0) {
-						sp.x = x3 * TILE_PIXELS - TILE_CENTER;
-						sp.y = y3 * TILE_PIXELS - TILE_CENTER;
+						sp.x = x3 * Tile.TILE_PIXELS - Tile.TILE_CENTER;
+						sp.y = y3 * Tile.TILE_PIXELS - Tile.TILE_CENTER;
 					}
 
-					if (getTile(sp.x >> TILE_SIZE_SHIFT, sp.y >> TILE_SIZE_SHIFT) == Tiles.get("rock")) {
-						setTile(sp.x >> TILE_SIZE_SHIFT, sp.y >> TILE_SIZE_SHIFT, Tiles.get("dirt"));
+					if (getTile(sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("rock")) {
+						setTile(sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT, Tiles.get("dirt"));
 					}
 
-					Structure.mobDungeonCenter.draw(this, sp.x >> TILE_SIZE_SHIFT, sp.y >> TILE_SIZE_SHIFT);
+					Structure.mobDungeonCenter.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT);
 
-					if (getTile(sp.x >> TILE_SIZE_SHIFT, (sp.y >> TILE_SIZE_SHIFT) - 4) == Tiles.get("dirt")) {
-						Structure.mobDungeonNorth.draw(this, sp.x >> TILE_SIZE_SHIFT, (sp.y >> TILE_SIZE_SHIFT) - 5);
+					if (getTile(sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) - 4) == Tiles.get("dirt")) {
+						Structure.mobDungeonNorth.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) - 5);
 					}
-					if (getTile(sp.x >> TILE_SIZE_SHIFT, (sp.y >> TILE_SIZE_SHIFT) + 4) == Tiles.get("dirt")) {
-						Structure.mobDungeonSouth.draw(this, sp.x >> TILE_SIZE_SHIFT, (sp.y >> TILE_SIZE_SHIFT) + 5);
+					if (getTile(sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) + 4) == Tiles.get("dirt")) {
+						Structure.mobDungeonSouth.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) + 5);
 					}
-					if (getTile((sp.x >> TILE_SIZE_SHIFT) + 4, sp.y >> TILE_SIZE_SHIFT) == Tiles.get("dirt")) {
-						Structure.mobDungeonEast.draw(this, (sp.x >> TILE_SIZE_SHIFT) + 5, sp.y >> TILE_SIZE_SHIFT);
+					if (getTile((sp.x >> Tile.TILE_SIZE_SHIFT) + 4, sp.y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("dirt")) {
+						Structure.mobDungeonEast.draw(this, (sp.x >> Tile.TILE_SIZE_SHIFT) + 5, sp.y >> Tile.TILE_SIZE_SHIFT);
 					}
-					if (getTile((sp.x >> TILE_SIZE_SHIFT) - 4, sp.y >> TILE_SIZE_SHIFT) == Tiles.get("dirt")) {
-						Structure.mobDungeonWest.draw(this, (sp.x >> TILE_SIZE_SHIFT) - 5, sp.y >> TILE_SIZE_SHIFT);
+					if (getTile((sp.x >> Tile.TILE_SIZE_SHIFT) - 4, sp.y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("dirt")) {
+						Structure.mobDungeonWest.draw(this, (sp.x >> Tile.TILE_SIZE_SHIFT) - 5, sp.y >> Tile.TILE_SIZE_SHIFT);
 					}
 
 					add(sp);
@@ -1137,7 +1133,7 @@ public class Level {
 
 						c.populateInvRandom(random, "minidungeon", chance);
 
-						add(c, sp.x - TILE_PIXELS + rpt * 32, sp.y - TILE_PIXELS);
+						add(c, sp.x - Tile.TILE_PIXELS + rpt * 32, sp.y - Tile.TILE_PIXELS);
 					}
 				}
 			}
@@ -1155,37 +1151,37 @@ public class Level {
 				}
 
 				Spawner sp = new Spawner(m);
-				int x3 = random.nextInt(TILE_PIXELS * w) / TILE_PIXELS;
-				int y3 = random.nextInt(TILE_PIXELS * h) / TILE_PIXELS;
+				int x3 = random.nextInt(Tile.TILE_PIXELS * w) / Tile.TILE_PIXELS;
+				int y3 = random.nextInt(Tile.TILE_PIXELS * h) / Tile.TILE_PIXELS;
 				if (getTile(x3, y3) == Tiles.get("Obsidian")) {
 					boolean xaxis2 = random.nextBoolean();
 
 					if (xaxis2) {
 						for (int s2 = x3; s2 < w - s2; s2++) {
 							if (getTile(s2, y3) == Tiles.get("Obsidian Wall")) {
-								sp.x = s2 * TILE_PIXELS - 24;
-								sp.y = y3 * TILE_PIXELS - 24;
+								sp.x = s2 * Tile.TILE_PIXELS - 24;
+								sp.y = y3 * Tile.TILE_PIXELS - 24;
 							}
 						}
 					} else {
 						for (int s2 = y3; s2 < h - s2; s2++) {
 							if (getTile(x3, s2) == Tiles.get("Obsidian Wall")) {
-								sp.x = x3 * TILE_PIXELS - 24;
-								sp.y = s2 * TILE_PIXELS - 24;
+								sp.x = x3 * Tile.TILE_PIXELS - 24;
+								sp.y = s2 * Tile.TILE_PIXELS - 24;
 							}
 						}
 					}
 
 					if (sp.x == 0 && sp.y == 0) {
-						sp.x = x3 * TILE_PIXELS - TILE_CENTER;
-						sp.y = y3 * TILE_PIXELS - TILE_CENTER;
+						sp.x = x3 * Tile.TILE_PIXELS - Tile.TILE_CENTER;
+						sp.y = y3 * Tile.TILE_PIXELS - Tile.TILE_CENTER;
 					}
 
-					if (getTile(sp.x >> TILE_SIZE_SHIFT, sp.y >> TILE_SIZE_SHIFT) == Tiles.get("Obsidian Wall")) {
-						setTile(sp.x >> TILE_SIZE_SHIFT, sp.y >> TILE_SIZE_SHIFT, Tiles.get("dirt"));
+					if (getTile(sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("Obsidian Wall")) {
+						setTile(sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT, Tiles.get("dirt"));
 					}
 
-					Structure.dungeonSpawner.draw(this, sp.x >> TILE_SIZE_SHIFT, sp.y >> TILE_SIZE_SHIFT);
+					Structure.dungeonSpawner.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT);
 
 					add(sp);
 					for (int rpt = 0; rpt < 2; rpt++) {
@@ -1193,7 +1189,7 @@ public class Level {
 						DungeonChest c = new DungeonChest(random);
 						chestCount++;
 
-						add(c, sp.x - TILE_PIXELS + rpt * 32, sp.y - TILE_PIXELS);
+						add(c, sp.x - Tile.TILE_PIXELS + rpt * 32, sp.y - Tile.TILE_PIXELS);
 					}
 				}
 			}
@@ -1251,7 +1247,7 @@ public class Level {
 						if (hasChest) {
 							Chest c = new Chest();
 							c.populateInvRandom(random, "villagehouse", 1);
-							add(c, (x + random.nextInt(2) + xo) << TILE_SIZE_SHIFT, (y + random.nextInt(2) + yo) << TILE_SIZE_SHIFT);
+							add(c, (x + random.nextInt(2) + xo) << Tile.TILE_SIZE_SHIFT, (y + random.nextInt(2) + yo) << Tile.TILE_SIZE_SHIFT);
 						}
 					}
 

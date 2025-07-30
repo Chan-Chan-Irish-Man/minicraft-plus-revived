@@ -53,14 +53,14 @@ public abstract class Mob extends Entity {
 		if (isRemoved()) return;
 		noActionTime++;
 
-		if (level != null && level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT) == Tiles.get("lava")) // If we are trying to swim in lava
+		if (level != null && level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("lava")) // If we are trying to swim in lava
 			hurt(Tiles.get("lava"), x, y, 4); // Inflict 4 damage to ourselves, sourced from the lava Tile, with the direction as the opposite of ours.
 
 		if (canBurn()) {
 			if (this.burningDuration > 0) {
-				if (level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT) == Tiles.get("water")) this.burningDuration = 0;
+				if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("water")) this.burningDuration = 0;
 				if (this.burningDuration % 10 == 0)
-					level.add(new BurnParticle(x - TILE_CENTER + (random.nextInt(8) - 4), y - TILE_CENTER + (random.nextInt(8) - 4)));
+					level.add(new BurnParticle(x - Tile.TILE_CENTER + (random.nextInt(8) - 4), y - Tile.TILE_CENTER + (random.nextInt(8) - 4)));
 				this.burningDuration--;
 				if (this instanceof Player) {
 					if (this.burningDuration % 70 == 0 && !Renderer.player.potioneffects.containsKey(PotionType.Lava))
@@ -99,9 +99,9 @@ public abstract class Mob extends Entity {
 		if (level == null) return false; // Stopped b/c there's no level to move in!
 
 		@SuppressWarnings("unused")
-		int oldxt = x >> TILE_SIZE_SHIFT;
+		int oldxt = x >> Tile.TILE_SIZE_SHIFT;
 		@SuppressWarnings("unused")
-		int oldyt = y >> TILE_SIZE_SHIFT;
+		int oldyt = y >> Tile.TILE_SIZE_SHIFT;
 
 		// These should return true b/c the mob is still technically moving; these are just to make it move *slower*.
 		if (tickTime % 2 == 0 && (isSwimming() || (!(this instanceof Player) && isWooling())))
@@ -195,7 +195,7 @@ public abstract class Mob extends Entity {
 
 	private boolean isWooling() { // supposed to walk at half speed on wool
 		if (level == null) return false;
-		Tile tile = level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		Tile tile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 		return tile == Tiles.get("white wool");
 	}
 
@@ -205,7 +205,7 @@ public abstract class Mob extends Entity {
 	 */
 	public boolean isLight() {
 		if (level == null) return false;
-		return level.isLight(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		return level.isLight(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 	}
 
 	/**
@@ -214,7 +214,7 @@ public abstract class Mob extends Entity {
 	 */
 	public boolean isSwimming() {
 		if (level == null) return false;
-		Tile tile = level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT); // Get the tile the mob is standing on (at x/16, y/16)
+		Tile tile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT); // Get the tile the mob is standing on (at x/16, y/16)
 		return tile == Tiles.get("water") || tile == Tiles.get("lava"); // Check if the tile is liquid, and return true if so
 	}
 

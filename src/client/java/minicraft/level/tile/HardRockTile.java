@@ -65,14 +65,14 @@ public class HardRockTile extends Tile {
 		int damage = level.getData(x, y) + dmg;
 		int hrHealth = 200;
 		if (Game.isMode("minicraft.settings.mode.creative")) dmg = damage = hrHealth;
-		level.add(new SmashParticle(x << TILE_SIZE_SHIFT, y << TILE_SIZE_SHIFT));
+		level.add(new SmashParticle(x << Tile.TILE_SIZE_SHIFT, y << Tile.TILE_SIZE_SHIFT));
 		Sound.play("monsterhurt");
 
-		level.add(new TextParticle("" + dmg, (x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, Color.RED));
+		level.add(new TextParticle("" + dmg, (x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, Color.RED));
 		if (damage >= hrHealth) {
 			level.setTile(x, y, Tiles.get("dirt"));
-			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 1, 3, Items.get("Stone"));
-			level.dropItem((x << TILE_SIZE_SHIFT) + TILE_CENTER, (y << TILE_SIZE_SHIFT) + TILE_CENTER, 0, 1, Items.get("Coal"));
+			level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, 1, 3, Items.get("Stone"));
+			level.dropItem((x << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (y << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, 0, 1, Items.get("Coal"));
 		} else {
 			level.setData(x, y, damage);
 		}

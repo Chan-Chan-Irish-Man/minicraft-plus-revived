@@ -59,7 +59,7 @@ public class GrassTile extends Tile {
 					level.setTile(xt, yt, Tiles.get("Dirt"));
 					Sound.play("monsterhurt");
 					if (random.nextInt(5) == 0) { // 20% chance to drop Grass seeds
-						level.dropItem((xt << TILE_SIZE_SHIFT) + TILE_CENTER, (yt << TILE_SIZE_SHIFT) + TILE_CENTER, 1, Items.get("Grass Seeds"));
+						level.dropItem((xt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (yt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, 1, Items.get("Grass Seeds"));
 					}
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(
 						new AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.ItemUsedOnTileTriggerConditionHandler.ItemUsedOnTileTriggerConditions(
@@ -73,7 +73,7 @@ public class GrassTile extends Tile {
 					level.setTile(xt, yt, Tiles.get("Farmland"));
 					Sound.play("monsterhurt");
 					if (random.nextInt(5) != 0) { // 80% chance to drop Wheat seeds
-						level.dropItem((xt << TILE_SIZE_SHIFT) + TILE_CENTER, (yt << TILE_SIZE_SHIFT) + TILE_CENTER, Items.get("Wheat Seeds"));
+						level.dropItem((xt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (yt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, Items.get("Wheat Seeds"));
 					}
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(
 						new AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.ItemUsedOnTileTriggerConditionHandler.ItemUsedOnTileTriggerConditions(

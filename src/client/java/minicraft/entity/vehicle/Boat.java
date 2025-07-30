@@ -77,7 +77,7 @@ public class Boat extends Entity implements PlayerRideable {
 	}
 
 	private Tile getCurrentTile() {
-		return level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		return level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 	}
 
 	@Override

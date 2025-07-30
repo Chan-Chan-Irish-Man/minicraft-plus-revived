@@ -28,6 +28,7 @@ import minicraft.item.PotionType;
 import minicraft.item.PowerGloveItem;
 import minicraft.item.ToolItem;
 import minicraft.item.ToolType;
+import minicraft.level.tile.Tile;
 import org.jetbrains.annotations.NotNull;
 import org.tinylog.Logger;
 
@@ -126,7 +127,7 @@ public class Spawner extends Furniture {
 		if (mob instanceof EnemyMob) {
 			if (level.depth >= 0 && Updater.tickCount > Updater.sleepEndTime && Updater.tickCount < Updater.sleepStartTime)
 				return; // Do not spawn if it is on the surface or above and it is under daylight.
-			if (level.isLight(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT))
+			if (level.isLight(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT))
 				return;
 		}
 
@@ -149,7 +150,7 @@ public class Spawner extends Furniture {
 			return;
 		}
 
-		Point pos = new Point(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		Point pos = new Point(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 		Point[] areaPositions = level.getAreaTilePositions(pos.x, pos.y, 1);
 		ArrayList<Point> validPositions = new ArrayList<>();
 		for (Point p : areaPositions)
@@ -160,8 +161,8 @@ public class Spawner extends Furniture {
 
 		Point spawnPos = validPositions.get(random.nextInt(validPositions.size()));
 
-		newmob.x = spawnPos.x << TILE_SIZE_SHIFT;
-		newmob.y = spawnPos.y << TILE_SIZE_SHIFT;
+		newmob.x = spawnPos.x << Tile.TILE_SIZE_SHIFT;
+		newmob.y = spawnPos.y << Tile.TILE_SIZE_SHIFT;
 
 		level.add(newmob);
 		Sound.play("monsterhurt");

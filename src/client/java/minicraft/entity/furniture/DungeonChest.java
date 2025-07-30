@@ -12,6 +12,7 @@ import minicraft.gfx.SpriteLinker.SpriteType;
 import minicraft.item.Item;
 import minicraft.item.Items;
 import minicraft.item.StackableItem;
+import minicraft.level.tile.Tile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +63,7 @@ public class DungeonChest extends Chest {
 				isLocked = false;
 				this.sprite = openSprite; // Set to the unlocked color
 
-				level.add(new SmashParticle(x << TILE_SIZE_SHIFT, y << TILE_SIZE_SHIFT));
+				level.add(new SmashParticle(x << Tile.TILE_SIZE_SHIFT, y << Tile.TILE_SIZE_SHIFT));
 				level.add(new TextParticle(Localization.getLocalized("minicraft.text_particales.key_consumed"), x, y, Color.RED));
 				level.chestCount--;
 

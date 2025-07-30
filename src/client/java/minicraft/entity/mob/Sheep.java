@@ -75,9 +75,9 @@ public class Sheep extends PassiveMob {
 	@Override
 	public void tick() {
 		super.tick();
-		Tile tile = level.getTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT);
+		Tile tile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 		if (tile instanceof GrassTile && random.nextInt(GRAZE_RAND_RANGE) == 0) { // Grazing
-			level.setTile(x >> TILE_SIZE_SHIFT, y >> TILE_SIZE_SHIFT, Tiles.get("dirt"));
+			level.setTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT, Tiles.get("dirt"));
 			cut = false;
 		}
 	}

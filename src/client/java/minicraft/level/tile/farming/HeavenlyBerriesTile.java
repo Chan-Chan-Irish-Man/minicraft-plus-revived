@@ -3,6 +3,7 @@ package minicraft.level.tile.farming;
 import minicraft.gfx.Screen;
 import minicraft.gfx.SpriteLinker;
 import minicraft.level.Level;
+import minicraft.level.tile.Tile;
 import minicraft.level.tile.Tiles;
 
 public class HeavenlyBerriesTile extends CropTile {
@@ -22,6 +23,6 @@ public class HeavenlyBerriesTile extends CropTile {
 		int age = (level.getData(x, y) >> 3) & maxAge;
 		Tiles.get("Farmland").render(screen, level, x, y);
 		int stage = (int) ((float) age / maxAge * 3);
-		screen.render((x << TILE_SIZE_SHIFT), (y << TILE_SIZE_SHIFT), spritStages[stage]);
+		screen.render((x << Tile.TILE_SIZE_SHIFT), (y << Tile.TILE_SIZE_SHIFT), spritStages[stage]);
 	}
 }

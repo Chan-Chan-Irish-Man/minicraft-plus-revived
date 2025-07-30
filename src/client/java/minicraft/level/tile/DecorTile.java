@@ -52,7 +52,7 @@ public class DecorTile extends Tile {
 	@Override
 	public void render(Screen screen, Level level, int x, int y) {
 		super.render(screen, level, x, y);
-		screen.render(x * TILE_PIXELS + 0, y * TILE_PIXELS, sprite.getCurrentFrame().getSprite().spritePixels[0][0]);
+		screen.render(x * Tile.TILE_PIXELS + 0, y * Tile.TILE_PIXELS, sprite.getCurrentFrame().getSprite().spritePixels[0][0]);
 	}
 
 	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {
@@ -81,7 +81,7 @@ public class DecorTile extends Tile {
 							throw new IllegalStateException("Unexpected value: " + thisType);
 					}
 					Sound.play("monsterhurt");
-					level.dropItem((xt << TILE_SIZE_SHIFT) + TILE_CENTER, (yt << TILE_SIZE_SHIFT) + TILE_CENTER, drop);
+					level.dropItem((xt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (yt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, drop);
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(
 						new AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.ItemUsedOnTileTriggerConditionHandler.ItemUsedOnTileTriggerConditions(
 							item, this, data, xt, yt, level.depth));

@@ -57,7 +57,7 @@ public class FloorTile extends Tile {
 							break;
 					}
 					Sound.play("monsterhurt");
-					level.dropItem((xt << TILE_SIZE_SHIFT) + TILE_CENTER, (yt << TILE_SIZE_SHIFT) + TILE_CENTER, drop);
+					level.dropItem((xt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (yt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, drop);
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(
 						new AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.ItemUsedOnTileTriggerConditionHandler.ItemUsedOnTileTriggerConditions(
 							item, this, data, xt, yt, level.depth));

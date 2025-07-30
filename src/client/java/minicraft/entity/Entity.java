@@ -9,6 +9,7 @@ import minicraft.item.Item;
 import minicraft.level.Level;
 import minicraft.network.Network;
 import minicraft.util.Logging;
+import minicraft.level.tile.Tile;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,9 +44,6 @@ public abstract class Entity implements Tickable {
 	private boolean removed; // If the entity is to be removed from the level.
 	protected Level level; // The level that the entity is on.
 	public int col; // Current color.
-	protected static final int TILE_PIXELS = 16; // Amount of pixels in a tile.
-	protected static final int TILE_CENTER = TILE_PIXELS / 2; // For finding the center of a tile.
-	protected static final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
 
 	// Numeric unique identifier for the entity.
 	public int eid;
@@ -187,8 +185,8 @@ public abstract class Entity implements Tickable {
 		if (xd != 0 && moveX(xd)) stopped = false; // Becomes false if horizontal movement was successful.
 		if (yd != 0 && moveY(yd)) stopped = false; // Becomes false if vertical movement was successful.
 		if (!stopped) {
-			int xt = x >> TILE_SIZE_SHIFT; // The x tile coordinate that the entity is standing on.
-			int yt = y >> TILE_SIZE_SHIFT; // The y tile coordinate that the entity is standing on.
+			int xt = x >> Tile.TILE_SIZE_SHIFT; // The x tile coordinate that the entity is standing on.
+			int yt = y >> Tile.TILE_SIZE_SHIFT; // The y tile coordinate that the entity is standing on.
 			level.getTile(xt, yt).steppedOn(level, xt, yt, this); // Calls the steppedOn() method in a tile's class. (used for tiles like sand (footprints) or lava (burning))
 		}
 		return !stopped;
@@ -214,9 +212,9 @@ public abstract class Entity implements Tickable {
 		int maxFront = Level.calculateMaxFrontClosestTile(sgn, d, hitBoxLeft, hitBoxRight, hitBoxFront,
 			(front, horTile) -> level.getTile(front, horTile).mayPass(level, front, horTile, this)); // Maximum position can be reached with front hit box
 		if (maxFront == hitBoxFront) { // Bumping into the facing tile
-			int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
-			int frontTile = (hitBoxFront + sgn) >> TILE_SIZE_SHIFT;
-			for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
+			int hitBoxRightTile = hitBoxRight >> Tile.TILE_SIZE_SHIFT;
+			int frontTile = (hitBoxFront + sgn) >> Tile.TILE_SIZE_SHIFT;
+			for (int horTile = hitBoxLeft >> Tile.TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 				level.getTile(frontTile, horTile).bumpedInto(level, frontTile, horTile, this);
 			}
 			return false; // No movement can be made.
@@ -246,9 +244,9 @@ public abstract class Entity implements Tickable {
 		int maxFront = Level.calculateMaxFrontClosestTile(sgn, d, hitBoxLeft, hitBoxRight, hitBoxFront,
 			(front, horTile) -> level.getTile(horTile, front).mayPass(level, horTile, front, this)); // Maximum position can be reached with front hit box
 		if (maxFront == hitBoxFront) { // Bumping into the facing tile
-			int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
-			int frontTile = (hitBoxFront + sgn) >> TILE_SIZE_SHIFT;
-			for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
+			int hitBoxRightTile = hitBoxRight >> Tile.TILE_SIZE_SHIFT;
+			int frontTile = (hitBoxFront + sgn) >> Tile.TILE_SIZE_SHIFT;
+			for (int horTile = hitBoxLeft >> Tile.TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 				level.getTile(horTile, frontTile).bumpedInto(level, horTile, frontTile, this);
 			}
 			return false; // No movement can be made.
@@ -282,13 +280,13 @@ public abstract class Entity implements Tickable {
 
 		// These lists are named as if the entity has already moved-- it hasn't, though.
 		HashSet<Entity> wasInside = new HashSet<>(level.getEntitiesInRect(getBounds())); // Gets all the entities that are inside this entity (aka: colliding) before moving.
-		int frontTile = hitBoxFront << TILE_SIZE_SHIFT; // The original tile the front boundary hit box staying on
+		int frontTile = hitBoxFront << Tile.TILE_SIZE_SHIFT; // The original tile the front boundary hit box staying on
 		boolean handleSteppedOn = false; // Used together with frontTile
 		for (int front = hitBoxFront; sgn < 0 ? front > maxFront : front < maxFront; front += sgn) {
-			int newFrontTile = (front + sgn) >> TILE_SIZE_SHIFT;
+			int newFrontTile = (front + sgn) >> Tile.TILE_SIZE_SHIFT;
 			if (newFrontTile != frontTile) { // New tile touched
-				int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
-				for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
+				int hitBoxRightTile = hitBoxRight >> Tile.TILE_SIZE_SHIFT;
+				for (int horTile = hitBoxLeft >> Tile.TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 					bumpingHandler.accept(newFrontTile, horTile);
 				}
 				frontTile = newFrontTile;
@@ -311,8 +309,8 @@ public abstract class Entity implements Tickable {
 			if (blocked) break;
 			incrementMove.act(); // Movement successful
 			if (handleSteppedOn) { // When the movement to a new tile successes
-				int hitBoxRightTile = hitBoxRight >> TILE_SIZE_SHIFT;
-				for (int horTile = hitBoxLeft >> TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
+				int hitBoxRightTile = hitBoxRight >> Tile.TILE_SIZE_SHIFT;
+				for (int horTile = hitBoxLeft >> Tile.TILE_SIZE_SHIFT; horTile <= hitBoxRightTile; horTile++) {
 					steppingHandler.accept(frontTile, horTile); // Calls the steppedOn() method in a tile's class. (used for tiles like sand (footprints) or lava (burning))
 				}
 			}
@@ -387,7 +385,7 @@ public abstract class Entity implements Tickable {
 
 		double distance = Math.abs(Math.hypot(x - other.x, y - other.y)); // Calculate the distance between the two entities, in entity coordinates.
 
-		return Math.round(distance) >> TILE_SIZE_SHIFT <= tileRadius; // Compare the distance (converted to tile units) with the specified radius.
+		return Math.round(distance) >> Tile.TILE_SIZE_SHIFT <= tileRadius; // Compare the distance (converted to tile units) with the specified radius.
 	}
 
 	/**
