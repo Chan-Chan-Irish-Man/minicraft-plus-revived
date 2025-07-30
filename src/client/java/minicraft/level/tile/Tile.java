@@ -20,7 +20,7 @@ public abstract class Tile {
 
 	public static final int TILE_PIXELS = 16; // Amount of pixels in a tile.
 	public static final int TILE_CENTER = TILE_PIXELS / 2; // For finding the center of a tile.
-	public static final int TILE_SIZE_SHIFT = 4; // Const for dividing coordinates by 16.
+	public static final int TILE_SIZE_SHIFT = Integer.numberOfTrailingZeros(TILE_PIXELS); // Const for dividing coordinates by 16.
 	/**
 	 * This is used by wall tiles to get what material they're made of.
 	 */

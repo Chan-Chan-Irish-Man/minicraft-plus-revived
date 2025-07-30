@@ -72,7 +72,7 @@ public class WallTile extends Tile {
 			ToolItem tool = (ToolItem) item;
 			if (tool.type == type.getRequiredTool()) {
 				if (level.depth != -3 || type != Material.Obsidian || AirWizard.beaten) {
-					if (player.payStamina(4 - tool.level) && tool.payDurability()) {
+					if (player.payStamina(Player.BASE_STAMINA_USE - tool.level) && tool.payDurability()) {
 						int data = level.getData(xt, yt);
 						hurt(level, xt, yt, tool.getDamage());
 						AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(

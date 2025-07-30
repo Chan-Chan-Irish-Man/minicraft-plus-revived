@@ -133,7 +133,7 @@ public class TreeTile extends Tile {
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
 			if (tool.type == ToolType.Axe) {
-				if (player.payStamina(4 - tool.level) && tool.payDurability()) {
+				if (player.payStamina(Player.BASE_STAMINA_USE - tool.level) && tool.payDurability()) {
 					int data = level.getData(xt, yt);
 					hurt(level, xt, yt, tool.getDamage());
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(

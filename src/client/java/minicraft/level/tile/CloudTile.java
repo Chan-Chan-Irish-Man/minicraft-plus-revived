@@ -30,7 +30,7 @@ public class CloudTile extends Tile {
 		// We don't want the tile to break when attacked with just anything, even in creative mode
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
-			if (tool.type == ToolType.Shovel && player.payStamina(5)) {
+			if (tool.type == ToolType.Shovel && player.payStamina(Player.BASE_STAMINA_USE + 1)) {
 				int data = level.getData(xt, yt);
 				level.setTile(xt, yt, Tiles.get("Infinite Fall")); // Would allow you to shovel cloud, I think.
 				Sound.play("monsterhurt");

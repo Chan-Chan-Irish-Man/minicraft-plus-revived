@@ -33,7 +33,7 @@ public class WoolTile extends Tile {
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
 			if (tool.type == ToolType.Shears) {
-				if (player.payStamina(3 - tool.level) && tool.payDurability()) {
+				if (player.payStamina((Player.BASE_STAMINA_USE - 1) - tool.level) && tool.payDurability()) {
 					int data = level.getData(xt, yt);
 					level.setTile(xt, yt, Tiles.get("Hole"));
 					Sound.play("monsterhurt");

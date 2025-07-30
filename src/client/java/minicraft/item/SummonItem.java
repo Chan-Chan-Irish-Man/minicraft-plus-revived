@@ -53,7 +53,7 @@ public class SummonItem extends StackableItem {
 					if (!AirWizard.active) {
 
 						// Pay stamina
-						if (player.payStamina(2)) {
+						if (player.payStamina(Player.LOW_STAMINA_USE)) {
 							AirWizard aw = new AirWizard();
 							level.add(aw, player.x + 8, player.y + 8, false);
 							Logger.tag("SummonItem").debug("Summoned new Air Wizard");
@@ -83,7 +83,7 @@ public class SummonItem extends StackableItem {
 
 							if (!exists) { // Prevent unintended behaviors
 								// Pay stamina
-								if (player.payStamina(2)) {
+								if (player.payStamina(Player.LOW_STAMINA_USE)) {
 									level.add(new KnightStatue(5000), level.w / 2, level.h / 2, true);
 									Logger.tag("SummonItem").debug("Summoned new Knight Statue");
 									success = true;

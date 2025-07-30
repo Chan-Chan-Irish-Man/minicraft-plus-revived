@@ -53,11 +53,11 @@ public class DoorTile extends Tile {
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
 			if (tool.type == type.getRequiredTool()) {
-				if (player.payStamina(4 - tool.level) && tool.payDurability()) {
+				if (player.payStamina(Player.BASE_STAMINA_USE - tool.level) && tool.payDurability()) {
 					int data = level.getData(xt, yt);
 					level.setTile(xt, yt, Tiles.get((short) (id + 3))); // Will get the corresponding floor tile.
 					Sound.play("monsterhurt");
-					level.dropItem((xt << 4) + 8, (yt << 4) + 8, Items.get(type.name() + " Door"));
+					level.dropItem((xt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, (yt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER, Items.get(type.name() + " Door"));
 					AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.INSTANCE.trigger(
 						new AdvancementElement.AdvancementTrigger.ItemUsedOnTileTrigger.ItemUsedOnTileTriggerConditionHandler.ItemUsedOnTileTriggerConditions(
 							item, this, data, xt, yt, level.depth));

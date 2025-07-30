@@ -113,6 +113,9 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	private int staminaRecharge; // The ticks before charging a bolt of the player's stamina
 	private static final int maxStaminaRecharge = 10; // Cutoff value for staminaRecharge
 	public int staminaRechargeDelay; // The recharge delay ticks when the player uses up their stamina.
+	public static final int LOW_STAMINA_USE = 2; // For payStamina.
+	public static final int BASE_STAMINA_USE = 4;
+	public static final int HIGH_STAMINA_USE = 6;
 
 	private int hungerStamCnt, stamHungerTicks; // Tiers of hunger penalties before losing a burger.
 	private static final int maxHungerTicks = 400; // The cutoff value for stamHungerTicks

@@ -54,7 +54,7 @@ public class RockTile extends Tile {
 	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {
 		if (item instanceof ToolItem) {
 			ToolItem tool = (ToolItem) item;
-			if (tool.type == ToolType.Pickaxe && player.payStamina(5 - tool.level) && tool.payDurability()) {
+			if (tool.type == ToolType.Pickaxe && player.payStamina((Player.BASE_STAMINA_USE + 1) - tool.level) && tool.payDurability()) {
 				int data = level.getData(xt, yt);
 				// Drop coal since we use a pickaxe.
 				dropCoal = true;

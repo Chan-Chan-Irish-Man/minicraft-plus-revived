@@ -31,7 +31,6 @@ public class Boat extends Entity implements PlayerRideable {
 	private static final int SCREEN_RENDER_DIST = 4;
 	private static final int BOAT_DIST = 3;
 	private static final int UNIT_MOVE_DEFAULT = 0;
-	private static final int STAMINA_COST = 1;
 	private static final int SPRITE_INDEX_OFFSET_UP_RIGHT = 2;
 	private static final int PUSH_DELAY_WATER = 2;
 	private static final int PUSH_DELAY_LAVA = 4;
@@ -150,7 +149,7 @@ public class Boat extends Entity implements PlayerRideable {
 		if (this.passenger != passenger) return false;
 
 		if (unitMoveCounter >= STAMINA_COST_TIME) {
-			passenger.payStamina(STAMINA_COST);
+			passenger.payStamina(1);
 			unitMoveCounter -= STAMINA_COST_TIME;
 		}
 
