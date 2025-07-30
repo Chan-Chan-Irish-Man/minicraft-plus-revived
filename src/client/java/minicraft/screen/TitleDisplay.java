@@ -25,7 +25,7 @@ import java.time.Month;
 import java.util.Random;
 
 public class TitleDisplay extends Display {
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	private int rand;
 	private int count = 0; // This and reverse are for the logo; they produce the fade-in/out effect.
@@ -58,7 +58,7 @@ public class TitleDisplay extends Display {
 				),
 				new SelectEntry("minicraft.displays.title.quit", Game::quit)
 			)
-				.setPositioning(new Point(Screen.w / 2, Screen.h * 3 / 5), RelPos.CENTER)
+				.setPositioning(new Point(Screen.W / 2, Screen.H * 3 / 5), RelPos.CENTER)
 				.createMenu()
 		);
 	}
@@ -76,7 +76,7 @@ public class TitleDisplay extends Display {
 		if (time.getMonth() == Month.DECEMBER) {
 			if (time.getDayOfMonth() == 19) rand = 1;
 		} else {
-			rand = random.nextInt(splashes.length - 2) + 2;
+			rand = RANDOM.nextInt(SPLASHES.length - 2) + 2;
 		}
 
 		World.levels = new Level[World.levels.length];
@@ -104,7 +104,7 @@ public class TitleDisplay extends Display {
 
 	@Override
 	public void tick(InputHandler input) {
-		if (input.getMappedKey("F3-r").isClicked()) rand = random.nextInt(splashes.length - 3) + 3;
+		if (input.getMappedKey("F3-r").isClicked()) rand = RANDOM.nextInt(SPLASHES.length - 3) + 3;
 
 		super.tick(input);
 	}
@@ -116,7 +116,7 @@ public class TitleDisplay extends Display {
 		MinicraftImage sheet = Renderer.spriteLinker.getSheet(SpriteType.Gui, "title");
 		int h = sheet.height / 8; // Height of squares (on the spritesheet)
 		int w = sheet.width / 8; // Width of squares (on the spritesheet)
-		int xo = (Screen.w - sheet.width) / 2; // X location of the title
+		int xo = (Screen.W - sheet.width) / 2; // X location of the title
 		int yo = 26 - sheet.height / 2; // Y location of the title
 
 		for (int y = 0; y < h; y++) {
@@ -125,9 +125,9 @@ public class TitleDisplay extends Display {
 			}
 		}
 
-		boolean isblue = splashes[rand].contains("blue");
-		boolean isGreen = splashes[rand].contains("Green");
-		boolean isRed = splashes[rand].contains("Red");
+		boolean isblue = SPLASHES[rand].contains("blue");
+		boolean isGreen = SPLASHES[rand].contains("Green");
+		boolean isRed = SPLASHES[rand].contains("Red");
 
 		if (reverse) {
 			count--;
@@ -141,7 +141,7 @@ public class TitleDisplay extends Display {
 		int bcol = 5 - count / 5; // This number ends up being between 1 and 5, inclusive.
 		int splashColor = isblue ? Color.BLUE : isRed ? Color.RED : isGreen ? Color.GREEN : Color.get(1, bcol * 51, bcol * 51, bcol * 25);
 
-		Font.drawCentered(splashes[rand], screen, (Screen.h / 2) - 44, splashColor);
+		Font.drawCentered(SPLASHES[rand], screen, (Screen.H / 2) - 44, splashColor);
 
 		Font.draw(Localization.getLocalized("minicraft.displays.title.display.version", Game.VERSION), screen, 1, 1, Color.get(1, 51));
 
@@ -150,12 +150,12 @@ public class TitleDisplay extends Display {
 		String selectString = Localization.getLocalized("minicraft.displays.title.display.help.1", Game.input.getMapping("select"));
 		String exitString = Localization.getLocalized("minicraft.displays.title.display.help.2", Game.input.getMapping("exit"));
 
-		Font.drawCentered(upString, screen, Screen.h - 30, Color.DARK_GRAY);
-		Font.drawCentered(selectString, screen, Screen.h - 20, Color.DARK_GRAY);
-		Font.drawCentered(exitString, screen, Screen.h - 10, Color.DARK_GRAY);
+		Font.drawCentered(upString, screen, Screen.H - 30, Color.DARK_GRAY);
+		Font.drawCentered(selectString, screen, Screen.H - 20, Color.DARK_GRAY);
+		Font.drawCentered(exitString, screen, Screen.H - 10, Color.DARK_GRAY);
 	}
 
-	private static final String[] splashes = {
+	private static final String[] SPLASHES = {
 		"Secret Splash!",
 		"Happy birthday Minicraft!",
 		// These two above have id specific functionality. Don't move or remove them.

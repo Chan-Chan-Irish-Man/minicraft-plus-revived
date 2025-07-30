@@ -129,7 +129,7 @@ public class CropTile extends FarmTile {
 		return successful;
 	}
 
-	private static final SpriteLinker.LinkedSprite particleSprite = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "glint");
+	private static final SpriteLinker.LinkedSprite PARTICLE_SPRITE = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "glint");
 
 	@Override
 	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {
@@ -139,7 +139,7 @@ public class CropTile extends FarmTile {
 			for (int i = 0; i < 2; ++i) {
 				double x = (double) (xt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER + (random.nextGaussian() * 0.5) * Tile.TILE_CENTER;
 				double y = (double) (yt << Tile.TILE_SIZE_SHIFT) + Tile.TILE_CENTER + (random.nextGaussian() * 0.5) * Tile.TILE_CENTER;
-				level.add(new Particle((int) x, (int) y, PARTICLE_LIFETIME_MEAN + random.nextInt(21) - PARTICLE_LIFETIME_VARIANCE, particleSprite));
+				level.add(new Particle((int) x, (int) y, PARTICLE_LIFETIME_MEAN + random.nextInt(21) - PARTICLE_LIFETIME_VARIANCE, PARTICLE_SPRITE));
 			}
 			int fertilization = getFertilization(level.getData(xt, yt));
 			if (fertilization < LOWEST_FERT) { // More fertilization, lower the buffer is applied.

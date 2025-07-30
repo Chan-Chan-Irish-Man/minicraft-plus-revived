@@ -29,32 +29,32 @@ public class SignDisplay extends Display {
 	public static final int MAX_ROW_COUNT = 4;
 
 	// TODO make this into an attached attribute of a sign tile.
-	private static final HashMap<Map.Entry<Integer, Point>, List<String>> signTexts = new HashMap<>(); // The lines of signs should be immutable when stored.
+	private static final HashMap<Map.Entry<Integer, Point>, List<String>> SIGN_TEXTS = new HashMap<>(); // The lines of signs should be immutable when stored.
 
 	public static void resetSignTexts() {
-		signTexts.clear();
+		SIGN_TEXTS.clear();
 	}
 
 	public static void loadSignTexts(Map<Map.Entry<Integer, Point>, List<String>> signTexts) {
-		SignDisplay.signTexts.clear();
-		signTexts.forEach((pt, texts) -> SignDisplay.signTexts.put(pt, Collections.unmodifiableList(new ArrayList<>(texts))));
+		SignDisplay.SIGN_TEXTS.clear();
+		signTexts.forEach((pt, texts) -> SignDisplay.SIGN_TEXTS.put(pt, Collections.unmodifiableList(new ArrayList<>(texts))));
 	}
 
 	public static Map<Map.Entry<Integer, Point>, List<String>> getSignTexts() {
-		return new HashMap<>(signTexts);
+		return new HashMap<>(SIGN_TEXTS);
 	}
 
 	public static void updateSign(int levelDepth, int x, int y, List<String> lines) {
-		signTexts.put(new AbstractMap.SimpleImmutableEntry<>(levelDepth, new Point(x, y)), Collections.unmodifiableList(new ArrayList<>(lines)));
+		SIGN_TEXTS.put(new AbstractMap.SimpleImmutableEntry<>(levelDepth, new Point(x, y)), Collections.unmodifiableList(new ArrayList<>(lines)));
 	}
 
 	public static void removeSign(int levelDepth, int x, int y) {
-		if (signTexts.remove(new AbstractMap.SimpleImmutableEntry<>(levelDepth, new Point(x, y))) == null)
+		if (SIGN_TEXTS.remove(new AbstractMap.SimpleImmutableEntry<>(levelDepth, new Point(x, y))) == null)
 			Logging.WORLDNAMED.warn("Sign at ({}, {}) does not exist to be removed.", x, y);
 	}
 
 	public static @Nullable List<String> getSign(int levelDepth, int x, int y) {
-		return signTexts.get(new AbstractMap.SimpleImmutableEntry<>(levelDepth, new Point(x, y)));
+		return SIGN_TEXTS.get(new AbstractMap.SimpleImmutableEntry<>(levelDepth, new Point(x, y)));
 	}
 
 	private final int levelDepth, x, y;
@@ -63,8 +63,8 @@ public class SignDisplay extends Display {
 
 	public SignDisplay(Level level, int x, int y) {
 		super(false, new Menu.Builder(true, 3, RelPos.CENTER)
-			.setPositioning(new Point(Screen.w / 2, 6), RelPos.BOTTOM)
-			.setMenuSize(new Dimension(MinicraftImage.boxWidth * (MAX_TEXT_LENGTH + 2), MinicraftImage.boxWidth * (MAX_ROW_COUNT + 2)))
+			.setPositioning(new Point(Screen.W / 2, 6), RelPos.BOTTOM)
+			.setMenuSize(new Dimension(MinicraftImage.BOX_WIDTH * (MAX_TEXT_LENGTH + 2), MinicraftImage.BOX_WIDTH * (MAX_ROW_COUNT + 2)))
 			.setSelectable(false)
 			.createMenu());
 		this.levelDepth = level.depth;
@@ -146,26 +146,26 @@ public class SignDisplay extends Display {
 
 		public void render(Screen screen) {
 			Rectangle bounds = menus[0].getBounds();
-			int yPos = bounds.getTop() + MinicraftImage.boxWidth; // Upper border
+			int yPos = bounds.getTop() + MinicraftImage.BOX_WIDTH; // Upper border
 			int centeredX = bounds.getLeft() + bounds.getWidth() / 2;
 			for (StringBuilder row : rows) {
 				Font.drawCentered(row.toString(), screen, yPos, Color.WHITE);
 				//noinspection SuspiciousNameCombination
-				yPos += MinicraftImage.boxWidth;
+				yPos += MinicraftImage.BOX_WIDTH;
 			}
 
 			// Cursor rendering
 			if (caretShown) {
-				int lineWidth = rows.get(cursorY).length() * MinicraftImage.boxWidth;
-				int displayX = cursorX * MinicraftImage.boxWidth;
-				int displayY = cursorY * MinicraftImage.boxWidth;
+				int lineWidth = rows.get(cursorY).length() * MinicraftImage.BOX_WIDTH;
+				int displayX = cursorX * MinicraftImage.BOX_WIDTH;
+				int displayY = cursorY * MinicraftImage.BOX_WIDTH;
 				int lineBeginning = centeredX - lineWidth / 2;
 				int cursorX = lineBeginning + displayX;
-				int cursorY = bounds.getTop() + MinicraftImage.boxWidth + displayY;
+				int cursorY = bounds.getTop() + MinicraftImage.BOX_WIDTH + displayY;
 				if (this.cursorX == rows.get(this.cursorY).length()) { // Replace cursor
-					screen.drawLineSpecial(cursorX, cursorY + MinicraftImage.boxWidth - 1, 0, MinicraftImage.boxWidth);
+					screen.drawLineSpecial(cursorX, cursorY + MinicraftImage.BOX_WIDTH - 1, 0, MinicraftImage.BOX_WIDTH);
 				} else { // Insert cursor
-					screen.drawLineSpecial(cursorX, cursorY, 1, MinicraftImage.boxWidth);
+					screen.drawLineSpecial(cursorX, cursorY, 1, MinicraftImage.BOX_WIDTH);
 				}
 			}
 		}

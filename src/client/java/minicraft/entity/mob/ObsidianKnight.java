@@ -20,13 +20,13 @@ import minicraft.level.tile.Tile;
 import org.jetbrains.annotations.Range;
 
 public class ObsidianKnight extends EnemyMob {
-	private static final SpriteLinker.LinkedSprite[][][] armored = new SpriteLinker.LinkedSprite[][][] {
+	private static final SpriteLinker.LinkedSprite[][][] ARMORED = new SpriteLinker.LinkedSprite[][][] {
 		Mob.compileMobSpriteAnimations(0, 0, "obsidian_knight_armored"),
 		Mob.compileMobSpriteAnimations(0, 2, "obsidian_knight_armored"),
 		Mob.compileMobSpriteAnimations(0, 4, "obsidian_knight_armored"),
 		Mob.compileMobSpriteAnimations(0, 6, "obsidian_knight_armored")
 	};
-	private static final SpriteLinker.LinkedSprite[][][] broken = new SpriteLinker.LinkedSprite[][][] {
+	private static final SpriteLinker.LinkedSprite[][][] BROKEN = new SpriteLinker.LinkedSprite[][][] {
 		Mob.compileMobSpriteAnimations(0, 0, "obsidian_knight_broken"),
 		Mob.compileMobSpriteAnimations(0, 2, "obsidian_knight_broken"),
 		Mob.compileMobSpriteAnimations(0, 4, "obsidian_knight_broken"),
@@ -34,7 +34,7 @@ public class ObsidianKnight extends EnemyMob {
 	};
 	public static ObsidianKnight entity = null;
 
-	public static final int maxHealth = 5000;
+	public static final int MAX_HEALTH = 5000;
 	public static boolean beaten = false; // If the boss was beaten
 	public static boolean active = false; // If the boss is active
 
@@ -68,7 +68,7 @@ public class ObsidianKnight extends EnemyMob {
 	 * Constructor for the ObsidianKnight.
 	 */
 	public ObsidianKnight(int health) {
-		super(LVL, armored, maxHealth, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
+		super(LVL, ARMORED, MAX_HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
 
 		Updater.notifyAll(Localization.getLocalized("minicraft.notification.obsidian_knight_awoken")); // On spawn tell player.
 
@@ -96,7 +96,7 @@ public class ObsidianKnight extends EnemyMob {
 		// Achieve phase 2
 		if (health <= 2500 && phase == 0) { // Assume that phase would not turn back to phase 1
 			phase = 1;
-			lvlSprites = broken; // Refreshing phased sprites
+			lvlSprites = BROKEN; // Refreshing phased sprites
 		}
 
 		if (Game.isMode("minicraft.settings.mode.creative")) return; // Should not attack if player is in creative
@@ -123,9 +123,9 @@ public class ObsidianKnight extends EnemyMob {
 				this.dir = Direction.getDirection(dir);
 				attackDelay--;
 				if (attackDelay == 0) {
-					if (health < maxHealth / 2)
+					if (health < MAX_HEALTH / 2)
 						attackLevel = 1; // If at 1000 health (50%) or lower, attackLevel = 1
-					if (health < maxHealth / 10)
+					if (health < MAX_HEALTH / 10)
 						attackLevel = 2; // If at 200 health (10%) or lower, attackLevel = 2
 					attackTime = 120; // attackTime set to 120 (2 seconds, at default 60 ticks/sec)
 				}
@@ -222,7 +222,7 @@ public class ObsidianKnight extends EnemyMob {
 
 		int textcol = Color.get(1, 0, 204, 0);
 		int textcol2 = Color.get(1, 0, 51, 0);
-		int percent = health / (maxHealth / 100);
+		int percent = health / (MAX_HEALTH / 100);
 		String h = percent + "%";
 
 		if (percent < 1) h = "1%";

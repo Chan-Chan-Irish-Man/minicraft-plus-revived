@@ -19,7 +19,7 @@ public class LinkEntry extends SelectEntry {
 	private static Desktop desktop = null;
 	private static boolean canBrowse = false;
 
-	private static final String openMsg = "minicraft.display.gui.link_opening";
+	private static final String OPEN_MSG = "minicraft.display.gui.link_opening";
 
 	private final int color;
 
@@ -55,7 +55,7 @@ public class LinkEntry extends SelectEntry {
 				// try to open the download link directly from the browser.
 				try {
 					URI uri = URI.create(url);
-					Game.setDisplay(new TempDisplay(3000, false, true, new Menu.Builder(true, 0, RelPos.CENTER, new StringEntry(Localization.getLocalized(openMsg))).createMenu()));
+					Game.setDisplay(new TempDisplay(3000, false, true, new Menu.Builder(true, 0, RelPos.CENTER, new StringEntry(Localization.getLocalized(OPEN_MSG))).createMenu()));
 					desktop.browse(uri);
 				} catch (IOException e) {
 					Logger.tag("Network").error("Could not parse LinkEntry url \"" + url + "\" into valid URI:");

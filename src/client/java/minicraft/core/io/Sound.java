@@ -26,13 +26,13 @@ import java.util.Optional;
 
 public class Sound {
 	// Creates sounds from their respective files
-	private static final HashMap<String, Sound> sounds = new HashMap<>();
-	private static final LinkedList<AudioPointer> pointers = new LinkedList<>();
+	private static final HashMap<String, Sound> SOUNDS = new HashMap<>();
+	private static final LinkedList<AudioPointer> POINTERS = new LinkedList<>();
 	private static final AudioFormat STANDARD_FORMAT =
 		new AudioFormat(44100, 16, 2, true, true);
 	private static final int MAX_BUFFER_SIZE = 4096;
-	private static final SourceDataLine dataLine;
-	private static final int internalBufferSize;
+	private static final SourceDataLine DATA_LINE;
+	private static final int INTERNAL_BUFFER_SIZE;
 
 	/*
 	 * Only 2/16/44100 and 1/16/44100 PCM_SIGNED are supported.
@@ -40,10 +40,10 @@ public class Sound {
 
 	static {
 		try {
-			dataLine = AudioSystem.getSourceDataLine(STANDARD_FORMAT);
-			dataLine.open();
+			DATA_LINE = AudioSystem.getSourceDataLine(STANDARD_FORMAT);
+			DATA_LINE.open();
 			// Assume DirectAudioDevice is used
-			internalBufferSize = ((int) (STANDARD_FORMAT.getFrameRate() / 2)) * STANDARD_FORMAT.getFrameSize();
+			INTERNAL_BUFFER_SIZE = ((int) (STANDARD_FORMAT.getFrameRate() / 2)) * STANDARD_FORMAT.getFrameSize();
 		} catch (LineUnavailableException e) {
 			throw new RuntimeException(e);
 		}
@@ -65,7 +65,7 @@ public class Sound {
 	}
 
 	public static void resetSounds() {
-		sounds.clear();
+		SOUNDS.clear();
 	}
 
 	public static void loadSound(String key, InputStream in, String pack) {
@@ -134,7 +134,7 @@ public class Sound {
 				raw1 = raw0;
 			}
 
-			sounds.put(key, new Sound(raw1));
+			SOUNDS.put(key, new Sound(raw1));
 		} catch (UnsupportedAudioFileException | IOException e) {
 			CrashHandler.errorHandle(e, new CrashHandler.ErrorInfo("Audio Could not Load", CrashHandler.ErrorInfo.ErrorType.REPORT,
 				String.format("Could not load audio: %s in pack: %s", key, pack)));
@@ -146,14 +146,14 @@ public class Sound {
 	 */
 	@Nullable
 	public static Sound getSound(String key) {
-		return sounds.get(key);
+		return SOUNDS.get(key);
 	}
 
 	/**
 	 * This method does safe check for {@link #play()}.
 	 */
 	public static void play(String key) {
-		Sound sound = sounds.get(key);
+		Sound sound = SOUNDS.get(key);
 		if (sound != null) sound.play();
 	}
 
@@ -161,17 +161,17 @@ public class Sound {
 	 * This method does safe check for {@link #loop(int)}.
 	 */
 	public static void loop(String key, int count) {
-		Sound sound = sounds.get(key);
+		Sound sound = SOUNDS.get(key);
 		if (sound != null) sound.loop(count);
 	}
 
 	public static void tick() {
-		dataLine.start();
+		DATA_LINE.start();
 		// internalBufferSize - dataLine.available() == used buffer
 		// Proceed data and then buffer into the data line.
 		// For 2/16/44100, 2940 bytes would be proceeded per tick.
-		if (internalBufferSize - dataLine.available() > MAX_BUFFER_SIZE) return;
-		int available = Math.min(dataLine.available(), MAX_BUFFER_SIZE) / 2; // in 16bit (short)
+		if (INTERNAL_BUFFER_SIZE - DATA_LINE.available() > MAX_BUFFER_SIZE) return;
+		int available = Math.min(DATA_LINE.available(), MAX_BUFFER_SIZE) / 2; // in 16bit (short)
 		if (available <= 0) return; // Skips tick if buffer is large causing latency
 		byte[] buf = new byte[available * 2];
 		short[] bufShort = new short[available];
@@ -206,7 +206,7 @@ public class Sound {
 			int n = 0;
 			int sum = 0;
 			double factor = 1;
-			for (Iterator<AudioPointer> iterator = pointers.iterator(); iterator.hasNext(); ) {
+			for (Iterator<AudioPointer> iterator = POINTERS.iterator(); iterator.hasNext(); ) {
 				AudioPointer pointer = iterator.next();
 				Optional<Short> d = pointer.getData();
 				if (!d.isPresent()) iterator.remove();
@@ -234,12 +234,12 @@ public class Sound {
 		}
 
 		ByteBuffer.wrap(buf).asShortBuffer().put(bufShort);
-		dataLine.write(buf, 0, buf.length);
+		DATA_LINE.write(buf, 0, buf.length);
 	}
 
 	public void play() {
 		if (!(boolean) Settings.get("sound")) return;
-		pointers.add(new AudioPointer());
+		POINTERS.add(new AudioPointer());
 	}
 
 	/** @deprecated no longer supported, but reserved for future implementation. */

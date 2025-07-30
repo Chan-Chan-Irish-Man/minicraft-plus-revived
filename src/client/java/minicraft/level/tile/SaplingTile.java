@@ -9,13 +9,13 @@ import minicraft.gfx.SpriteLinker.SpriteType;
 import minicraft.level.Level;
 
 public class SaplingTile extends Tile {
-	private static final SpriteAnimation sprite = new SpriteAnimation(SpriteType.Tile, "sapling");
+	private static final SpriteAnimation SPRITE = new SpriteAnimation(SpriteType.Tile, "sapling");
 
 	private Tile onType;
 	private Tile growsTo;
 
 	protected SaplingTile(String name, Tile onType, Tile growsTo) {
-		super(name, sprite);
+		super(name, SPRITE);
 		this.onType = onType;
 		this.growsTo = growsTo;
 		maySpawn = true;
@@ -38,7 +38,7 @@ public class SaplingTile extends Tile {
 
 	public void render(Screen screen, Level level, int x, int y) {
 		onType.render(screen, level, x, y);
-		sprite.render(screen, level, x, y);
+		SPRITE.render(screen, level, x, y);
 	}
 
 	public boolean tick(Level level, int x, int y) {

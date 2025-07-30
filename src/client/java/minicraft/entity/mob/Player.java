@@ -67,28 +67,28 @@ import java.util.List;
 
 public class Player extends Mob implements ItemHolder, ClientTickable {
 	protected InputHandler input;
-	private static final int playerHurtTime = 30;
+	private static final int PLAYER_HURT_TIME = 30;
 	public static final int INTERACT_DIST = 12;
 	private static final int ATTACK_DIST = 20;
 
-	private static final int mtm = 300; // Time given to increase multiplier before it goes back to 1.
+	private static final int MULTIPLIER_TIME = 300; // Time given to increase multiplier before it goes back to 1.
 	public static final int MAX_MULTIPLIER = 50; // Maximum score multiplier.
 
 	public double moveSpeed = 1; // The number of coordinate squares to move; each tile is 16x16.
 	private int score; // The player's score
 
-	private int multipliertime = mtm; // Time left on the current multiplier.
+	private int multipliertime = MULTIPLIER_TIME; // Time left on the current multiplier.
 	private int multiplier = 1; // Score multiplier
 
 	// These 2 ints are ints saved from the first spawn - this way the spawn pos is always saved.
 	public int spawnx = 0, spawny = 0; // These are stored as tile coordinates, not entity coordinates.
 
 	// The maximum stats that the player can have.
-	public static final int maxStat = 10;
-	public static final int maxHealth = 30, maxStamina = maxStat, maxHunger = maxStat;
+	public static final int MAX_STAT = 10;
+	public static final int MAX_HEALTH = 30, MAX_STAMINA = MAX_STAT, MAX_HUNGER = MAX_STAT;
 	public static int extraHealth = 0;
 	public static int baseHealth = 10;
-	public static final int maxArmor = 100;
+	public static final int MAX_ARMOR = 100;
 
 	public static LinkedSprite[][] sprites;
 	public static LinkedSprite[][] carrySprites;
@@ -111,19 +111,19 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	public ArmorItem curArmor; // The color/type of armor to be displayed.
 
 	private int staminaRecharge; // The ticks before charging a bolt of the player's stamina
-	private static final int maxStaminaRecharge = 10; // Cutoff value for staminaRecharge
+	private static final int MAX_STAMINA_RECHARGE = 10; // Cutoff value for staminaRecharge
 	public int staminaRechargeDelay; // The recharge delay ticks when the player uses up their stamina.
 	public static final int LOW_STAMINA_USE = 2; // For payStamina.
 	public static final int BASE_STAMINA_USE = 4;
 	public static final int HIGH_STAMINA_USE = 6;
 
 	private int hungerStamCnt, stamHungerTicks; // Tiers of hunger penalties before losing a burger.
-	private static final int maxHungerTicks = 400; // The cutoff value for stamHungerTicks
-	private static final int[] maxHungerStams = {10, 7, 5}; // TungerStamCnt required to lose a burger.
-	private static final int[] hungerTickCount = {120, 30, 10}; // Ticks before decrementing stamHungerTicks.
-	private static final int[] hungerStepCount = {8, 3, 1}; // Steps before decrementing stamHungerTicks.
-	private static final int[] minStarveHealth = {5, 3, 0}; // Min hearts required for hunger to hurt you.
-	private static final int maxRideStaminaTick = 180;
+	private static final int MAX_HUNGER_TICKS = 400; // The cutoff value for stamHungerTicks
+	private static final int[] MAX_HUNGER_STAMS = {10, 7, 5}; // HungerStamCnt required to lose a burger.
+	private static final int[] HUNGER_TICK_COUNT = {120, 30, 10}; // Ticks before decrementing stamHungerTicks.
+	private static final int[] HUNGER_STEP_COUNT = {8, 3, 1}; // Steps before decrementing stamHungerTicks.
+	private static final int[] MIN_STARVE_HEALTH = {5, 3, 0}; // Min hearts required for hunger to hurt you.
+	private static final int MAX_RIDE_STAMINA_TICK = 180;
 	private int stepCount; // Used to penalize hunger for movement.
 	private int rideStaminaTick;
 	private int hungerChargeDelay; // The delay between each time the hunger bar increases your health
@@ -210,11 +210,11 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		armor = 0;
 		curArmor = null;
 		armorDamageBuffer = 0;
-		stamina = maxStamina;
-		hunger = maxHunger;
+		stamina = MAX_STAMINA;
+		hunger = MAX_HUNGER;
 
-		hungerStamCnt = maxHungerStams[Settings.getIdx("diff")];
-		stamHungerTicks = maxHungerTicks;
+		hungerStamCnt = MAX_HUNGER_STAMS[Settings.getIdx("diff")];
+		stamHungerTicks = MAX_HUNGER_TICKS;
 
 		if (previousInstance != null) {
 			spawnx = previousInstance.spawnx;
@@ -232,13 +232,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 	void resetMultiplier() {
 		multiplier = 1;
-		multipliertime = mtm;
+		multipliertime = MULTIPLIER_TIME;
 	}
 
 	public void addMultiplier(int value) {
 		if (!Game.isMode("minicraft.settings.mode.score")) return;
 		multiplier = Math.min(MAX_MULTIPLIER, multiplier + value);
-		multipliertime = Math.max(multipliertime, mtm - 5);
+		multipliertime = Math.max(multipliertime, MULTIPLIER_TIME - 5);
 	}
 
 	public void tickMultiplier() {
@@ -304,8 +304,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		tickMultiplier();
 
-		if ((baseHealth + extraHealth) > maxHealth) {
-			extraHealth = maxHealth - 10;
+		if ((baseHealth + extraHealth) > MAX_HEALTH) {
+			extraHealth = MAX_HEALTH - 10;
 			Logging.PLAYER.warn("Current Max Health is greater than Max Health, downgrading.");
 		}
 
@@ -372,8 +372,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		if (Game.isMode("minicraft.settings.mode.creative")) {
 			// Prevent stamina/hunger decay in creative mode.
-			stamina = maxStamina;
-			hunger = maxHunger;
+			stamina = MAX_STAMINA;
+			hunger = MAX_HUNGER;
 		}
 
 		// Remember: staminaRechargeDelay is a penalty delay for when the player uses up all their stamina.
@@ -382,7 +382,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			staminaRechargeDelay = 40; // Delay before resuming adding to stamina.
 		}
 
-		if (staminaRechargeDelay > 0 && stamina < maxStamina) staminaRechargeDelay--;
+		if (staminaRechargeDelay > 0 && stamina < MAX_STAMINA) staminaRechargeDelay--;
 
 		if (staminaRechargeDelay == 0) {
 			staminaRecharge++; // Ticks since last recharge, accounting for the time potion effect.
@@ -393,9 +393,9 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				staminaRecharge = 0; // Don't recharge stamina while rowing the boat.
 
 			// Recharge a bolt for each multiple of maxStaminaRecharge.
-			while (staminaRecharge > maxStaminaRecharge) {
-				staminaRecharge -= maxStaminaRecharge;
-				if (stamina < maxStamina) stamina++; // Recharge one stamina bolt per "charge".
+			while (staminaRecharge > MAX_STAMINA_RECHARGE) {
+				staminaRecharge -= MAX_STAMINA_RECHARGE;
+				if (stamina < MAX_STAMINA) stamina++; // Recharge one stamina bolt per "charge".
 			}
 		}
 
@@ -403,7 +403,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		if (hunger < 0) hunger = 0; // Error correction
 
-		if (stamina < maxStamina) {
+		if (stamina < MAX_STAMINA) {
 			stamHungerTicks -= diffIdx; // Affect hunger if not at full stamina; this is 2 levels away from a hunger "burger".
 			if (stamina == 0) stamHungerTicks -= diffIdx; // Double effect if no stamina at all.
 		}
@@ -415,28 +415,28 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				if (hunger == 0) stamHungerTicks -= diffIdx; // Further penalty if at full hunger
 			}
 
-			if (Updater.tickCount % Player.hungerTickCount[diffIdx] == 0)
+			if (Updater.tickCount % Player.HUNGER_TICK_COUNT[diffIdx] == 0)
 				stamHungerTicks--; // hunger due to time.
 
-			if (stepCount >= Player.hungerStepCount[diffIdx]) {
+			if (stepCount >= Player.HUNGER_STEP_COUNT[diffIdx]) {
 				stamHungerTicks--; // hunger due to exercise.
 				stepCount = 0; // reset.
 			}
 
 			if (stamHungerTicks <= 0) {
-				stamHungerTicks += maxHungerTicks; // Reset stamHungerTicks
+				stamHungerTicks += MAX_HUNGER_TICKS; // Reset stamHungerTicks
 				hungerStamCnt--; // Enter 1 level away from burger.
 			}
 
 			while (hungerStamCnt <= 0) {
 				hunger--; // Reached burger level.
-				hungerStamCnt += maxHungerStams[diffIdx];
+				hungerStamCnt += MAX_HUNGER_STAMS[diffIdx];
 			}
 
 			/// System that heals you depending on your hunger
-			if (health < (baseHealth + extraHealth) && hunger > maxHunger / 2) {
+			if (health < (baseHealth + extraHealth) && hunger > MAX_HUNGER / 2) {
 				hungerChargeDelay++;
-				if (hungerChargeDelay > 20 * Math.pow(maxHunger - hunger + 2, 2)) {
+				if (hungerChargeDelay > 20 * Math.pow(MAX_HUNGER - hunger + 2, 2)) {
 					health++;
 					hungerChargeDelay = 0;
 				}
@@ -446,7 +446,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				hungerStarveDelay = 120;
 			}
 
-			if (hunger == 0 && health > minStarveHealth[diffIdx]) {
+			if (hunger == 0 && health > MIN_STARVE_HEALTH[diffIdx]) {
 				if (hungerStarveDelay > 0) hungerStarveDelay--;
 				if (hungerStarveDelay == 0) {
 					directHurt(1, Direction.NONE); // Do 1 damage to the player
@@ -550,7 +550,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 			if (Game.getDisplay() == null) {
 				if (input.inputPressed("craft") && !use()) {
-					Game.setDisplay(new CraftingDisplay(Recipes.craftRecipes, "minicraft.displays.crafting", this, true));
+					Game.setDisplay(new CraftingDisplay(Recipes.CRAFT_RECIPES, "minicraft.displays.crafting", this, true));
 					return;
 				} else if (input.inputPressed("menu") && !use()) { // !use() = no furniture in front of the player; this prevents player inventory from opening (will open furniture inventory instead)
 					Game.setDisplay(new PlayerInvDisplay(this));
@@ -866,13 +866,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		// Figure out which table to roll for
 		List<String> data = null;
 		if (fcatch > FishingRodItem.getChance(0, fishingLevel)) {
-			data = FishingData.fishData;
+			data = FishingData.FISH_DATA;
 		} else if (fcatch > FishingRodItem.getChance(1, fishingLevel)) {
-			data = FishingData.junkData;
+			data = FishingData.JUNK_DATA;
 		} else if (fcatch > FishingRodItem.getChance(2, fishingLevel)) {
-			data = FishingData.toolData;
+			data = FishingData.TOOL_DATA;
 		} else if (fcatch >= FishingRodItem.getChance(3, fishingLevel)) {
-			data = FishingData.rareData;
+			data = FishingData.RARE_DATA;
 		}
 
 		if (data != null) { // If you've caught something
@@ -1040,7 +1040,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// Makes the player white if they have just gotten hurt
-		if (hurtTime > playerHurtTime - 10) {
+		if (hurtTime > PLAYER_HURT_TIME - 10) {
 			col = Color.WHITE; // Make the sprite white.
 		}
 
@@ -1356,7 +1356,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		Sound.play("playerhurt");
-		hurtTime = playerHurtTime;
+		hurtTime = PLAYER_HURT_TIME;
 	}
 
 	/**
@@ -1379,7 +1379,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		Sound.play("playerhurt");
-		hurtTime = playerHurtTime;
+		hurtTime = PLAYER_HURT_TIME;
 	}
 
 	@Override

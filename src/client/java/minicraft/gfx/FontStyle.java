@@ -37,7 +37,7 @@ public class FontStyle {
 		this.mainColor = mainColor;
 		shadowColor = Color.get(-1, -1);
 		shadowType = "";
-		anchor = new Point(Screen.w / 2, Screen.h / 2);
+		anchor = new Point(Screen.W / 2, Screen.H / 2);
 
 		/// By default, the styling is set so as to center the text in the middle of the screen, with no shadow.
 	}

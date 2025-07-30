@@ -93,15 +93,15 @@ public class ResourcePackDisplay extends Display {
 	 */
 
 
-	private static final ArrayList<ResourcePack> resourcePacks = new ArrayList<>(); // List of all packs, in order of loading priority
+	private static final ArrayList<ResourcePack> RESOURCE_PACKS = new ArrayList<>(); // List of all packs, in order of loading priority
 	private static final File FOLDER_LOCATION = new File(FileHandler.gameDir + "/resourcepacks");
 	@SuppressWarnings("unused")
 	private static final int VERSION = 1;
 
-	private static final ResourcePack defaultPack; // Used to check if the resource pack default.
-	private static final MinicraftImage defaultLogo;
+	private static final ResourcePack DEFAULT_PACK; // Used to check if the resource pack default.
+	private static final MinicraftImage DEFAULT_LOGO;
 
-	private static final int padding = 10;
+	private static final int PADDING = 10;
 
 	private WatcherThread fileWatcher;
 	private ArrayList<ListEntry> entries = new ArrayList<>(), toggleIndicators = new ArrayList<>();
@@ -120,13 +120,13 @@ public class ResourcePackDisplay extends Display {
 
 		// Default resources
 		try {
-			defaultPack = Objects.requireNonNull(
+			DEFAULT_PACK = Objects.requireNonNull(
 				loadPackFromStream(defaultPackURL, defaultPackPath.resolve("pack.json").toUri().toURL().openStream(), "Default")
 			);
-			defaultPack.enable();
-			defaultPack.lock();
-			resourcePacks.add(defaultPack);
-			defaultLogo = MinicraftImage.createDefaultCompatible(ImageIO.read(Objects.requireNonNull(ResourcePackDisplay.class.getResourceAsStream("/resources/default_pack.png"))));
+			DEFAULT_PACK.enable();
+			DEFAULT_PACK.lock();
+			RESOURCE_PACKS.add(DEFAULT_PACK);
+			DEFAULT_LOGO = MinicraftImage.createDefaultCompatible(ImageIO.read(Objects.requireNonNull(ResourcePackDisplay.class.getResourceAsStream("/resources/default_pack.png"))));
 		} catch (IOException e) {
 			CrashHandler.crashHandle(e);
 			throw new UncheckedIOException(e);
@@ -156,8 +156,8 @@ public class ResourcePackDisplay extends Display {
 
 		selection = 1;
 
-		if (menus[1].getBounds().getLeft() - menus[0].getBounds().getRight() < padding)
-			menus[1].translate(menus[0].getBounds().getRight() - menus[1].getBounds().getLeft() + padding, 0);
+		if (menus[1].getBounds().getLeft() - menus[0].getBounds().getRight() < PADDING)
+			menus[1].translate(menus[0].getBounds().getRight() - menus[1].getBounds().getLeft() + PADDING, 0);
 
 		fileWatcher = new WatcherThread();
 	}
@@ -167,8 +167,8 @@ public class ResourcePackDisplay extends Display {
 		super.onSelectionChange(oldSel, newSel);
 		if (oldSel == newSel)
 			return; // this also serves as a protection against access to menus[0] when such may not exist.
-		if (menus[1].getBounds().getLeft() - menus[0].getBounds().getRight() < padding)
-			menus[1].translate(menus[0].getBounds().getRight() - menus[1].getBounds().getLeft() + padding, 0);
+		if (menus[1].getBounds().getLeft() - menus[0].getBounds().getRight() < PADDING)
+			menus[1].translate(menus[0].getBounds().getRight() - menus[1].getBounds().getLeft() + PADDING, 0);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class ResourcePackDisplay extends Display {
 		// toggleIndicators just indicate whether a pack is enabled
 		entries.clear();
 		toggleIndicators.clear();
-		for (ResourcePack pack : resourcePacks) { // List all available resource packs
+		for (ResourcePack pack : RESOURCE_PACKS) { // List all available resource packs
 			entries.add(new SelectEntry(pack.name, () -> { pack.toggle(); changed = true; }, false));
 			toggleIndicators.add(new SelectEntry("✓", () -> {}, false) {
 				@Override
@@ -190,7 +190,7 @@ public class ResourcePackDisplay extends Display {
 
 				@Override
 				public int getColor(boolean isSelected) {
-					if(pack == defaultPack) return COL_UNSLCT;
+					if(pack == DEFAULT_PACK) return COL_UNSLCT;
 					else return COL_SLCT;
 				}
 			});
@@ -293,11 +293,11 @@ public class ResourcePackDisplay extends Display {
 	public void tick(InputHandler input) {
 		// Overrides the default tick handler.
 		if (input.getMappedKey("cursor-right").isClicked()) { // Move the selected pack down.
-			if (menus[1].getSelection() < resourcePacks.size() - 2) { // Only if it has space to move down (and stay above default)
+			if (menus[1].getSelection() < RESOURCE_PACKS.size() - 2) { // Only if it has space to move down (and stay above default)
 				int i = menus[1].getSelection();
-				ResourcePack swap = resourcePacks.get(i + 1);
-				resourcePacks.set(i + 1, resourcePacks.get(i));
-				resourcePacks.set(i, swap);
+				ResourcePack swap = RESOURCE_PACKS.get(i + 1);
+				RESOURCE_PACKS.set(i + 1, RESOURCE_PACKS.get(i));
+				RESOURCE_PACKS.set(i, swap);
 				menus[1].setSelection(i + 1);
 				changed = true;
 				refreshEntries();
@@ -306,11 +306,11 @@ public class ResourcePackDisplay extends Display {
 
 			return;
 		} else if (input.getMappedKey("cursor-left").isClicked()) { // Move the selected pack up.
-			if (menus[1].getSelection() > 0 && resourcePacks.get(menus[1].getSelection()) != defaultPack) {
+			if (menus[1].getSelection() > 0 && RESOURCE_PACKS.get(menus[1].getSelection()) != DEFAULT_PACK) {
 				int i = menus[1].getSelection();
-				ResourcePack swap = resourcePacks.get(i - 1);
-				resourcePacks.set(i - 1, resourcePacks.get(i));
-				resourcePacks.set(i, swap);
+				ResourcePack swap = RESOURCE_PACKS.get(i - 1);
+				RESOURCE_PACKS.set(i - 1, RESOURCE_PACKS.get(i));
+				RESOURCE_PACKS.set(i, swap);
 				menus[1].setSelection(i - 1);
 				changed = true;
 				refreshEntries();
@@ -319,7 +319,7 @@ public class ResourcePackDisplay extends Display {
 
 			return;
 		} else if (input.getMappedKey("menu").isClicked()) {
-			ResourcePack pack = resourcePacks.get(menus[1].getSelection());
+			ResourcePack pack = RESOURCE_PACKS.get(menus[1].getSelection());
 			Game.setDisplay(new PopupDisplay(null, pack.name, pack.description));
 		}
 
@@ -335,18 +335,18 @@ public class ResourcePackDisplay extends Display {
 
 		// Info text at the bottom.
 		if (Game.input.anyControllerConnected())
-			Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.keyboard_needed"), screen, Screen.h - 41, Color.DARK_GRAY);
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.move", Game.input.getMapping("cursor-up"), Game.input.getMapping("cursor-down")), screen, Screen.h - 33, Color.DARK_GRAY);
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.reorder", Game.input.getMapping("cursor-left"), Game.input.getMapping("cursor-right")), screen, Screen.h - 25, Color.DARK_GRAY);
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.select", Game.input.getMapping("select")), screen, Screen.h - 17, Color.DARK_GRAY);
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.info", Game.input.getMapping("menu")), screen, Screen.h - 9, Color.DARK_GRAY);
+			Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.keyboard_needed"), screen, Screen.H - 41, Color.DARK_GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.move", Game.input.getMapping("cursor-up"), Game.input.getMapping("cursor-down")), screen, Screen.H - 33, Color.DARK_GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.reorder", Game.input.getMapping("cursor-left"), Game.input.getMapping("cursor-right")), screen, Screen.H - 25, Color.DARK_GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.select", Game.input.getMapping("select")), screen, Screen.H - 17, Color.DARK_GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.resource_packs.display.help.info", Game.input.getMapping("menu")), screen, Screen.H - 9, Color.DARK_GRAY);
 
-		if (resourcePacks.size() > 0) { // If there is any pack that can be selected.
+		if (RESOURCE_PACKS.size() > 0) { // If there is any pack that can be selected.
 			@SuppressWarnings("resource")
-			MinicraftImage logo = resourcePacks.get(menus[1].getSelection()).logo;
+			MinicraftImage logo = RESOURCE_PACKS.get(menus[1].getSelection()).logo;
 			int h = logo.height / 8;
 			int w = logo.width / 8;
-			int xo = (Screen.w - logo.width) / 2;
+			int xo = (Screen.W - logo.width) / 2;
 			int yo = 36 - logo.height / 2;
 
 			for (int y = 0; y < h; y++) {
@@ -410,24 +410,24 @@ public class ResourcePackDisplay extends Display {
 					int h = logo.height;
 					int w = logo.width;
 					if (h == 0 || w == 0 || h % 8 != 0 || w % 8 != 0 ||
-						h > 32 || w > Screen.w) {
+						h > 32 || w > Screen.W) {
 						throw new IOException(String.format("Unacceptable logo size: %s;%s", w, h));
 					}
 				} else {
 					Logging.RESOURCEHANDLER_RESOURCEPACK.trace("Pack logo not found in pack: {}, loading default logo instead.", name);
-					logo = defaultLogo;
+					logo = DEFAULT_LOGO;
 				}
 				close();
 
 			} catch (IOException | NullPointerException | MinicraftImage.MinicraftImageDimensionIncompatibleException e) {
 				Logging.RESOURCEHANDLER_RESOURCEPACK.warn(e, "Unable to load logo in pack: {}, loading default logo instead.", name);
-				if (this == defaultPack) {
+				if (this == DEFAULT_PACK) {
 					try {
 						logo = new MinicraftImage(ImageIO.read(Objects.requireNonNull(getClass().getResourceAsStream("/resources/logo.png"))));
 					} catch (IOException | NullPointerException e1) {
 						CrashHandler.crashHandle(e1);
 					}
-				} else logo = defaultLogo;
+				} else logo = DEFAULT_LOGO;
 			}
 		}
 
@@ -605,10 +605,10 @@ public class ResourcePackDisplay extends Display {
 		}
 
 		ArrayList<URL> urls = new ArrayList<>();
-		urls.add(defaultPack.packRoot); // Add default pack first
+		urls.add(DEFAULT_PACK.packRoot); // Add default pack first
 
 		// Add already recognized resourcePacks
-		for (ResourcePack pack : resourcePacks) {
+		for (ResourcePack pack : RESOURCE_PACKS) {
 			if (!urls.contains(pack.packRoot)) {
 				urls.add(pack.packRoot);
 			}
@@ -639,7 +639,7 @@ public class ResourcePackDisplay extends Display {
 	 * @return The found resource pack. {@code null} if not found.
 	 */
 	private static ResourcePack findPackByURL(URL url) {
-		for (ResourcePack pack : resourcePacks) {
+		for (ResourcePack pack : RESOURCE_PACKS) {
 			if (pack.packRoot.equals(url)) {
 				return pack;
 			}
@@ -654,40 +654,40 @@ public class ResourcePackDisplay extends Display {
 	 */
 	private static void refreshResourcePacks(List<URL> urls) {
 		// Reverse from entry-order (default last) to priority order (default first)
-		Collections.reverse(resourcePacks);
+		Collections.reverse(RESOURCE_PACKS);
 
 		Logging.RESOURCEHANDLER_RESOURCEPACK.debug("Refreshing from " + urls);
 		for (URL url : urls) {
 			ResourcePack pack = findPackByURL(url);
 			if (pack != null) { // Re-check and refresh if it exists
 				try {
-					if (pack == defaultPack || new File(url.toURI()).exists())
+					if (pack == DEFAULT_PACK || new File(url.toURI()).exists())
 						pack.refreshPack();
 					else // Remove if it doesn't exist
-						resourcePacks.remove(pack);
+						RESOURCE_PACKS.remove(pack);
 				} catch (URISyntaxException e) {
 					Logging.RESOURCEHANDLER_RESOURCEPACK.debug(e, "Resource pack URL not found.");
-					resourcePacks.remove(pack);
+					RESOURCE_PACKS.remove(pack);
 				}
 			} else { // Add as a new pack
 				pack = loadPackMetadata(url);
 				if (pack != null) {
-					resourcePacks.add(pack);
+					RESOURCE_PACKS.add(pack);
 				}
 			}
 		}
 
 		// Reverse from priority-order (default first) to entry order (default last)
-		Collections.reverse(resourcePacks);
+		Collections.reverse(RESOURCE_PACKS);
 	}
 
 	/**
 	 * Releasing the unloaded packs.
 	 */
 	public static void releaseUnloadedPacks() {
-		for(int i = 0; i < resourcePacks.size(); i++) {
-			if(!resourcePacks.get(i).isEnabled()) {
-				resourcePacks.remove(i--); // Releases unloaded packs.
+		for(int i = 0; i < RESOURCE_PACKS.size(); i++) {
+			if(!RESOURCE_PACKS.get(i).isEnabled()) {
+				RESOURCE_PACKS.remove(i--); // Releases unloaded packs.
 			}
 		}
 	}
@@ -698,7 +698,7 @@ public class ResourcePackDisplay extends Display {
 	 */
 	public static void loadResourcePacks(String[] names) {
 		for (String name : names) {
-			for (ResourcePack pack : resourcePacks) {
+			for (ResourcePack pack : RESOURCE_PACKS) {
 				try {
 					if (Paths.get(pack.packRoot.toURI()).equals(FOLDER_LOCATION.toPath().resolve(name))) {
 						pack.enable();
@@ -717,8 +717,8 @@ public class ResourcePackDisplay extends Display {
 	 */
 	public static ArrayList<String> getLoadedPacks() {
 		ArrayList<String> packs = new ArrayList<>();
-		for (ResourcePack pack : resourcePacks) {
-			if (pack != defaultPack && pack.isEnabled()) {
+		for (ResourcePack pack : RESOURCE_PACKS) {
+			if (pack != DEFAULT_PACK && pack.isEnabled()) {
 				try {
 					packs.add(new File(pack.packRoot.toURI()).getName());
 				} catch (URISyntaxException e) {
@@ -736,7 +736,7 @@ public class ResourcePackDisplay extends Display {
 	@SuppressWarnings("unchecked")
 	public static void reloadResources() {
 		ArrayList<ResourcePack> loadQuery = new ArrayList<>();
-		loadQuery.addAll(resourcePacks);
+		loadQuery.addAll(RESOURCE_PACKS);
 		Collections.reverse(loadQuery);
 
 		// Clear all previously loaded resources.

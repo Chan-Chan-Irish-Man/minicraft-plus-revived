@@ -18,8 +18,8 @@ public class SignDisplayMenu extends Menu {
 
 	public SignDisplayMenu(Level level, int x, int y) {
 		super(new Menu.Builder(true, 0, RelPos.CENTER)
-			.setPositioning(new Point(Screen.w / 2, 6), RelPos.BOTTOM)
-			.setMenuSize(new Dimension(MinicraftImage.boxWidth * (SignDisplay.MAX_TEXT_LENGTH + 2), MinicraftImage.boxWidth * (SignDisplay.MAX_ROW_COUNT + 2)))
+			.setPositioning(new Point(Screen.W / 2, 6), RelPos.BOTTOM)
+			.setMenuSize(new Dimension(MinicraftImage.BOX_WIDTH * (SignDisplay.MAX_TEXT_LENGTH + 2), MinicraftImage.BOX_WIDTH * (SignDisplay.MAX_ROW_COUNT + 2)))
 			.setDisplayLength(4)
 			.setSelectable(false)
 			.createMenu());

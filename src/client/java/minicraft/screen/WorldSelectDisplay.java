@@ -25,10 +25,10 @@ import java.util.Arrays;
 
 public class WorldSelectDisplay extends Display {
 
-	private static final ArrayList<String> worldNames = new ArrayList<>();
-	private static final ArrayList<Version> worldVersions = new ArrayList<>();
+	private static final ArrayList<String> WORLD_NAMES = new ArrayList<>();
+	private static final ArrayList<Version> WORLD_VERSIONS = new ArrayList<>();
 
-	private static final String worldsDir = Game.gameDir + "/saves/";
+	private static final String WORLDS_DIRECTORY = Game.gameDir + "/saves/";
 
 	private static String worldName = "";
 	private static boolean loadedWorld = true;
@@ -54,11 +54,11 @@ public class WorldSelectDisplay extends Display {
 	}
 
 	private void updateEntries() {
-		SelectEntry[] entries = new SelectEntry[worldNames.size()];
+		SelectEntry[] entries = new SelectEntry[WORLD_NAMES.size()];
 
 		for (int i = 0; i < entries.length; i++) {
-			final String name = worldNames.get(i);
-			final Version version = worldVersions.get(i);
+			final String name = WORLD_NAMES.get(i);
+			final Version version = WORLD_VERSIONS.get(i);
 			entries[i] = new SelectEntry(name, () -> {
 				// Executed when we select a world.
 				if (version.compareTo(Game.VERSION) > 0)
@@ -95,7 +95,7 @@ public class WorldSelectDisplay extends Display {
 				InputEntry entry;
 
 				// The location of the world folder on the disk.
-				File world = new File(worldsDir + worldNames.get(menus[0].getSelection()));
+				File world = new File(WORLDS_DIRECTORY + WORLD_NAMES.get(menus[0].getSelection()));
 
 				// Do the action.
 				entry = (InputEntry) popup.getCurEntry();
@@ -103,7 +103,7 @@ public class WorldSelectDisplay extends Display {
 					return false;
 				//user hits enter with a valid new name; copy is created here.
 				String newname = entry.getUserInput();
-				File newworld = new File(worldsDir + newname);
+				File newworld = new File(WORLDS_DIRECTORY + newname);
 				newworld.mkdirs();
 				Logging.GAMEHANDLER.debug("Copying world {} to world {}.", world, newworld);
 				// walk file tree
@@ -141,7 +141,7 @@ public class WorldSelectDisplay extends Display {
 			ArrayList<PopupDisplay.PopupActionCallback> callbacks = new ArrayList<>();
 			callbacks.add(new PopupDisplay.PopupActionCallback("select", popup -> {
 				// The location of the world folder on the disk.
-				File world = new File(worldsDir + worldNames.get(menus[0].getSelection()));
+				File world = new File(WORLDS_DIRECTORY + WORLD_NAMES.get(menus[0].getSelection()));
 
 				// Do the action.
 				InputEntry entry = (InputEntry) popup.getCurEntry();
@@ -152,7 +152,7 @@ public class WorldSelectDisplay extends Display {
 				String name = entry.getUserInput();
 
 				// Try to rename the file, if it works, return
-				if (world.renameTo(new File(worldsDir + name))) {
+				if (world.renameTo(new File(WORLDS_DIRECTORY + name))) {
 					Logging.GAMEHANDLER.debug("Renaming world {} to new name: {}", world, name);
 					WorldSelectDisplay.updateWorlds();
 				} else {
@@ -176,7 +176,7 @@ public class WorldSelectDisplay extends Display {
 		} else if (input.getMappedKey("SHIFT-D").isClicked() || input.leftTriggerPressed() && input.rightTriggerPressed()) {
 			ArrayList<ListEntry> entries = new ArrayList<>();
 			entries.addAll(Arrays.asList(StringEntry.useLines(Color.RED, Localization.getLocalized("minicraft.displays.world_select.popups.display.delete",
-				Color.toStringCode(Color.tint(Color.RED, 1, true)), worldNames.get(menus[0].getSelection()),
+				Color.toStringCode(Color.tint(Color.RED, 1, true)), WORLD_NAMES.get(menus[0].getSelection()),
 				Color.RED_CODE))
 			));
 
@@ -188,7 +188,7 @@ public class WorldSelectDisplay extends Display {
 			ArrayList<PopupDisplay.PopupActionCallback> callbacks = new ArrayList<>();
 			callbacks.add(new PopupDisplay.PopupActionCallback("select", popup -> {
 				// The location of the world folder on the disk.
-				File world = new File(worldsDir + worldNames.get(menus[0].getSelection()));
+				File world = new File(WORLDS_DIRECTORY + WORLD_NAMES.get(menus[0].getSelection()));
 
 				// Do the action.
 				Logging.GAMEHANDLER.debug("Deleting world: " + world);
@@ -203,8 +203,8 @@ public class WorldSelectDisplay extends Display {
 				updateEntries();
 				if (WorldSelectDisplay.getWorldNames().size() > 0) {
 					Game.exitDisplay();
-					if (menus[0].getSelection() >= worldNames.size()) {
-						menus[0].setSelection(worldNames.size() - 1);
+					if (menus[0].getSelection() >= WORLD_NAMES.size()) {
+						menus[0].setSelection(WORLD_NAMES.size() - 1);
 					}
 				} else {
 					Game.exitDisplay(3); // Exiting to title display.
@@ -223,8 +223,8 @@ public class WorldSelectDisplay extends Display {
 		super.render(screen);
 
 		int sel = menus[0].getSelection();
-		if (sel >= 0 && sel < worldVersions.size()) {
-			Version version = worldVersions.get(sel);
+		if (sel >= 0 && sel < WORLD_VERSIONS.size()) {
+			Version version = WORLD_VERSIONS.get(sel);
 			int col = Color.WHITE;
 			if (version.compareTo(Game.VERSION) > 0) {
 				col = Color.RED;
@@ -233,12 +233,12 @@ public class WorldSelectDisplay extends Display {
 			Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.world_version", (version.compareTo(new Version("1.9.2")) <= 0 ? "~" : "") + version), screen, Font.textHeight() * 7 / 2, col);
 		}
 
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.0", Game.input.getMapping("select")), screen, Screen.h - 60, Color.GRAY);
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.1", Game.input.getMapping("exit")), screen, Screen.h - 40, Color.GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.0", Game.input.getMapping("select")), screen, Screen.H - 60, Color.GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.1", Game.input.getMapping("exit")), screen, Screen.H - 40, Color.GRAY);
 
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.2", Game.input.selectMapping("SHIFT-C", "LEFTBUMPER")), screen, Screen.h - 24, Color.BLUE);
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.3", Game.input.selectMapping("SHIFT-R", "RIGHTBUMPER")), screen, Screen.h - 16, Color.GREEN);
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.4", Game.input.selectMapping("SHIFT-D", "LEFTRIGHTTRIGGER")), screen, Screen.h - 8, Color.RED);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.2", Game.input.selectMapping("SHIFT-C", "LEFTBUMPER")), screen, Screen.H - 24, Color.BLUE);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.3", Game.input.selectMapping("SHIFT-R", "RIGHTBUMPER")), screen, Screen.H - 16, Color.GREEN);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.display.help.4", Game.input.selectMapping("SHIFT-D", "LEFTRIGHTTRIGGER")), screen, Screen.H - 8, Color.RED);
 
 		Font.drawCentered(Localization.getLocalized("minicraft.displays.world_select.select_world"), screen, 0, Color.WHITE);
 	}
@@ -247,7 +247,7 @@ public class WorldSelectDisplay extends Display {
 		Logging.GAMEHANDLER.debug("Updating worlds list.");
 
 		// Get folder containing the worlds and load them.
-		File worldSavesFolder = new File(worldsDir);
+		File worldSavesFolder = new File(WORLDS_DIRECTORY);
 
 		// Try to create the saves folder if it doesn't exist.
 		if (worldSavesFolder.mkdirs()) {
@@ -262,8 +262,8 @@ public class WorldSelectDisplay extends Display {
 			return;
 		}
 
-		worldNames.clear();
-		worldVersions.clear();
+		WORLD_NAMES.clear();
+		WORLD_VERSIONS.clear();
 
 		// Check if there are no files in folder.
 		if (worlds.length == 0) {
@@ -274,14 +274,14 @@ public class WorldSelectDisplay extends Display {
 		// Iterate between every file in worlds.
 		for (File file : worlds) {
 			if (file.isDirectory()) {
-				String path = worldsDir + file.getName() + "/";
+				String path = WORLDS_DIRECTORY + file.getName() + "/";
 				File folder2 = new File(path);
 				folder2.mkdirs();
 				String[] files = folder2.list();
 				if (files != null && files.length > 0 && Arrays.stream(files).anyMatch(f -> f.endsWith(Save.extension))) {
 					String name = file.getName();
-					worldNames.add(name);
-					worldVersions.add(new Load(name, false).getWorldVersion());
+					WORLD_NAMES.add(name);
+					WORLD_VERSIONS.add(new Load(name, false).getWorldVersion());
 				}
 			}
 		}
@@ -301,6 +301,6 @@ public class WorldSelectDisplay extends Display {
 	}
 
 	public static ArrayList<String> getWorldNames() {
-		return worldNames;
+		return WORLD_NAMES;
 	}
 }

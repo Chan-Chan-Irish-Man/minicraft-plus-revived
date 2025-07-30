@@ -19,7 +19,7 @@ public class EnemyMob extends MobAi {
 
 	@Override
 	public void handleDespawn() {
-		if (level.depth == 0 && Updater.tickCount >= Updater.dayLength / 4 && Updater.tickCount <= Updater.dayLength / 2)
+		if (level.depth == 0 && Updater.tickCount >= Updater.DAY_LENGTH / 4 && Updater.tickCount <= Updater.DAY_LENGTH / 2)
 			if (isWithinLight()) // If it is now morning and on the surface, the mob despawns when it is within light.
 				super.handleDespawn();
 			else if (!isWithinLight()) // Otherwise, it despawns when it is not within light.
@@ -58,7 +58,7 @@ public class EnemyMob extends MobAi {
 	 * @param rwChance The chance of this mob will walk in a random direction (random walk chance)
 	 */
 	public EnemyMob(int lvl, LinkedSprite[][][] lvlSprites, int health, boolean isFactor, int detectDist, int rwTime, int rwChance) {
-		this(lvl, lvlSprites, health, isFactor, detectDist, 60 * Updater.normSpeed, rwTime, rwChance);
+		this(lvl, lvlSprites, health, isFactor, detectDist, 60 * Updater.NORM_SPEED, rwTime, rwChance);
 	}
 
 	/**

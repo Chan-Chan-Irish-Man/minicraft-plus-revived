@@ -21,7 +21,7 @@ public class Network extends Game {
 	private Network() {
 	}
 
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
 	private static VersionInfo latestVersion = null;
 
@@ -85,7 +85,7 @@ public class Network extends Game {
 			if (tries == 1000)
 				Logging.NETWORK.info("Note: Trying 1000th time to find valid entity id...(Will continue)");
 
-			eid = random.nextInt();
+			eid = RANDOM.nextInt();
 		} while (!idIsAvailable(eid));
 
 		return eid;

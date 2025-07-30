@@ -16,7 +16,7 @@ import minicraft.level.tile.Tile;
 import minicraft.screen.AchievementsDisplay;
 
 public class AirWizard extends EnemyMob {
-	private static final LinkedSprite[][][] sprites = new LinkedSprite[][][] {
+	private static final LinkedSprite[][][] SPRITES = new LinkedSprite[][][] {
 		Mob.compileMobSpriteAnimations(0, 0, "air_wizard"),
 		Mob.compileMobSpriteAnimations(0, 2, "air_wizard")
 	};
@@ -49,7 +49,7 @@ public class AirWizard extends EnemyMob {
 	 * Constructor for the AirWizard.
 	 */
 	public AirWizard() {
-		super(LVL, sprites, HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
+		super(LVL, SPRITES, HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
 
 		active = true;
 		speed = 2;

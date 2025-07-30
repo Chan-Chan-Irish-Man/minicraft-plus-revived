@@ -12,11 +12,11 @@ import java.util.Random;
 
 public class LevelGen {
 	private static long worldSeed = 0;
-	private static final Random random = new Random(worldSeed);
-	private static final Simplex noise = new Simplex(worldSeed);
+	private static final Random RANDOM = new Random(worldSeed);
+	private static final Simplex NOISE = new Simplex(worldSeed);
 	public double[] values; // An array of doubles, used to help making noise for the map
 	private final int w, h; // Width and height of the map
-	private static final int stairRadius = 15;
+	private static final int STAIR_RADIUS = 15;
 
 	private static final int NOISE_LAYER_DIFF = 100;
 
@@ -37,7 +37,7 @@ public class LevelGen {
 
 		for (int x = 0; x < w; x++)
 			for (int y = 0; y < h; y++) {
-				setSample(x, y, noise.noise3((x + xOffset) / (float) featureSize, (y + yOffset) / (float) featureSize, layer * NOISE_LAYER_DIFF));
+				setSample(x, y, NOISE.noise3((x + xOffset) / (float) featureSize, (y + yOffset) / (float) featureSize, layer * NOISE_LAYER_DIFF));
 			}
 	}
 
@@ -88,8 +88,8 @@ public class LevelGen {
 	}
 
 	private static void generateTopChunk(ChunkManager map, int chunkX, int chunkY) {
-		random.setSeed(worldSeed);
-		noise.setSeed(worldSeed);
+		RANDOM.setSeed(worldSeed);
+		NOISE.setSeed(worldSeed);
 
 		// Brevity
 		int S = ChunkManager.CHUNK_SIZE;
@@ -184,14 +184,14 @@ public class LevelGen {
 
 		if (Settings.get("Theme").equals("minicraft.settings.theme.desert")) {
 			for (int i = 0; i < S * S / 200; i++) {
-				int xs = random.nextInt(S);
-				int ys = random.nextInt(S);
+				int xs = RANDOM.nextInt(S);
+				int ys = RANDOM.nextInt(S);
 				for (int k = 0; k < 10; k++) {
-					int x = xs + random.nextInt(21) - 10;
-					int y = ys + random.nextInt(21) - 10;
+					int x = xs + RANDOM.nextInt(21) - 10;
+					int y = ys + RANDOM.nextInt(21) - 10;
 					for (int j = 0; j < 100; j++) {
-						int xo = x + random.nextInt(5) - random.nextInt(5);
-						int yo = y + random.nextInt(5) - random.nextInt(5);
+						int xo = x + RANDOM.nextInt(5) - RANDOM.nextInt(5);
+						int yo = y + RANDOM.nextInt(5) - RANDOM.nextInt(5);
 						for (int yy = yo - 1; yy <= yo + 1; yy++)
 							for (int xx = xo - 1; xx <= xo + 1; xx++)
 								if (xx >= 0 && yy >= 0 && xx < S && yy < S) {
@@ -206,14 +206,14 @@ public class LevelGen {
 
 		if (!Settings.get("Theme").equals("minicraft.settings.theme.desert")) {
 			for (int i = 0; i < S * S / 2800; i++) {
-				int xs = random.nextInt(S);
-				int ys = random.nextInt(S);
+				int xs = RANDOM.nextInt(S);
+				int ys = RANDOM.nextInt(S);
 				for (int k = 0; k < 10; k++) {
-					int x = xs + random.nextInt(21) - 10;
-					int y = ys + random.nextInt(21) - 10;
+					int x = xs + RANDOM.nextInt(21) - 10;
+					int y = ys + RANDOM.nextInt(21) - 10;
 					for (int j = 0; j < 100; j++) {
-						int xo = x + random.nextInt(5) - random.nextInt(5);
-						int yo = y + random.nextInt(5) - random.nextInt(5);
+						int xo = x + RANDOM.nextInt(5) - RANDOM.nextInt(5);
+						int yo = y + RANDOM.nextInt(5) - RANDOM.nextInt(5);
 						for (int yy = yo - 1; yy <= yo + 1; yy++)
 							for (int xx = xo - 1; xx <= xo + 1; xx++)
 								if (xx >= 0 && yy >= 0 && xx < S && yy < S) {
@@ -228,11 +228,11 @@ public class LevelGen {
 
 		if (Settings.get("Theme").equals("minicraft.settings.theme.forest")) {
 			for (int i = 0; i < S * S / 200; i++) {
-				int x = random.nextInt(S);
-				int y = random.nextInt(S);
+				int x = RANDOM.nextInt(S);
+				int y = RANDOM.nextInt(S);
 				for (int j = 0; j < 200; j++) {
-					int xx = x + random.nextInt(15) - random.nextInt(15);
-					int yy = y + random.nextInt(15) - random.nextInt(15);
+					int xx = x + RANDOM.nextInt(15) - RANDOM.nextInt(15);
+					int yy = y + RANDOM.nextInt(15) - RANDOM.nextInt(15);
 					if (xx >= 0 && yy >= 0 && xx < S && yy < S) {
 						if (map.getTile(xx + tileX, yy + tileY) == Tiles.get("grass")) {
 							map.setTile(xx + tileX, yy + tileY, Tiles.get("tree"), 0);
@@ -243,11 +243,11 @@ public class LevelGen {
 		}
 		if (!Settings.get("Theme").equals("minicraft.settings.theme.forest") && !Settings.get("Theme").equals("minicraft.settings.theme.plain")) {
 			for (int i = 0; i < S * S / 1200; i++) {
-				int x = random.nextInt(S);
-				int y = random.nextInt(S);
+				int x = RANDOM.nextInt(S);
+				int y = RANDOM.nextInt(S);
 				for (int j = 0; j < 200; j++) {
-					int xx = x + random.nextInt(15) - random.nextInt(15);
-					int yy = y + random.nextInt(15) - random.nextInt(15);
+					int xx = x + RANDOM.nextInt(15) - RANDOM.nextInt(15);
+					int yy = y + RANDOM.nextInt(15) - RANDOM.nextInt(15);
 					if (xx >= 0 && yy >= 0 && xx < S && yy < S) {
 						if (map.getTile(xx + tileX, yy + tileY) == Tiles.get("grass")) {
 							map.setTile(xx + tileX, yy + tileY, Tiles.get("tree"), 0);
@@ -259,11 +259,11 @@ public class LevelGen {
 
 		if (Settings.get("Theme").equals("minicraft.settings.theme.plain")) {
 			for (int i = 0; i < S * S / 2800; i++) {
-				int x = random.nextInt(S);
-				int y = random.nextInt(S);
+				int x = RANDOM.nextInt(S);
+				int y = RANDOM.nextInt(S);
 				for (int j = 0; j < 200; j++) {
-					int xx = x + random.nextInt(15) - random.nextInt(15);
-					int yy = y + random.nextInt(15) - random.nextInt(15);
+					int xx = x + RANDOM.nextInt(15) - RANDOM.nextInt(15);
+					int yy = y + RANDOM.nextInt(15) - RANDOM.nextInt(15);
 					if (xx >= 0 && yy >= 0 && xx < S && yy < S) {
 						if (map.getTile(xx + tileX, yy + tileY) == Tiles.get("grass")) {
 							map.setTile(xx + tileX, yy + tileY, Tiles.get("tree"), 0);
@@ -274,11 +274,11 @@ public class LevelGen {
 		}
 		if (!Settings.get("Theme").equals("minicraft.settings.theme.plain")) {
 			for (int i = 0; i < S * S / 400; i++) {
-				int x = random.nextInt(S);
-				int y = random.nextInt(S);
+				int x = RANDOM.nextInt(S);
+				int y = RANDOM.nextInt(S);
 				for (int j = 0; j < 200; j++) {
-					int xx = x + random.nextInt(15) - random.nextInt(15);
-					int yy = y + random.nextInt(15) - random.nextInt(15);
+					int xx = x + RANDOM.nextInt(15) - RANDOM.nextInt(15);
+					int yy = y + RANDOM.nextInt(15) - RANDOM.nextInt(15);
 					if (xx >= 0 && yy >= 0 && xx < S && yy < S) {
 						if (map.getTile(xx + tileX, yy + tileY) == Tiles.get("grass")) {
 							map.setTile(xx + tileX, yy + tileY, Tiles.get("tree"), 0);
@@ -289,23 +289,23 @@ public class LevelGen {
 		}
 
 		for (int i = 0; i < S * S / 400; i++) {
-			int x = random.nextInt(S);
-			int y = random.nextInt(S);
-			int col = random.nextInt(4) * random.nextInt(4);
+			int x = RANDOM.nextInt(S);
+			int y = RANDOM.nextInt(S);
+			int col = RANDOM.nextInt(4) * RANDOM.nextInt(4);
 			for (int j = 0; j < 30; j++) {
-				int xx = x + random.nextInt(5) - random.nextInt(5);
-				int yy = y + random.nextInt(5) - random.nextInt(5);
+				int xx = x + RANDOM.nextInt(5) - RANDOM.nextInt(5);
+				int yy = y + RANDOM.nextInt(5) - RANDOM.nextInt(5);
 				if (xx >= 0 && yy >= 0 && xx < S && yy < S) {
 					if (map.getTile(xx + tileX, yy + tileY) == Tiles.get("grass")) {
-						map.setTile(xx + tileX, yy + tileY, Tiles.get("flower"), col + random.nextInt(3)); // Data determines what the flower is
+						map.setTile(xx + tileX, yy + tileY, Tiles.get("flower"), col + RANDOM.nextInt(3)); // Data determines what the flower is
 					}
 				}
 			}
 		}
 
 		for (int i = 0; i < S * S / 100; i++) {
-			int xx = random.nextInt(S);
-			int yy = random.nextInt(S);
+			int xx = RANDOM.nextInt(S);
+			int yy = RANDOM.nextInt(S);
 			if (xx < S && yy < S) {
 				if (map.getTile(xx + tileX, yy + tileY) == Tiles.get("sand")) {
 					map.setTile(xx + tileX, yy + tileY, Tiles.get("cactus"), 0);
@@ -317,7 +317,7 @@ public class LevelGen {
 
 		stairsLoop:
 		while (!rocks.isEmpty() && count < S / 21) { // Loops a certain number of times, more for bigger world sizes.
-			int i = random.nextInt(rocks.size());
+			int i = RANDOM.nextInt(rocks.size());
 
 			Point p = rocks.get(i);
 			rocks.remove(i);
@@ -329,8 +329,8 @@ public class LevelGen {
 						continue stairsLoop;
 
 			// This should prevent any stairsDown tile from being within 30 tiles of any other stairsDown tile.
-			for (int yy = p.y - stairRadius; yy <= p.y + stairRadius; yy++)
-				for (int xx = p.x - stairRadius; xx <= p.x + stairRadius; xx++)
+			for (int yy = p.y - STAIR_RADIUS; yy <= p.y + STAIR_RADIUS; yy++)
+				for (int xx = p.x - STAIR_RADIUS; xx <= p.x + STAIR_RADIUS; xx++)
 					if (map.getTile(xx, yy) == Tiles.get("Stairs Down"))
 						continue stairsLoop;
 
@@ -356,8 +356,8 @@ public class LevelGen {
 				} else if (val >= -0.05 && val < -0.03) {
 					map.setTile(x, y, Tiles.get("Lava"), 0);
 				} else {
-					if (random.nextInt(2) == 1) {
-						if (random.nextInt(2) == 1) {
+					if (RANDOM.nextInt(2) == 1) {
+						if (RANDOM.nextInt(2) == 1) {
 							map.setTile(x, y, Tiles.get("Obsidian"), 0);
 						} else {
 							map.setTile(x, y, Tiles.get("Raw Obsidian"), 0);
@@ -371,8 +371,8 @@ public class LevelGen {
 
 		decorLoop:
 		for (int i = 0; i < S * S / 450; i++) {
-			int x = random.nextInt(S - 2) + 1;
-			int y = random.nextInt(S - 2) + 1;
+			int x = RANDOM.nextInt(S - 2) + 1;
+			int y = RANDOM.nextInt(S - 2) + 1;
 
 			for (int yy = y - 1; yy <= y + 1; yy++) {
 				for (int xx = x - 1; xx <= x + 1; xx++) {
@@ -383,16 +383,16 @@ public class LevelGen {
 
 			if (x > 8 && y > 8) {
 				if (x < S - 8 && y < S - 8) {
-					if (random.nextInt(2) == 0)
-						Structure.ornateLavaPool.draw(map, x, y);
+					if (RANDOM.nextInt(2) == 0)
+						Structure.ORNATE_LAVA_POOL.draw(map, x, y);
 				}
 			}
 		}
 	}
 
 	private static void generateUndergroundChunk(ChunkManager map, int chunkX, int chunkY, int depth) {
-		random.setSeed(worldSeed);
-		noise.setSeed(worldSeed);
+		RANDOM.setSeed(worldSeed);
+		NOISE.setSeed(worldSeed);
 		int S = ChunkManager.CHUNK_SIZE;
 		LevelGen mnoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 0);
 		LevelGen mnoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 1);
@@ -441,11 +441,11 @@ public class LevelGen {
 		{
 			int r = 2;
 			for (int i = 0; i < S * S / 200; i++) {
-				int x = tileX + random.nextInt(S);
-				int y = tileY + random.nextInt(S);
+				int x = tileX + RANDOM.nextInt(S);
+				int y = tileY + RANDOM.nextInt(S);
 				for (int j = 0; j < 30; j++) {
-					int xx = x + random.nextInt(5) - random.nextInt(5);
-					int yy = y + random.nextInt(5) - random.nextInt(5);
+					int xx = x + RANDOM.nextInt(5) - RANDOM.nextInt(5);
+					int yy = y + RANDOM.nextInt(5) - RANDOM.nextInt(5);
 					// if (xx >= r && yy >= r && xx < S - r && yy < S - r) {
 					if (map.getTile(xx, yy) == Tiles.get("rock")) {
 						map.setTile(xx, yy, Tiles.get((short) (Tiles.get("iron Ore").id + depth - 1)), 0);
@@ -453,8 +453,8 @@ public class LevelGen {
 					// }
 				}
 				for (int j = 0; j < 10; j++) {
-					int xx = x + random.nextInt(3) - random.nextInt(2);
-					int yy = y + random.nextInt(3) - random.nextInt(2);
+					int xx = x + RANDOM.nextInt(3) - RANDOM.nextInt(2);
+					int yy = y + RANDOM.nextInt(3) - RANDOM.nextInt(2);
 					// if (xx >= r && yy >= r && xx < S - r && yy < S - r) {
 					if (map.getTile(xx, yy) == Tiles.get("rock")) {
 						map.setTile(xx, yy, Tiles.get("Lapis"), 0);
@@ -468,16 +468,16 @@ public class LevelGen {
 			int count = 0;
 			stairsLoop:
 			for (int i = 0; i < S * S / 100; i++) {
-				int x = tileX + random.nextInt(S);
-				int y = tileY + random.nextInt(S);
+				int x = tileX + RANDOM.nextInt(S);
+				int y = tileY + RANDOM.nextInt(S);
 
 				for (int yy = y - 1; yy <= y + 1; yy++)
 					for (int xx = x - 1; xx <= x + 1; xx++)
 						if (map.getTile(xx, yy) != Tiles.get("rock")) continue stairsLoop;
 
 				// This should prevent any stairsDown tile from being within 30 tiles of any other stairsDown tile.
-				for (int yy = Math.max(0, y - stairRadius); yy <= Math.min(S - 1, y + stairRadius); yy++)
-					for (int xx = Math.max(0, x - stairRadius); xx <= Math.min(S - 1, x + stairRadius); xx++)
+				for (int yy = Math.max(0, y - STAIR_RADIUS); yy <= Math.min(S - 1, y + STAIR_RADIUS); yy++)
+					for (int xx = Math.max(0, x - STAIR_RADIUS); xx <= Math.min(S - 1, x + STAIR_RADIUS); xx++)
 						if (map.getTile(xx, yy) == Tiles.get("Stairs Down")) continue stairsLoop;
 
 				map.setTile(x, y, Tiles.get("Stairs Down"), 0);
@@ -514,8 +514,8 @@ public class LevelGen {
 
 		stairsLoop:
 		for (int i = 0; i < S * S / 50; i++) {
-			int x = tileX + random.nextInt(S - 2) + 1;
-			int y = tileY + random.nextInt(S - 2) + 1;
+			int x = tileX + RANDOM.nextInt(S - 2) + 1;
+			int y = tileY + RANDOM.nextInt(S - 2) + 1;
 
 			for (int yy = y - 1; yy <= y + 1; yy++) {
 				for (int xx = x - 1; xx <= x + 1; xx++) {
@@ -529,8 +529,8 @@ public class LevelGen {
 		int count = 0;
 		stairsLoop:
 		for (int i = 0; i < S * S; i++) {
-			int x = random.nextInt(S - 2) + 1;
-			int y = random.nextInt(S - 2) + 1;
+			int x = RANDOM.nextInt(S - 2) + 1;
+			int y = RANDOM.nextInt(S - 2) + 1;
 
 			for (int yy = y - 1; yy <= y + 1; yy++) {
 				for (int xx = x - 1; xx <= x + 1; xx++) {
@@ -539,8 +539,8 @@ public class LevelGen {
 			}
 
 			// This should prevent any stairsDown tile from being within 30 tiles of any other stairsDown tile.
-			for (int yy = Math.max(0, y - stairRadius); yy <= Math.min(S - 1, y + stairRadius); yy++)
-				for (int xx = Math.max(0, x - stairRadius); xx <= Math.min(S - 1, x + stairRadius); xx++)
+			for (int yy = Math.max(0, y - STAIR_RADIUS); yy <= Math.min(S - 1, y + STAIR_RADIUS); yy++)
+				for (int xx = Math.max(0, x - STAIR_RADIUS); xx <= Math.min(S - 1, x + STAIR_RADIUS); xx++)
 					if (map.getTile(xx, yy) == Tiles.get("Stairs Down")) continue stairsLoop;
 
 			map.setTile(x, y, Tiles.get("Stairs Down"), 0);

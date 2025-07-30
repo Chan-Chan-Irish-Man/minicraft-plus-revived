@@ -4,7 +4,7 @@ import minicraft.gfx.SpriteLinker;
 
 public class BurnParticle extends Particle {
 	/// This is used for Spawners, when they spawn an entity.
-	private static final SpriteLinker.LinkedSprite sprite = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Gui, "hud")
+	private static final SpriteLinker.LinkedSprite SPRITE = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Gui, "hud")
 		.setSpriteDim(6, 2, 1, 1)
 		.setMirror(3);
 
@@ -15,6 +15,6 @@ public class BurnParticle extends Particle {
 	 * @param y Y map position
 	 */
 	public BurnParticle(int x, int y) {
-		super(x, y, 30, sprite);
+		super(x, y, 30, SPRITE);
 	}
 }

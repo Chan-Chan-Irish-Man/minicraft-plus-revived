@@ -19,8 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Random;
 
 public class DungeonChest extends Chest {
-	private static final LinkedSprite openSprite = new LinkedSprite(SpriteType.Entity, "dungeon_chest");
-	private static final LinkedSprite lockSprite = new LinkedSprite(SpriteType.Entity, "white_chest");
+	private static final LinkedSprite OPEN_SPRITE = new LinkedSprite(SpriteType.Entity, "dungeon_chest");
+	private static final LinkedSprite LOCK_SPRITE = new LinkedSprite(SpriteType.Entity, "white_chest");
 
 	private boolean isLocked;
 
@@ -61,7 +61,7 @@ public class DungeonChest extends Chest {
 				}
 
 				isLocked = false;
-				this.sprite = openSprite; // Set to the unlocked color
+				this.sprite = OPEN_SPRITE; // Set to the unlocked color
 
 				level.add(new SmashParticle(x << Tile.TILE_SIZE_SHIFT, y << Tile.TILE_SIZE_SHIFT));
 				level.add(new TextParticle(Localization.getLocalized("minicraft.text_particales.key_consumed"), x, y, Color.RED));
@@ -98,7 +98,7 @@ public class DungeonChest extends Chest {
 		this.isLocked = locked;
 
 		// auto update sprite
-		sprite = locked ? DungeonChest.lockSprite : DungeonChest.openSprite;
+		sprite = locked ? DungeonChest.LOCK_SPRITE : DungeonChest.OPEN_SPRITE;
 	}
 
 	/**

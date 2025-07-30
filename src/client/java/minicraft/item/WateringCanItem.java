@@ -25,11 +25,11 @@ public class WateringCanItem extends Item {
 		return items;
 	}
 
-	private static final SpriteLinker.LinkedSprite sprite = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Item, "watering_can");
-	private static final SpriteLinker.LinkedSprite spriteFilled = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Item, "watering_can_filled");
-	private static final SpriteLinker.LinkedSprite particleSprite = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "glint");
+	private static final SpriteLinker.LinkedSprite SPRITE = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Item, "watering_can");
+	private static final SpriteLinker.LinkedSprite SPRITE_FILLED = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Item, "watering_can_filled");
+	private static final SpriteLinker.LinkedSprite PARTICLE_SPRITE = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "glint");
 
-	private static final SpriteLinker.LinkedSprite[] spriteSplash = new SpriteLinker.LinkedSprite[] {
+	private static final SpriteLinker.LinkedSprite[] SPRITE_SPLASH = new SpriteLinker.LinkedSprite[] {
 		new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "splash_0"),
 		new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "splash_1"),
 		new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "splash_2"),
@@ -41,7 +41,7 @@ public class WateringCanItem extends Item {
 	private int renderingTick = 0;
 
 	protected WateringCanItem(String name) {
-		super(name, sprite);
+		super(name, SPRITE);
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class WateringCanItem extends Item {
 				int py = player.y + 16 * attackDir.getY();
 
 				for (int i = 0; i < 4; i++) {
-					SpriteLinker.LinkedSprite splash = spriteSplash[random.nextInt(spriteSplash.length)];
+					SpriteLinker.LinkedSprite splash = SPRITE_SPLASH[random.nextInt(SPRITE_SPLASH.length)];
 					int x = px + random.nextInt(5) - 2;
 					int y = py + random.nextInt(5) - 2;
 					int destX = px + random.nextInt(3) - 1;
@@ -77,14 +77,14 @@ public class WateringCanItem extends Item {
 				if (random.nextInt(5) == 0) {
 					double x = (double) xt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
 					double y = (double) yt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
-					level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, particleSprite));
+					level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, PARTICLE_SPRITE));
 				}
 			} else if (tile instanceof DirtTile || tile instanceof GrassTile) {
 				if (tile instanceof GrassTile) {
 					if (random.nextInt(15) == 0) {
 						double x = (double) xt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
 						double y = (double) yt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
-						level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, particleSprite));
+						level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, PARTICLE_SPRITE));
 					}
 					if (random.nextInt(60) == 0) { // Small chance for growing flowers
 						level.setTile(xt, yt, Tiles.get((short) 2), random.nextInt(2));
@@ -98,7 +98,7 @@ public class WateringCanItem extends Item {
 							if (random.nextInt(5) == 0) {
 								double x = (double) xt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
 								double y = (double) yt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
-								level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, particleSprite));
+								level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, PARTICLE_SPRITE));
 							}
 							if (random.nextInt(10) == 0)
 								level.setTile(xt, yt, Tiles.get("grass")); // Grass extends.
@@ -109,7 +109,7 @@ public class WateringCanItem extends Item {
 							if (random.nextInt(5) == 0) {
 								double x = (double) xt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
 								double y = (double) yt * 16 + 8 + (random.nextGaussian() * 0.5) * 8;
-								level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, particleSprite));
+								level.add(new Particle((int) x, (int) y, 120 + random.nextInt(21) - 40, PARTICLE_SPRITE));
 							}
 							if (random.nextInt(15) == 0)
 								level.setTile(p.x, p.y, Tiles.get("grass")); // Grass extends.
@@ -126,7 +126,7 @@ public class WateringCanItem extends Item {
 	}
 
 	private void updateSprite() {
-		super.sprite = content > 0 ? spriteFilled : sprite;
+		super.sprite = content > 0 ? SPRITE_FILLED : SPRITE;
 	}
 
 	@Override

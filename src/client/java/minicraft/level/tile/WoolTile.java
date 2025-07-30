@@ -17,16 +17,16 @@ import minicraft.util.AdvancementElement;
 import java.util.HashMap;
 
 public class WoolTile extends Tile {
-	private static final HashMap<DyeItem.DyeColor, SpriteAnimation> sprites = new HashMap<>();
+	private static final HashMap<DyeItem.DyeColor, SpriteAnimation> SPRITES = new HashMap<>();
 
 	static {
 		for (DyeItem.DyeColor color : DyeItem.DyeColor.values()) {
-			sprites.put(color, new SpriteAnimation(SpriteType.Tile, color.toString().toLowerCase() + "_wool"));
+			SPRITES.put(color, new SpriteAnimation(SpriteType.Tile, color.toString().toLowerCase() + "_wool"));
 		}
 	}
 
 	public WoolTile(DyeItem.DyeColor color) {
-		super(color.toString().replace('_', ' ') + " Wool", sprites.get(color));
+		super(color.toString().replace('_', ' ') + " Wool", SPRITES.get(color));
 	}
 
 	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {

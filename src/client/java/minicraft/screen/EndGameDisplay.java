@@ -18,9 +18,9 @@ import java.util.Arrays;
 import java.util.Random;
 
 public class EndGameDisplay extends Display {
-	private static final Random random = new Random();
+	private static final Random RANDOM = new Random();
 
-	private static final String[] scoredItems = {
+	private static final String[] SCORED_ITEMS = {
 		"Cloth", "Slime", "Bone", "Arrow", "Gunpowder", "Antidious"
 	};
 
@@ -30,15 +30,15 @@ public class EndGameDisplay extends Display {
 
 	static {
 		int maxLength = 0;
-		for (String s : scoredItems)
+		for (String s : SCORED_ITEMS)
 			maxLength = Math.max(maxLength, s.length());
 	}
 
 	public EndGameDisplay() {
 		super(false, false);
 
-		displayTimer = Updater.normSpeed; // wait 3 seconds before rendering the menu.
-		inputDelay = Updater.normSpeed / 2; // wait a half-second after rendering before allowing user input.
+		displayTimer = Updater.NORM_SPEED; // wait 3 seconds before rendering the menu.
+		inputDelay = Updater.NORM_SPEED / 2; // wait a half-second after rendering before allowing user input.
 
 
 		ArrayList<ListEntry> entries = new ArrayList<>();
@@ -48,7 +48,7 @@ public class EndGameDisplay extends Display {
 		entries.add(new StringEntry("minicraft.displays.end_game.display.bonuses", Color.YELLOW));
 
 		finalScore = Game.player.getScore();
-		for (String item : scoredItems)
+		for (String item : SCORED_ITEMS)
 			addBonus(item);
 
 		entries.add(new StringEntry(Localization.getLocalized("minicraft.displays.end_game.display.final_score", finalScore)));
@@ -65,7 +65,7 @@ public class EndGameDisplay extends Display {
 
 	private void addBonus(String item) {
 		int count = Game.player.getInventory().count(Items.get(item));
-		int score = count * (random.nextInt(2) + 1) * 10;
+		int score = count * (RANDOM.nextInt(2) + 1) * 10;
 		finalScore += score;
 	}
 

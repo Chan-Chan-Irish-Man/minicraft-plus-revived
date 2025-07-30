@@ -63,7 +63,7 @@ public class Save {
 	File folder;
 
 	// Used to indent the .json files
-	private static final int indent = 4;
+	private static final int INDENT = 4;
 
 	public static String extension = ".miniplussave";
 
@@ -243,7 +243,7 @@ public class Save {
 
 		// Save json
 		try {
-			writeJSONToFile(location + "Preferences.json", json.toString(indent));
+			writeJSONToFile(location + "Preferences.json", json.toString(INDENT));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -262,7 +262,7 @@ public class Save {
 		json.put("unlockedAchievements", new JSONArray(AchievementsDisplay.getUnlockedAchievements()));
 
 		try {
-			writeJSONToFile(location + "Unlocks.json", json.toString(indent));
+			writeJSONToFile(location + "Unlocks.json", json.toString(INDENT));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

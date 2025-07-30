@@ -11,34 +11,34 @@ import java.util.HashMap;
 
 public final class Settings {
 
-	private static final HashMap<String, ArrayEntry<?>> options = new HashMap<>();
+	private static final HashMap<String, ArrayEntry<?>> OPTIONS = new HashMap<>();
 
 	static {
-		options.put("fps", new RangeEntry("minicraft.settings.fps", 10, 300, getDefaultRefreshRate())); // Has to check if the game is running in a headless mode. If it doesn't set the fps to 60
-		options.put("diff", new ArrayEntry<>("minicraft.settings.difficulty", "minicraft.settings.difficulty.easy", "minicraft.settings.difficulty.normal", "minicraft.settings.difficulty.hard"));
-		options.get("diff").setSelection(1);
-		options.put("mode", new ArrayEntry<>("minicraft.settings.mode", "minicraft.settings.mode.survival", "minicraft.settings.mode.creative", "minicraft.settings.mode.hardcore", "minicraft.settings.mode.score"));
+		OPTIONS.put("fps", new RangeEntry("minicraft.settings.fps", 10, 300, getDefaultRefreshRate())); // Has to check if the game is running in a headless mode. If it doesn't set the fps to 60
+		OPTIONS.put("diff", new ArrayEntry<>("minicraft.settings.difficulty", "minicraft.settings.difficulty.easy", "minicraft.settings.difficulty.normal", "minicraft.settings.difficulty.hard"));
+		OPTIONS.get("diff").setSelection(1);
+		OPTIONS.put("mode", new ArrayEntry<>("minicraft.settings.mode", "minicraft.settings.mode.survival", "minicraft.settings.mode.creative", "minicraft.settings.mode.hardcore", "minicraft.settings.mode.score"));
 
-		options.put("scoretime", new ArrayEntry<>("minicraft.settings.scoretime", 10, 20, 40, 60, 120));
-		options.get("scoretime").setValueVisibility(10, false);
-		options.get("scoretime").setValueVisibility(120, false);
+		OPTIONS.put("scoretime", new ArrayEntry<>("minicraft.settings.scoretime", 10, 20, 40, 60, 120));
+		OPTIONS.get("scoretime").setValueVisibility(10, false);
+		OPTIONS.get("scoretime").setValueVisibility(120, false);
 
-		options.put("sound", new BooleanEntry("minicraft.settings.sound", true));
-		options.put("autosave", new BooleanEntry("minicraft.settings.autosave", true));
+		OPTIONS.put("sound", new BooleanEntry("minicraft.settings.sound", true));
+		OPTIONS.put("autosave", new BooleanEntry("minicraft.settings.autosave", true));
 		// For Windows, OpenGL hardware acceleration is disabled by default
-		options.put("hwa", new BooleanEntry("minicraft.settings.opengl_hwa", !FileHandler.OS.contains("windows")));
+		OPTIONS.put("hwa", new BooleanEntry("minicraft.settings.opengl_hwa", !FileHandler.OS.contains("windows")));
 
-		options.put("size", new ArrayEntry<>("minicraft.settings.size", 128, 256, 512));
-		options.put("theme", new ArrayEntry<>("minicraft.settings.theme", "minicraft.settings.theme.normal", "minicraft.settings.theme.forest", "minicraft.settings.theme.desert", "minicraft.settings.theme.plain", "minicraft.settings.theme.hell"));
-		options.put("type", new ArrayEntry<>("minicraft.settings.type", "minicraft.settings.type.island", "minicraft.settings.type.box", "minicraft.settings.type.mountain", "minicraft.settings.type.irregular"));
+		OPTIONS.put("size", new ArrayEntry<>("minicraft.settings.size", 128, 256, 512));
+		OPTIONS.put("theme", new ArrayEntry<>("minicraft.settings.theme", "minicraft.settings.theme.normal", "minicraft.settings.theme.forest", "minicraft.settings.theme.desert", "minicraft.settings.theme.plain", "minicraft.settings.theme.hell"));
+		OPTIONS.put("type", new ArrayEntry<>("minicraft.settings.type", "minicraft.settings.type.island", "minicraft.settings.type.box", "minicraft.settings.type.mountain", "minicraft.settings.type.irregular"));
 
 		// TODO localize these labels
-		options.put("tutorials", new BooleanEntry("minicraft.settings.tutorials", false));
-		options.put("quests", new BooleanEntry("minicraft.settings.quests", false));
-		options.put("showquests", new BooleanEntry("minicraft.settings.show_quests", true));
+		OPTIONS.put("tutorials", new BooleanEntry("minicraft.settings.tutorials", false));
+		OPTIONS.put("quests", new BooleanEntry("minicraft.settings.quests", false));
+		OPTIONS.put("showquests", new BooleanEntry("minicraft.settings.show_quests", true));
 
-		options.get("mode").setChangeAction(value ->
-			options.get("scoretime").setVisible("minicraft.settings.mode.score".equals(value))
+		OPTIONS.get("mode").setChangeAction(value ->
+			OPTIONS.get("scoretime").setVisible("minicraft.settings.mode.score".equals(value))
 		);
 	}
 
@@ -48,7 +48,7 @@ public final class Settings {
 	 * @return The value of the setting
 	 */
 	public static Object get(String option) {
-		return options.get(option.toLowerCase()).getValue();
+		return OPTIONS.get(option.toLowerCase()).getValue();
 	}
 
 	/**
@@ -57,7 +57,7 @@ public final class Settings {
 	 * @return The index of the setting.
 	 */
 	public static int getIdx(String option) {
-		return options.get(option.toLowerCase()).getSelection();
+		return OPTIONS.get(option.toLowerCase()).getSelection();
 	}
 
 	/**
@@ -66,7 +66,7 @@ public final class Settings {
 	 * @return The ArrayEntry.
 	 */
 	public static ArrayEntry<?> getEntry(String option) {
-		return options.get(option.toLowerCase());
+		return OPTIONS.get(option.toLowerCase());
 	}
 
 	/**
@@ -75,7 +75,7 @@ public final class Settings {
 	 * @param value The value to change to.
 	 */
 	public static void set(String option, Object value) {
-		options.get(option.toLowerCase()).setValue(value);
+		OPTIONS.get(option.toLowerCase()).setValue(value);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public final class Settings {
 	 * @param idx Index to select.
 	 */
 	public static void setIdx(String option, int idx) {
-		options.get(option.toLowerCase()).setSelection(idx);
+		OPTIONS.get(option.toLowerCase()).setSelection(idx);
 	}
 
 	/**

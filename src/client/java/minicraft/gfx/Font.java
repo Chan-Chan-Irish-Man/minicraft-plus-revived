@@ -10,7 +10,7 @@ import java.util.List;
 
 public class Font {
 	// These are all the characters that will be translated to the screen. (The spaces are important)
-	private static final String chars =
+	private static final String CHARS =
 		"ABCDEFGHIJKLMNOPQRSTUVWXYZ012345" +
 			"6789.,!?'\"-+=/\\%()<>:;^@ÁÉÍÓÚÑ¿¡" +
 			"ÃÊÇÔÕĞÇÜİÖŞÆØÅŰŐ[]#|{}_АБВГДЕЁЖЗ" +
@@ -32,7 +32,7 @@ public class Font {
 	public static void
 	draw(String msg, Screen screen, int x, int y, int whiteTint) {
 		for (int i = 0; i < msg.length(); i++) { // Loops through all the characters that you typed
-			int ix = chars.indexOf(msg.charAt(i)); // The current letter in the message loop
+			int ix = CHARS.indexOf(msg.charAt(i)); // The current letter in the message loop
 			if (ix >= 0) {
 				// If that character's position is larger than or equal to 0, then render the character on the screen.
 				screen.render(x + i * textWidth(msg.substring(i, i + 1)), y, ix % 32, ix / 32, 0, Renderer.spriteLinker.getSheet(SpriteType.Gui, "font"), whiteTint);
@@ -114,7 +114,7 @@ public class Font {
 	}
 
 	public static int textHeight() {//noinspection SuspiciousNameCombination
-		return MinicraftImage.boxWidth;
+		return MinicraftImage.BOX_WIDTH;
 	}
 
 	public static void drawCentered(String msg, Screen screen, int y, int color) {
@@ -124,7 +124,7 @@ public class Font {
 
 	/// note: the y centering values in the FontStyle object will be used as a paragraph y centering value instead.
 	public static void drawParagraph(String para, Screen screen, FontStyle style, int lineSpacing) {
-		drawParagraph(para, screen, Screen.w, Screen.h, style, lineSpacing);
+		drawParagraph(para, screen, Screen.W, Screen.H, style, lineSpacing);
 	}
 
 	public static void drawParagraph(String para, Screen screen, int w, int h, FontStyle style, int lineSpacing) {

@@ -17,8 +17,8 @@ import java.util.HashMap;
 
 public class Bed extends Furniture {
 
-	private static final HashMap<DyeItem.DyeColor, LinkedSprite> sprites = new HashMap<>();
-	private static final HashMap<DyeItem.DyeColor, LinkedSprite> itemSprites = new HashMap<>();
+	private static final HashMap<DyeItem.DyeColor, LinkedSprite> SPRITES = new HashMap<>();
+	private static final HashMap<DyeItem.DyeColor, LinkedSprite> ITEM_SPRITES = new HashMap<>();
 
 	@Override
 	public @NotNull Furniture copy() {
@@ -27,13 +27,13 @@ public class Bed extends Furniture {
 
 	static {
 		for (DyeItem.DyeColor color : DyeItem.DyeColor.values()) {
-			sprites.put(color, new LinkedSprite(SpriteType.Entity, color.toString().toLowerCase() + "_bed"));
-			itemSprites.put(color, new LinkedSprite(SpriteType.Item, color.toString().toLowerCase() + "_bed"));
+			SPRITES.put(color, new LinkedSprite(SpriteType.Entity, color.toString().toLowerCase() + "_bed"));
+			ITEM_SPRITES.put(color, new LinkedSprite(SpriteType.Item, color.toString().toLowerCase() + "_bed"));
 		}
 	}
 
 	private static int playersAwake = 1;
-	private static final HashMap<Player, Bed> sleepingPlayers = new HashMap<>();
+	private static final HashMap<Player, Bed> SLEEPING_PLAYERS = new HashMap<>();
 
 	public final DyeItem.DyeColor color;
 
@@ -42,7 +42,7 @@ public class Bed extends Furniture {
 	 */
 	public Bed() { this(DyeItem.DyeColor.RED); }
 	public Bed(DyeItem.DyeColor color) {
-		super(MyUtils.capitalizeFully(color.toString().replace('_', ' ')) + " Bed", sprites.get(color), itemSprites.get(color), 3, 2);
+		super(MyUtils.capitalizeFully(color.toString().replace('_', ' ')) + " Bed", SPRITES.get(color), ITEM_SPRITES.get(color), 3, 2);
 		this.color = color;
 	}
 
@@ -56,7 +56,7 @@ public class Bed extends Furniture {
 			player.spawnx = player.x >> Tile.TILE_SIZE_SHIFT;
 			player.spawny = player.y >> Tile.TILE_SIZE_SHIFT;
 
-			sleepingPlayers.put(player, this);
+			SLEEPING_PLAYERS.put(player, this);
 			player.remove();
 
 			playersAwake = 0;
@@ -68,9 +68,9 @@ public class Bed extends Furniture {
 	public static boolean checkCanSleep(Player player) {
 		if (inBed(player)) return false;
 
-		if (!(Updater.tickCount >= Updater.sleepStartTime || Updater.tickCount < Updater.sleepEndTime && Updater.pastDay1)) {
+		if (!(Updater.tickCount >= Updater.SLEEP_START_TIME || Updater.tickCount < Updater.SLEEP_END_TIME && Updater.pastDay1)) {
 			// It is too early to sleep; display how much time is remaining.
-			int sec = (int) Math.ceil((Updater.sleepStartTime - Updater.tickCount) * 1.0 / Updater.normSpeed); // gets the seconds until sleeping is allowed. // normSpeed is in tiks/sec.
+			int sec = (int) Math.ceil((Updater.SLEEP_START_TIME - Updater.tickCount) * 1.0 / Updater.NORM_SPEED); // gets the seconds until sleeping is allowed. // normSpeed is in tiks/sec.
 			String note = Localization.getLocalized("minicraft.notification.cannot_sleep", sec / 60, sec % 60);
 			Game.notifications.add(note); // Add the notification displaying the time remaining in minutes and seconds.
 
@@ -85,11 +85,11 @@ public class Bed extends Furniture {
 	}
 
 	public static boolean inBed(Player player) {
-		return sleepingPlayers.containsKey(player);
+		return SLEEPING_PLAYERS.containsKey(player);
 	}
 
 	public static Level getBedLevel(Player player) {
-		Bed bed = sleepingPlayers.get(player);
+		Bed bed = SLEEPING_PLAYERS.get(player);
 		if (bed == null)
 			return null;
 		return bed.getLevel();
@@ -97,16 +97,16 @@ public class Bed extends Furniture {
 
 	// Get the player "out of bed"; used on the client only.
 	public static void removePlayer(Player player) {
-		sleepingPlayers.remove(player);
+		SLEEPING_PLAYERS.remove(player);
 	}
 
 	public static void removePlayers() {
-		sleepingPlayers.clear();
+		SLEEPING_PLAYERS.clear();
 	}
 
 	// Client should not call this.
 	public static void restorePlayer(Player player) {
-		Bed bed = sleepingPlayers.remove(player);
+		Bed bed = SLEEPING_PLAYERS.remove(player);
 		if (bed != null) {
 			if (bed.getLevel() == null)
 				Game.levels[Game.currentLevel].add(player);
@@ -119,12 +119,12 @@ public class Bed extends Furniture {
 
 	// Client should not call this.
 	public static void restorePlayers() {
-		for (Player p : sleepingPlayers.keySet()) {
-			Bed bed = sleepingPlayers.get(p);
+		for (Player p : SLEEPING_PLAYERS.keySet()) {
+			Bed bed = SLEEPING_PLAYERS.get(p);
 			bed.getLevel().add(p);
 		}
 
-		sleepingPlayers.clear();
+		SLEEPING_PLAYERS.clear();
 
 		playersAwake = 1;
 	}

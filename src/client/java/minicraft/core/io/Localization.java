@@ -20,12 +20,12 @@ public class Localization {
 	public static boolean unlocalizedStringTracing = false;
 
 	private static final Pattern NUMBER_REGEX = Pattern.compile("^[+-]?((\\d+(\\.\\d*)?)|(\\.\\d+))$");
-	private static final HashMap<Locale, HashSet<String>> knownUnlocalizedStrings = new HashMap<>();
-	private static final HashMap<String, String> localization = new HashMap<>();
+	private static final HashMap<Locale, HashSet<String>> KNOWN_UNLOCALIZED_STRINGS = new HashMap<>();
+	private static final HashMap<String, String> LOCALIZATION = new HashMap<>();
 
 	private static Locale selectedLocale = DEFAULT_LOCALE;
-	private static final HashMap<Locale, ArrayList<String>> unloadedLocalization = new HashMap<>();
-	private static final HashMap<Locale, LocaleInformation> localeInfo = new HashMap<>();
+	private static final HashMap<Locale, ArrayList<String>> UNLOADED_LOCALIZATION = new HashMap<>();
+	private static final HashMap<Locale, LocaleInformation> LOCALE_INFO = new HashMap<>();
 
 	/**
 	 * Get the provided key's localization for the currently selected language.
@@ -42,14 +42,14 @@ public class Localization {
 			return key; // This is a number; don't try to localize it
 		}
 
-		String localString = localization.get(key);
+		String localString = LOCALIZATION.get(key);
 
 		if (localString == null) {
-			if (!knownUnlocalizedStrings.containsKey(selectedLocale))
-				knownUnlocalizedStrings.put(selectedLocale, new HashSet<>());
-			if (!knownUnlocalizedStrings.get(selectedLocale).contains(key)) {
+			if (!KNOWN_UNLOCALIZED_STRINGS.containsKey(selectedLocale))
+				KNOWN_UNLOCALIZED_STRINGS.put(selectedLocale, new HashSet<>());
+			if (!KNOWN_UNLOCALIZED_STRINGS.get(selectedLocale).contains(key)) {
 				Logger.tag("LOC").trace(unlocalizedStringTracing ? new Throwable("Tracing") : null, "{}: '{}' is unlocalized.", selectedLocale.toLanguageTag(), key);
-				knownUnlocalizedStrings.get(selectedLocale).add(key);
+				KNOWN_UNLOCALIZED_STRINGS.get(selectedLocale).add(key);
 			}
 		}
 
@@ -74,7 +74,7 @@ public class Localization {
 	 */
 	@NotNull
 	public static LocaleInformation getSelectedLanguage() {
-		return localeInfo.get(selectedLocale);
+		return LOCALE_INFO.get(selectedLocale);
 	}
 
 	/**
@@ -83,7 +83,7 @@ public class Localization {
 	 */
 	@NotNull
 	public static LocaleInformation[] getLocales() {
-		return localeInfo.values().toArray(new LocaleInformation[0]);
+		return LOCALE_INFO.values().toArray(new LocaleInformation[0]);
 	}
 
 	/**
@@ -109,30 +109,30 @@ public class Localization {
 	 */
 	public static void loadLanguage() {
 		Logging.RESOURCEHANDLER_LOCALIZATION.trace("Loading language...");
-		localization.clear();
+		LOCALIZATION.clear();
 
 		if (selectedLocale == DEBUG_LOCALE) return; // DO NOT load any localization for debugging.
 
 		// Check if selected localization exists.
-		if (!unloadedLocalization.containsKey(selectedLocale))
+		if (!UNLOADED_LOCALIZATION.containsKey(selectedLocale))
 			selectedLocale = DEFAULT_LOCALE;
 
 		// Attempt to load the string as a json object.
 		JSONObject json;
-		for (String text : unloadedLocalization.get(selectedLocale)) {
+		for (String text : UNLOADED_LOCALIZATION.get(selectedLocale)) {
 			json = new JSONObject(text);
 			for (String key : json.keySet()) {
-				localization.put(key, json.getString(key));
+				LOCALIZATION.put(key, json.getString(key));
 			}
 		}
 
 		// Language fallback
 		if (!selectedLocale.equals(DEFAULT_LOCALE)) {
-			for (String text : unloadedLocalization.get(DEFAULT_LOCALE)) { // Getting default localization.
+			for (String text : UNLOADED_LOCALIZATION.get(DEFAULT_LOCALE)) { // Getting default localization.
 				json = new JSONObject(text);
 				for (String key : json.keySet()) {
-					if (!localization.containsKey(key)) { // The default localization is added only when the key is not existed.
-						localization.put(key, json.getString(key));
+					if (!LOCALIZATION.containsKey(key)) { // The default localization is added only when the key is not existed.
+						LOCALIZATION.put(key, json.getString(key));
 					}
 				}
 			}
@@ -141,10 +141,10 @@ public class Localization {
 
 	public static void resetLocalizations() {
 		// Clear array with localization files.
-		unloadedLocalization.clear();
-		localeInfo.clear();
+		UNLOADED_LOCALIZATION.clear();
+		LOCALE_INFO.clear();
 		if (isDebugLocaleEnabled) { // Adding the debug locale as an option.
-			localeInfo.put(DEBUG_LOCALE, new LocaleInformation(DEBUG_LOCALE, "Debug", null));
+			LOCALE_INFO.put(DEBUG_LOCALE, new LocaleInformation(DEBUG_LOCALE, "Debug", null));
 		}
 	}
 
@@ -177,13 +177,13 @@ public class Localization {
 	}
 
 	public static void addLocale(Locale loc, LocaleInformation info) {
-		if (!localeInfo.containsKey(loc)) localeInfo.put(loc, info);
+		if (!LOCALE_INFO.containsKey(loc)) LOCALE_INFO.put(loc, info);
 	}
 
 	public static void addLocalization(Locale loc, String json) {
-		if (!localeInfo.containsKey(loc)) return; // Only add when Locale Information is exist.
-		if (!unloadedLocalization.containsKey(loc))
-			unloadedLocalization.put(loc, new ArrayList<>());
-		unloadedLocalization.get(loc).add(json);
+		if (!LOCALE_INFO.containsKey(loc)) return; // Only add when Locale Information is exist.
+		if (!UNLOADED_LOCALIZATION.containsKey(loc))
+			UNLOADED_LOCALIZATION.put(loc, new ArrayList<>());
+		UNLOADED_LOCALIZATION.get(loc).add(json);
 	}
 }

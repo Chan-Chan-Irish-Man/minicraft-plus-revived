@@ -18,9 +18,9 @@ import minicraft.util.AdvancementElement;
 
 public class FenceTile extends Tile {
 
-	private static final SpriteAnimation wood = new SpriteAnimation(SpriteType.Tile, "wood_fence");
-	private static final SpriteAnimation stone = new SpriteAnimation(SpriteType.Tile, "stone_fence");
-	private static final SpriteAnimation obsidian = new SpriteAnimation(SpriteType.Tile, "obsidian_fence");
+	private static final SpriteAnimation WOOD = new SpriteAnimation(SpriteType.Tile, "wood_fence");
+	private static final SpriteAnimation STONE = new SpriteAnimation(SpriteType.Tile, "stone_fence");
+	private static final SpriteAnimation OBSIDIAN = new SpriteAnimation(SpriteType.Tile, "obsidian_fence");
 
 	protected final Material type;
 
@@ -35,13 +35,13 @@ public class FenceTile extends Tile {
 		this.type = type;
 		switch (type) {
 			case Wood:
-				sprite = wood;
+				sprite = WOOD;
 				break;
 			case Stone:
-				sprite = stone;
+				sprite = STONE;
 				break;
 			case Obsidian:
-				sprite = obsidian;
+				sprite = OBSIDIAN;
 				break;
 		}
 		top = new SpriteAnimation(SpriteType.Tile, type.toString().toLowerCase() + "_fence_top");

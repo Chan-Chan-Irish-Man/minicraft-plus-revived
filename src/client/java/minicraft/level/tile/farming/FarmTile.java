@@ -18,8 +18,8 @@ import minicraft.util.AdvancementElement;
 import java.util.Arrays;
 
 public class FarmTile extends Tile {
-	private static final SpriteAnimation sprite = new SpriteAnimation(SpriteType.Tile, "farmland");
-	private static final SpriteAnimation spriteMoist = new SpriteAnimation(SpriteType.Tile, "farmland_moist");
+	private static final SpriteAnimation SPRITE = new SpriteAnimation(SpriteType.Tile, "farmland");
+	private static final SpriteAnimation SPRITE_MOIST = new SpriteAnimation(SpriteType.Tile, "farmland_moist");
 
 	private static final int PLAYER_STAM_COST = 4;
 
@@ -27,7 +27,7 @@ public class FarmTile extends Tile {
 	private static final int RAND_MOIST_RANGE = 10;
 
 	public FarmTile(String name) {
-		super(name, sprite);
+		super(name, SPRITE);
 	}
 
 	protected FarmTile(String name, SpriteAnimation sprite) {
@@ -75,8 +75,8 @@ public class FarmTile extends Tile {
 	@Override
 	public void render(Screen screen, Level level, int x, int y) {
 		if ((level.getData(x, y) & 0b111) > 0)
-			spriteMoist.render(screen, level, x, y);
+			SPRITE_MOIST.render(screen, level, x, y);
 		else
-			sprite.render(screen, level, x, y);
+			SPRITE.render(screen, level, x, y);
 	}
 }

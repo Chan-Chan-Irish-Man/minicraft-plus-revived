@@ -14,12 +14,12 @@ import minicraft.level.Level;
 import minicraft.util.AdvancementElement;
 
 public class GrassTile extends Tile {
-	private static final SpriteAnimation sprite = new SpriteAnimation(SpriteType.Tile, "grass")
+	private static final SpriteAnimation SPRITE = new SpriteAnimation(SpriteType.Tile, "grass")
 		.setConnectionChecker((level, x, y, tile, side) -> tile.connectsToGrass(level, x, y))
 		.setSingletonWithConnective(true);
 
 	protected GrassTile(String name) {
-		super(name, sprite);
+		super(name, SPRITE);
 		maySpawn = true;
 	}
 
@@ -47,7 +47,7 @@ public class GrassTile extends Tile {
 	@Override
 	public void render(Screen screen, Level level, int x, int y) {
 		Tiles.get("dirt").render(screen, level, x, y);
-		sprite.render(screen, level, x, y);
+		SPRITE.render(screen, level, x, y);
 	}
 
 	public boolean interact(Level level, int xt, int yt, Player player, Item item, Direction attackDir) {

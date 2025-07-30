@@ -39,11 +39,11 @@ public class DeathChest extends Chest {
 
 		/// Set the expiration time based on the world difficulty.
 		if (Settings.get("diff").equals("minicraft.settings.difficulty.easy")) {
-			time = EASY_EXPIRE_TIME * Updater.normSpeed;
+			time = EASY_EXPIRE_TIME * Updater.NORM_SPEED;
 		} else if (Settings.get("diff").equals("minicraft.settings.difficulty.normal")) {
-			time = NORM_EXPIRE_TIME * Updater.normSpeed;
+			time = NORM_EXPIRE_TIME * Updater.NORM_SPEED;
 		} else if (Settings.get("diff").equals("minicraft.settings.difficulty.hard")) {
-			time = HARD_EXPIRE_TIME * Updater.normSpeed;
+			time = HARD_EXPIRE_TIME * Updater.NORM_SPEED;
 		}
 	}
 
@@ -66,7 +66,7 @@ public class DeathChest extends Chest {
 			remove();
 		}
 
-		if (time < 30 * Updater.normSpeed) { // If there is less than 30 seconds left...
+		if (time < 30 * Updater.NORM_SPEED) { // If there is less than 30 seconds left...
 			redtick += reverse ? -1 : 1; // inc/dec-rement redtick, changing the red shading.
 
 			/// These two statements keep the red color oscillating.
@@ -91,7 +91,7 @@ public class DeathChest extends Chest {
 
 	public void render(Screen screen) {
 		super.render(screen);
-		String timeString = (time / Updater.normSpeed) + "S";
+		String timeString = (time / Updater.NORM_SPEED) + "S";
 		Font.draw(timeString, screen, x - Font.textWidth(timeString) / 2, y - Font.textHeight() - getBounds().getHeight() / 2, Color.WHITE);
 	}
 

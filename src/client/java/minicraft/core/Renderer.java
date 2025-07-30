@@ -191,8 +191,8 @@ public class Renderer extends Game {
 		Level level = levels[currentLevel];
 		if (level == null) return;
 
-		int xScroll = player.x - Screen.w / 2; // Scrolls the screen in the x axis.
-		int yScroll = player.y - (Screen.h - 8) / 2; // Scrolls the screen in the y axis.
+		int xScroll = player.x - Screen.W / 2; // Scrolls the screen in the x axis.
+		int yScroll = player.y - (Screen.H - 8) / 2; // Scrolls the screen in the y axis.
 
 		// Stop scrolling if the screen is at the ...
 		// if (xScroll < 0) xScroll = 0; // ...Left border.
@@ -212,7 +212,7 @@ public class Renderer extends Game {
 		level.renderSprites(screen, xScroll, yScroll); // Renders level sprites on screen
 
 		// This creates the darkness in the caves
-		if ((currentLevel != 3 || Updater.tickCount < Updater.dayLength / 4 || Updater.tickCount > Updater.dayLength / 2) && !isMode("minicraft.settings.mode.creative")) {
+		if ((currentLevel != 3 || Updater.tickCount < Updater.DAY_LENGTH / 4 || Updater.tickCount > Updater.DAY_LENGTH / 2) && !isMode("minicraft.settings.mode.creative")) {
 			int brightnessMultiplier = player.potioneffects.containsKey(PotionType.Light) ? 12 : 8; // Brightens all light sources by a factor of 1.5 when the player has the Light potion effect. (8 above is normal)
 			level.renderLight(screen, xScroll, yScroll, brightnessMultiplier); // Finds (and renders) all the light from objects (like the player, lanterns, and lava).
 			screen.overlay(currentLevel, xScroll, yScroll); // Overlays the light screen over the main screen.
@@ -227,13 +227,13 @@ public class Renderer extends Game {
 		// This draws the black square where the selected item would be if you were holding it
 		if (!isMode("minicraft.settings.mode.creative") || player.activeItem != null) {
 			for (int x = 10; x < 26; x++) {
-				screen.render(x * 8, Screen.h - 8, 5, 2, 0, hudSheet.getSheet());
+				screen.render(x * 8, Screen.H - 8, 5, 2, 0, hudSheet.getSheet());
 			}
 		}
 
 		// Shows active item sprite and name in bottom toolbar.
 		if (player.activeItem != null) {
-			player.activeItem.renderHUD(screen, 10 * 8, Screen.h - 8, Color.WHITE);
+			player.activeItem.renderHUD(screen, 10 * 8, Screen.H - 8, Color.WHITE);
 		}
 
 
@@ -243,11 +243,11 @@ public class Renderer extends Game {
 				int ac = player.getInventory().count(Items.arrowItem);
 				// "^" is an infinite symbol.
 				if (isMode("minicraft.settings.mode.creative") || ac >= 10000)
-					Font.drawBackground("	x" + "^", screen, 84, Screen.h - 16);
+					Font.drawBackground("	x" + "^", screen, 84, Screen.H - 16);
 				else
-					Font.drawBackground("	x" + ac, screen, 84, Screen.h - 16);
+					Font.drawBackground("	x" + ac, screen, 84, Screen.H - 16);
 				// Displays the arrow icon
-				screen.render(10 * 8 + 4, Screen.h - 16, 4, 1, 0, hudSheet.getSheet());
+				screen.render(10 * 8 + 4, Screen.H - 16, 4, 1, 0, hudSheet.getSheet());
 			}
 		}
 
@@ -260,7 +260,7 @@ public class Renderer extends Game {
 		}
 
 		if (permStatus.size() > 0) {
-			FontStyle style = new FontStyle(Color.WHITE).setYPos(Screen.h / 2 - 25)
+			FontStyle style = new FontStyle(Color.WHITE).setYPos(Screen.H / 2 - 25)
 				.setRelTextPos(RelPos.TOP)
 				.setShadowType(Color.DARK_GRAY, false);
 
@@ -282,20 +282,20 @@ public class Renderer extends Game {
 			}
 			List<String> print = new ArrayList<>();
 			for (String n : notifications) {
-				for (String l : Font.getLines(n, Screen.w, Screen.h, 0))
+				for (String l : Font.getLines(n, Screen.W, Screen.H, 0))
 					print.add(l);
 			}
 
 			// Draw each current notification, with shadow text effect.
 			FontStyle style = new FontStyle(Color.WHITE).setShadowType(Color.DARK_GRAY, false)
-				.setYPos(Screen.h * 2 / 5).setRelTextPos(RelPos.TOP, false);
+				.setYPos(Screen.H * 2 / 5).setRelTextPos(RelPos.TOP, false);
 			Font.drawParagraph(print, screen, style, 0);
 		}
 
 
 		// SCORE MODE ONLY:
 		if (isMode("minicraft.settings.mode.score")) {
-			int seconds = (int) Math.ceil(Updater.scoreTime / (double) Updater.normSpeed);
+			int seconds = (int) Math.ceil(Updater.scoreTime / (double) Updater.NORM_SPEED);
 			int minutes = seconds / 60;
 			int hours = minutes / 60;
 			minutes %= 60;
@@ -306,15 +306,15 @@ public class Renderer extends Game {
 			else if (Updater.scoreTime >= 3600) timeCol = Color.get(330, 555);
 			else timeCol = Color.get(400, 555);
 
-			Font.draw(Localization.getLocalized("minicraft.display.gui.score.time_left", hours > 0 ? hours + "h " : "", minutes, seconds), screen, Screen.w / 2 - 9 * 8, 2, timeCol);
+			Font.draw(Localization.getLocalized("minicraft.display.gui.score.time_left", hours > 0 ? hours + "h " : "", minutes, seconds), screen, Screen.W / 2 - 9 * 8, 2, timeCol);
 
 			String scoreString = Localization.getLocalized("minicraft.display.gui.score.current_score", player.getScore());
-			Font.draw(scoreString, screen, Screen.w - Font.textWidth(scoreString) - 2, 3 + 8, Color.WHITE);
+			Font.draw(scoreString, screen, Screen.W - Font.textWidth(scoreString) - 2, 3 + 8, Color.WHITE);
 
 			if (player.getMultiplier() > 1) {
 				int multColor = player.getMultiplier() < Player.MAX_MULTIPLIER ? Color.get(-1, 540) : Color.RED;
 				String mult = "X" + player.getMultiplier();
-				Font.draw(mult, screen, Screen.w - Font.textWidth(mult) - 2, 4 + 2 * 8, multColor);
+				Font.draw(mult, screen, Screen.W - Font.textWidth(mult) - 2, 4 + 2 * 8, multColor);
 			}
 		}
 
@@ -324,7 +324,7 @@ public class Renderer extends Game {
 			ToolItem tool = (ToolItem) player.activeItem;
 			int dura = tool.dur * 100 / (tool.type.durability * (tool.level + 1));
 			int green = (int) (dura * 2.55f); // Let duration show as normal.
-			Font.drawBackground(dura + "%", screen, 164, Screen.h - 16, Color.get(1, 255 - green, green, 0));
+			Font.drawBackground(dura + "%", screen, 164, Screen.H - 16, Color.get(1, 255 - green, green, 0));
 		}
 
 		// WATERING CAN CONTAINER STATUS
@@ -333,7 +333,7 @@ public class Renderer extends Game {
 			WateringCanItem tin = (WateringCanItem) player.activeItem;
 			int dura = tin.content * 100 / tin.CAPACITY;
 			int green = (int) (dura * 2.55f); // Let duration show as normal.
-			Font.drawBackground(dura + "%", screen, 164, Screen.h - 16, Color.get(1, 255 - green, green, 0));
+			Font.drawBackground(dura + "%", screen, 164, Screen.H - 16, Color.get(1, 255 - green, green, 0));
 		}
 
 		// This renders the potions overlay
@@ -346,7 +346,7 @@ public class Renderer extends Game {
 			if (!player.simpPotionEffects) {
 				for (int i = 0; i < effects.length; i++) {
 					PotionType pType = effects[i].getKey();
-					int pTime = effects[i].getValue() / Updater.normSpeed;
+					int pTime = effects[i].getValue() / Updater.NORM_SPEED;
 					int minutes = pTime / 60;
 					int seconds = pTime % 60;
 					Font.drawBackground(Localization.getLocalized("minicraft.display.gui.potion_effects.hide_hint", input.getMapping("potionEffects")), screen, 180, 9);
@@ -355,7 +355,7 @@ public class Renderer extends Game {
 			} else {
 				for (int i = 0; i < effects.length; i++) {
 					PotionType pType = effects[i].getKey();
-					Font.drawBackground(pType.toString().substring(0, 1), screen, Screen.w - 17 - (effects.length - 1 - i) * 8, 9, pType.dispColor);
+					Font.drawBackground(pType.toString().substring(0, 1), screen, Screen.W - 17 - (effects.length - 1 - i) * 8, 9, pType.dispColor);
 				}
 			}
 		}
@@ -365,47 +365,47 @@ public class Renderer extends Game {
 			for (int i = 1; i <= 30; i++) {
 				// Renders your current red default hearts, golden hearts for 20 HP, obsidian hearts for 30 HP, or black hearts for damaged health.
 				if (i < 11) {
-					screen.render((i - 1) * 8, Screen.h - 16, 0, 1, 0, hudSheet.getSheet()); // Empty Hearts
+					screen.render((i - 1) * 8, Screen.H - 16, 0, 1, 0, hudSheet.getSheet()); // Empty Hearts
 				}
 				if (i < player.health + 1 && i < 11) {
-					screen.render((i - 1) * 8, Screen.h - 16, 0, 0, 0, hudSheet.getSheet());  // Red Hearts
+					screen.render((i - 1) * 8, Screen.H - 16, 0, 0, 0, hudSheet.getSheet());  // Red Hearts
 				}
 				if (i < player.health + 1 && i < 21 && i >= 11) {
-					screen.render((i - 11) * 8, Screen.h - 16, 0, 2, 0, hudSheet.getSheet()); // Yellow Hearts
+					screen.render((i - 11) * 8, Screen.H - 16, 0, 2, 0, hudSheet.getSheet()); // Yellow Hearts
 				}
 				if (i < player.health + 1 && i >= 21) {
-					screen.render((i - 21) * 8, Screen.h - 16, 0, 3, 0, hudSheet.getSheet()); // Obsidian Hearts
+					screen.render((i - 21) * 8, Screen.H - 16, 0, 3, 0, hudSheet.getSheet()); // Obsidian Hearts
 				}
 			}
-			for (int i = 0; i < Player.maxStat; i++) {
+			for (int i = 0; i < Player.MAX_STAT; i++) {
 
 				// Renders armor
-				int armor = player.armor * Player.maxStat / Player.maxArmor;
+				int armor = player.armor * Player.MAX_STAT / Player.MAX_ARMOR;
 				if (i <= armor && player.curArmor != null) {
-					screen.render(i * 8, Screen.h - 24, player.curArmor.sprite);
+					screen.render(i * 8, Screen.H - 24, player.curArmor.sprite);
 				}
 
 				if (player.staminaRechargeDelay > 0) {
 					// Creates the white/gray blinking effect when you run out of stamina.
 					if (player.staminaRechargeDelay / 4 % 2 == 0) {
-						screen.render(i * 8, Screen.h - 8, 1, 2, 0, hudSheet.getSheet());
+						screen.render(i * 8, Screen.H - 8, 1, 2, 0, hudSheet.getSheet());
 					} else {
-						screen.render(i * 8, Screen.h - 8, 1, 1, 0, hudSheet.getSheet());
+						screen.render(i * 8, Screen.H - 8, 1, 1, 0, hudSheet.getSheet());
 					}
 				} else {
 					// Renders your current stamina, and uncharged gray stamina.
 					if (i < player.stamina) {
-						screen.render(i * 8, Screen.h - 8, 1, 0, 0, hudSheet.getSheet());
+						screen.render(i * 8, Screen.H - 8, 1, 0, 0, hudSheet.getSheet());
 					} else {
-						screen.render(i * 8, Screen.h - 8, 1, 1, 0, hudSheet.getSheet());
+						screen.render(i * 8, Screen.H - 8, 1, 1, 0, hudSheet.getSheet());
 					}
 				}
 
 				// Renders hunger
 				if (i < player.hunger) {
-					screen.render(i * 8 + (Screen.w - 80), Screen.h - 16, 2, 0, 0, hudSheet.getSheet());
+					screen.render(i * 8 + (Screen.W - 80), Screen.H - 16, 2, 0, 0, hudSheet.getSheet());
 				} else {
-					screen.render(i * 8 + (Screen.w - 80), Screen.h - 16, 2, 1, 0, hudSheet.getSheet());
+					screen.render(i * 8 + (Screen.W - 80), Screen.H - 16, 2, 1, 0, hudSheet.getSheet());
 				}
 			}
 		}
@@ -417,7 +417,7 @@ public class Renderer extends Game {
 				renderBossbar((int) ((((float) boss.health) / boss.maxHealth) * 100), "Air wizard");
 			} else if (ObsidianKnight.active && (player.getLevel().depth == -4)) {
 				ObsidianKnight boss = ObsidianKnight.entity;
-				renderBossbar((int) ((((float) boss.health) / boss.maxHealth) * 100), "Obsidian Knight");
+				renderBossbar((int) ((((float) boss.health) / boss.MAX_HEALTH) * 100), "Obsidian Knight");
 			}
 		}
 
@@ -429,8 +429,8 @@ public class Renderer extends Game {
 
 	public static void renderBossbar(int length, String title) {
 
-		int x = Screen.w / 4 - 24;
-		int y = Screen.h / 8 - 24;
+		int x = Screen.W / 4 - 24;
+		int y = Screen.H / 8 - 24;
 
 		int max_bar_length = 100;
 		int bar_length = length; // Bossbar size.
@@ -483,7 +483,7 @@ public class Renderer extends Game {
 		if (questsShown.size() > 0) {
 			potionRenderOffset = 9 + (Math.min(questsShown.size(), 3)) * 8 + 8 * 2;
 			new Menu.Builder(true, 0, RelPos.RIGHT, questsShown)
-				.setPositioning(new Point(Screen.w - 9, 9), RelPos.BOTTOM_LEFT)
+				.setPositioning(new Point(Screen.W - 9, 9), RelPos.BOTTOM_LEFT)
 				.setTitle("Quests")
 				.createMenu()
 				.render(screen);
@@ -502,7 +502,7 @@ public class Renderer extends Game {
 			info.add("VERSION: " + Initializer.VERSION);
 			info.add(Initializer.fra + " fps");
 			info.add("Day tiks: " + Updater.tickCount + " (" + Updater.getTime() + ")");
-			info.add((Updater.normSpeed * Updater.gamespeed) + " tps");
+			info.add((Updater.NORM_SPEED * Updater.gamespeed) + " tps");
 
 			info.add("walk spd: " + player.moveSpeed);
 			info.add("X: " + (player.x >> Tile.TILE_SIZE_SHIFT) + "-" + (player.x % Tile.TILE_PIXELS));
@@ -548,7 +548,7 @@ public class Renderer extends Game {
 		String msg = "Click to focus!"; // The message when you click off the screen.
 
 		Updater.paused = true; // Perhaps paused is only used for this.
-		int xx = (Screen.w - Font.textWidth(msg)) / 2; // The width of the box
+		int xx = (Screen.W - Font.textWidth(msg)) / 2; // The width of the box
 		int yy = (HEIGHT - 8) / 2; // The height of the box
 		int w = msg.length(); // Length of message in characters.
 		int h = 1;

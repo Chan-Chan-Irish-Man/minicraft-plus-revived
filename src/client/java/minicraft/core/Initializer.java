@@ -86,7 +86,7 @@ public class Initializer extends Game {
 
 		while (running) {
 			long now = System.nanoTime();
-			double nsPerTick = 1E9D / Updater.normSpeed; // Nanosecs per sec divided by ticks per sec = nanosecs per tick
+			double nsPerTick = 1E9D / Updater.NORM_SPEED; // Nanosecs per sec divided by ticks per sec = nanosecs per tick
 			if (currentDisplay == null) nsPerTick /= Updater.gamespeed;
 			unprocessed += (now - lastTick) / nsPerTick; // Figures out the unprocessed time between now and lastTick.
 			lastTick = now;

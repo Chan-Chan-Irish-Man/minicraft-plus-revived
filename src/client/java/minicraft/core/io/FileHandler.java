@@ -34,8 +34,8 @@ public class FileHandler extends Game {
 	public static final int SKIP = 2;
 
 	public static final String OS;
-	private static final String localGameDir;
-	static final String systemGameDir;
+	private static final String LOCAL_GAME_DIRECTORY;
+	static final String SYSTEM_GAME_DIRECTORY;
 	private static Path jarResourcesPath;
 
 	static {
@@ -43,14 +43,14 @@ public class FileHandler extends Game {
 		String local = "playminicraft/mods/Minicraft_Plus";
 
 		if (OS.contains("windows")) // windows
-			systemGameDir = System.getenv("APPDATA");
+			SYSTEM_GAME_DIRECTORY = System.getenv("APPDATA");
 		else {
-			systemGameDir = System.getProperty("user.home");
+			SYSTEM_GAME_DIRECTORY = System.getProperty("user.home");
 			if (!OS.contains("mac"))
 				local = "." + local; // linux
 		}
 
-		localGameDir = "/" + local;
+		LOCAL_GAME_DIRECTORY = "/" + local;
 	}
 
 
@@ -71,7 +71,7 @@ public class FileHandler extends Game {
 		} else {
 			saveDir = FileHandler.getSystemGameDir();
 
-			gameDir = saveDir + localGameDir;
+			gameDir = saveDir + LOCAL_GAME_DIRECTORY;
 			Logging.GAMEHANDLER.debug("Determined gameDir: " + gameDir);
 
 			File testFile = new File(gameDir);
@@ -100,11 +100,11 @@ public class FileHandler extends Game {
 	}
 
 	public static String getSystemGameDir() {
-		return systemGameDir;
+		return SYSTEM_GAME_DIRECTORY;
 	}
 
 	public static String getLocalGameDir() {
-		return localGameDir;
+		return LOCAL_GAME_DIRECTORY;
 	}
 
 	private static void deleteFolder(File top) {

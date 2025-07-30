@@ -103,54 +103,54 @@ public class Structure {
 		}
 	}
 
-	static final Structure dungeonGate;
-	static final Structure dungeonLock;
-	static final Structure dungeonBossRoom;
-	static final Structure lavaPool;
-	static final Structure ornateLavaPool;
-	static final Structure dungeonGarden;
-	static final Structure dungeonChest;
-	static final Structure dungeonSpawner;
+	static final Structure DUNGEON_GATE;
+	static final Structure DUNGEON_LOCK;
+	static final Structure DUNGEON_BOSS_ROOM;
+	static final Structure LAVA_POOL;
+	static final Structure ORNATE_LAVA_POOL;
+	static final Structure DUNGEON_GARDEN;
+	static final Structure DUNGEON_CHEST;
+	static final Structure DUNGEON_SPAWNER;
 
 	// All the "mobDungeon" structures are for the spawner structures
-	static final Structure mobDungeonCenter;
-	static final Structure mobDungeonNorth;
-	static final Structure mobDungeonSouth;
-	static final Structure mobDungeonEast;
-	static final Structure mobDungeonWest;
+	static final Structure MOB_DUNGEON_CENTER;
+	static final Structure MOB_DUNGEON_NORTH;
+	static final Structure MOB_DUNGEON_SOUTH;
+	static final Structure MOB_DUNGEON_EAST;
+	static final Structure MOB_DUNGEON_WEST;
 
-	static final Structure airWizardHouse;
+	static final Structure AIR_WIZARD_HOUSE;
 
 	// Used for random villages
-	static final Structure villageHouseNormal;
-	static final Structure villageHouseTwoDoor;
+	static final Structure VILLAGE_HOUSE_NORMAL;
+	static final Structure VILLAGE_HOUSE_TWO_DOOR;
 
-	static final Structure villageRuinedOverlay1;
-	static final Structure villageRuinedOverlay2;
+	static final Structure VILLAGE_RUINED_OVERLAY_1;
+	static final Structure VILLAGE_RUINED_OVERLAY_2;
 
 	// Ok, because of the way the system works, these structures are rotated 90 degrees clockwise when placed
 	// Then it's flipped on the vertical
 	static {
-		dungeonGate = new Structure();
-		dungeonGate.setData("O:Obsidian,D:Obsidian Door,W:Obsidian Wall",
+		DUNGEON_GATE = new Structure();
+		DUNGEON_GATE.setData("O:Obsidian,D:Obsidian Door,W:Obsidian Wall",
 			"WWDWW\n" +
 				"WOOOW\n" +
 				"DOOOD\n" +
 				"WOOOW\n" +
 				"WWDWW"
 		);
-		dungeonGate.addFurniture(-1, -1, new Lantern(Lantern.Type.IRON));
+		DUNGEON_GATE.addFurniture(-1, -1, new Lantern(Lantern.Type.IRON));
 
-		dungeonLock = new Structure();
-		dungeonLock.setData("O:Obsidian,W:Obsidian Wall",
+		DUNGEON_LOCK = new Structure();
+		DUNGEON_LOCK.setData("O:Obsidian,W:Obsidian Wall",
 			"WWWWW\n" +
 				"WOOOW\n" +
 				"WOOOW\n" +
 				"WOOOW\n" +
 				"WWWWW"
 		);
-		dungeonBossRoom = new Structure();
-		dungeonBossRoom.setData("O:Obsidian Boss Floor,D:Obsidian Boss Door,W:Obsidian Boss Wall",
+		DUNGEON_BOSS_ROOM = new Structure();
+		DUNGEON_BOSS_ROOM.setData("O:Obsidian Boss Floor,D:Obsidian Boss Door,W:Obsidian Boss Wall",
 			"WWWWDWWWW\n" +
 				"WOOOOOOOW\n" +
 				"WOOOOOOOW\n" +
@@ -161,10 +161,10 @@ public class Structure {
 				"WOOOOOOOW\n" +
 				"WWWWDWWWW"
 		);
-		dungeonBossRoom.addFurniture(0, 0, new KnightStatue(5000));
+		DUNGEON_BOSS_ROOM.addFurniture(0, 0, new KnightStatue(5000));
 
-		dungeonSpawner = new Structure();
-		dungeonSpawner.setData("F:Grass,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
+		DUNGEON_SPAWNER = new Structure();
+		DUNGEON_SPAWNER.setData("F:Grass,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
 			"WWWDWWW\n" +
 				"WOOOOOW\n" +
 				"WOFFFOW\n" +
@@ -174,14 +174,14 @@ public class Structure {
 				"WWWDWWW"
 		);
 
-		lavaPool = new Structure();
-		lavaPool.setData("L:Lava",
+		LAVA_POOL = new Structure();
+		LAVA_POOL.setData("L:Lava",
 			"LL\n" +
 				"LL"
 		);
 
-		ornateLavaPool = new Structure();
-		ornateLavaPool.setData("L:Lava,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
+		ORNATE_LAVA_POOL = new Structure();
+		ORNATE_LAVA_POOL.setData("L:Lava,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
 			"WWWDWWW\n" +
 				"WOOOOOW\n" +
 				"WOLLLOW\n" +
@@ -191,8 +191,8 @@ public class Structure {
 				"WWWDWWW"
 		);
 
-		dungeonGarden = new Structure();
-		dungeonGarden.setData("F:Flower,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
+		DUNGEON_GARDEN = new Structure();
+		DUNGEON_GARDEN.setData("F:Flower,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
 			"WWWDWWW\n" +
 				"WOOOOOW\n" +
 				"WOFFFOW\n" +
@@ -202,8 +202,8 @@ public class Structure {
 				"WWWDWWW"
 		);
 
-		dungeonChest = new Structure();
-		dungeonChest.setData("F:Grass,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
+		DUNGEON_CHEST = new Structure();
+		DUNGEON_CHEST.setData("F:Grass,W:Obsidian Wall,O:Ornate Obsidian,D:Obsidian Door",
 			"WWWDWWW\n" +
 				"WOOOOOW\n" +
 				"WOFFFOW\n" +
@@ -212,42 +212,42 @@ public class Structure {
 				"WOOOOOW\n" +
 				"WWWDWWW"
 		);
-		dungeonChest.addFurniture(0, 0, new DungeonChest(null));
+		DUNGEON_CHEST.addFurniture(0, 0, new DungeonChest(null));
 
-		mobDungeonCenter = new Structure();
-		mobDungeonCenter.setData("B:Stone Bricks,W:Stone Wall",
+		MOB_DUNGEON_CENTER = new Structure();
+		MOB_DUNGEON_CENTER.setData("B:Stone Bricks,W:Stone Wall",
 			"WWBWW\n" +
 				"WBBBW\n" +
 				"BBBBB\n" +
 				"WBBBW\n" +
 				"WWBWW"
 		);
-		mobDungeonNorth = new Structure();
-		mobDungeonNorth.setData("B:Stone Bricks,W:Stone Wall",
+		MOB_DUNGEON_NORTH = new Structure();
+		MOB_DUNGEON_NORTH.setData("B:Stone Bricks,W:Stone Wall",
 			"WWWWW\n" +
 				"WBBBB\n" +
 				"BBBBB\n" +
 				"WBBBB\n" +
 				"WWWWW"
 		);
-		mobDungeonSouth = new Structure();
-		mobDungeonSouth.setData("B:Stone Bricks,W:Stone Wall",
+		MOB_DUNGEON_SOUTH = new Structure();
+		MOB_DUNGEON_SOUTH.setData("B:Stone Bricks,W:Stone Wall",
 			"WWWWW\n" +
 				"BBBBW\n" +
 				"BBBBB\n" +
 				"BBBBW\n" +
 				"WWWWW"
 		);
-		mobDungeonEast = new Structure();
-		mobDungeonEast.setData("B:Stone Bricks,W:Stone Wall",
+		MOB_DUNGEON_EAST = new Structure();
+		MOB_DUNGEON_EAST.setData("B:Stone Bricks,W:Stone Wall",
 			"WBBBW\n" +
 				"WBBBW\n" +
 				"WBBBW\n" +
 				"WBBBW\n" +
 				"WWBWW"
 		);
-		mobDungeonWest = new Structure();
-		mobDungeonWest.setData("B:Stone Bricks,W:Stone Wall",
+		MOB_DUNGEON_WEST = new Structure();
+		MOB_DUNGEON_WEST.setData("B:Stone Bricks,W:Stone Wall",
 			"WWBWW\n" +
 				"WBBBW\n" +
 				"WBBBW\n" +
@@ -255,19 +255,19 @@ public class Structure {
 				"WBBBW"
 		);
 
-		airWizardHouse = new Structure();
-		airWizardHouse.setData("F:Wood Planks,W:Wood Wall,D:Wood Door",
+		AIR_WIZARD_HOUSE = new Structure();
+		AIR_WIZARD_HOUSE.setData("F:Wood Planks,W:Wood Wall,D:Wood Door",
 			"WWWWWWW\n" +
 				"WFFFFFW\n" +
 				"DFFFFFW\n" +
 				"WFFFFFW\n" +
 				"WWWWWWW"
 		);
-		airWizardHouse.addFurniture(-2, 0, new Lantern(Lantern.Type.GOLD));
-		airWizardHouse.addFurniture(0, 0, new Crafter(Crafter.Type.Enchanter));
+		AIR_WIZARD_HOUSE.addFurniture(-2, 0, new Lantern(Lantern.Type.GOLD));
+		AIR_WIZARD_HOUSE.addFurniture(0, 0, new Crafter(Crafter.Type.Enchanter));
 
-		villageHouseNormal = new Structure();
-		villageHouseNormal.setData("F:Wood Planks,W:Wood Wall,D:Wood Door,G:Grass",
+		VILLAGE_HOUSE_NORMAL = new Structure();
+		VILLAGE_HOUSE_NORMAL.setData("F:Wood Planks,W:Wood Wall,D:Wood Door,G:Grass",
 			"WWWWW\n" +
 				"WFFFW\n" +
 				"WFFFD\n" +
@@ -275,8 +275,8 @@ public class Structure {
 				"WWWWW"
 		);
 
-		villageHouseTwoDoor = new Structure();
-		villageHouseTwoDoor.setData("F:Wood Planks,W:Wood Wall,D:Wood Door,G:Grass",
+		VILLAGE_HOUSE_TWO_DOOR = new Structure();
+		VILLAGE_HOUSE_TWO_DOOR.setData("F:Wood Planks,W:Wood Wall,D:Wood Door,G:Grass",
 			"WWWWW\n" +
 				"WFFFW\n" +
 				"DFFFW\n" +
@@ -284,8 +284,8 @@ public class Structure {
 				"WWDWW"
 		);
 
-		villageRuinedOverlay1 = new Structure();
-		villageRuinedOverlay1.setData("G:Grass,F:Wood Planks",
+		VILLAGE_RUINED_OVERLAY_1 = new Structure();
+		VILLAGE_RUINED_OVERLAY_1.setData("G:Grass,F:Wood Planks",
 			"**FG*\n" +
 				"F*GG*\n" +
 				"*G**F\n" +
@@ -293,8 +293,8 @@ public class Structure {
 				"***G*"
 		);
 
-		villageRuinedOverlay2 = new Structure();
-		villageRuinedOverlay2.setData("G:Grass,F:Wood Planks",
+		VILLAGE_RUINED_OVERLAY_2 = new Structure();
+		VILLAGE_RUINED_OVERLAY_2.setData("G:Grass,F:Wood Planks",
 			"F**G*\n" +
 				"*****\n" +
 				"*GG**\n" +

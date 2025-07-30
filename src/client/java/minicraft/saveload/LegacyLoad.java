@@ -53,7 +53,7 @@ public class LegacyLoad {
 
 	String location = Game.gameDir;
 
-	private static final String extension = Save.extension;
+	private static final String EXTENSION = Save.extension;
 
 	ArrayList<String> data;
 	ArrayList<String> extradata;
@@ -78,7 +78,7 @@ public class LegacyLoad {
 	public LegacyLoad(String worldname) {
 		location += "/saves/" + worldname + "/";
 
-		File testFile = new File(location + "KeyPrefs" + extension);
+		File testFile = new File(location + "KeyPrefs" + EXTENSION);
 		if (!testFile.exists()) {
 			worldVer = new Version("1.8");
 			oldSave = true;
@@ -122,7 +122,7 @@ public class LegacyLoad {
 
 			if (filename.contains("Level")) {
 				total = new StringBuilder();
-				br2 = new BufferedReader(new FileReader(filename.substring(0, filename.lastIndexOf("/") + 7) + "data" + extension));
+				br2 = new BufferedReader(new FileReader(filename.substring(0, filename.lastIndexOf("/") + 7) + "data" + EXTENSION));
 
 				while ((curLine = br2.readLine()) != null)
 					total.append(curLine);
@@ -181,7 +181,7 @@ public class LegacyLoad {
 	private int playerac = 0; // This is a temp storage var for use to restore player arrow count.
 
 	public void loadGame(String filename) {
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 		boolean hasVersion = data.get(0).contains(".");
 		if (hasVersion) {
 			worldVer = new Version(data.get(0)); // Gets the world version
@@ -218,7 +218,7 @@ public class LegacyLoad {
 
 	public void loadWorld(String filename) {
 		for (int l = 0; l < World.levels.length; l++) {
-			loadFromFile(location + filename + l + extension);
+			loadFromFile(location + filename + l + EXTENSION);
 
 			int lvlw = Integer.parseInt(data.get(0));
 			int lvlh = Integer.parseInt(data.get(1));
@@ -246,7 +246,7 @@ public class LegacyLoad {
 	}
 
 	public void loadPlayer(String filename, Player player) {
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 		player.x = Integer.parseInt(data.get(0));
 		player.y = Integer.parseInt(data.get(1));
 		player.spawnx = Integer.parseInt(data.get(2));
@@ -312,7 +312,7 @@ public class LegacyLoad {
 
 	public void loadInventory(String filename, Inventory inventory) {
 		deathChest = new DeathChest();
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 		inventory.clearInv();
 
 		for (int i = 0; i < data.size(); i++) {
@@ -361,7 +361,7 @@ public class LegacyLoad {
 	}
 
 	public void loadEntities(String filename, Player player) {
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 
 		for (int i = 0; i < World.levels.length; i++) {
 			World.levels[i].clearEntities();

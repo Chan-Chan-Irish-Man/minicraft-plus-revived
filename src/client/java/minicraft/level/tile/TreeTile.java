@@ -22,29 +22,29 @@ import minicraft.screen.AchievementsDisplay;
 import minicraft.util.AdvancementElement;
 
 public class TreeTile extends Tile {
-	private static final LinkedSprite oakSprite = new LinkedSprite(SpriteType.Tile, "oak");
-	private static final LinkedSprite oakSpriteFull = new LinkedSprite(SpriteType.Tile, "oak_full");
-	private static final LinkedSprite spruceSprite = new LinkedSprite(SpriteType.Tile, "spruce");
-	private static final LinkedSprite spruceSpriteFull = new LinkedSprite(SpriteType.Tile, "spruce_full");
-	private static final LinkedSprite birchSprite = new LinkedSprite(SpriteType.Tile, "birch");
-	private static final LinkedSprite birchSpriteFull = new LinkedSprite(SpriteType.Tile, "birch_full");
-	private static final LinkedSprite ashSprite = new LinkedSprite(SpriteType.Tile, "ash");
-	private static final LinkedSprite ashSpriteFull = new LinkedSprite(SpriteType.Tile, "ash_full");
-	private static final LinkedSprite aspenSprite = new LinkedSprite(SpriteType.Tile, "aspen");
-	private static final LinkedSprite aspenSpriteFull = new LinkedSprite(SpriteType.Tile, "aspen_full");
-	private static final LinkedSprite firSprite = new LinkedSprite(SpriteType.Tile, "fir");
-	private static final LinkedSprite firSpriteFull = new LinkedSprite(SpriteType.Tile, "fir_full");
-	private static final LinkedSprite willowSprite = new LinkedSprite(SpriteType.Tile, "willow");
-	private static final LinkedSprite willowSpriteFull = new LinkedSprite(SpriteType.Tile, "willow_full");
+	private static final LinkedSprite OAK_SPRITE = new LinkedSprite(SpriteType.Tile, "oak");
+	private static final LinkedSprite OAK_SPRITE_FULL = new LinkedSprite(SpriteType.Tile, "oak_full");
+	private static final LinkedSprite SPRUCE_SPRITE = new LinkedSprite(SpriteType.Tile, "spruce");
+	private static final LinkedSprite SPRUCE_SPRITE_FULL = new LinkedSprite(SpriteType.Tile, "spruce_full");
+	private static final LinkedSprite BIRCH_SPRITE = new LinkedSprite(SpriteType.Tile, "birch");
+	private static final LinkedSprite BIRCH_SPRITE_FULL = new LinkedSprite(SpriteType.Tile, "birch_full");
+	private static final LinkedSprite ASH_SPRITE = new LinkedSprite(SpriteType.Tile, "ash");
+	private static final LinkedSprite ASH_SPRITE_FULL = new LinkedSprite(SpriteType.Tile, "ash_full");
+	private static final LinkedSprite ASPEN_SPRITE = new LinkedSprite(SpriteType.Tile, "aspen");
+	private static final LinkedSprite ASPEN_SPRITE_FULL = new LinkedSprite(SpriteType.Tile, "aspen_full");
+	private static final LinkedSprite FIR_SPRITE = new LinkedSprite(SpriteType.Tile, "fir");
+	private static final LinkedSprite FIR_SPRITE_FULL = new LinkedSprite(SpriteType.Tile, "fir_full");
+	private static final LinkedSprite WILLOW_SPRITE = new LinkedSprite(SpriteType.Tile, "willow");
+	private static final LinkedSprite WILLOW_SPRITE_FULL = new LinkedSprite(SpriteType.Tile, "willow_full");
 
 	public enum TreeType {
-		OAK(oakSprite, oakSpriteFull),
-		SPRUCE(spruceSprite, spruceSpriteFull),
-		BIRCH(birchSprite, birchSpriteFull),
-		ASH(ashSprite, ashSpriteFull),
-		ASPEN(aspenSprite, aspenSpriteFull),
-		FIR(firSprite, firSpriteFull),
-		WILLOW(willowSprite, willowSpriteFull);
+		OAK(OAK_SPRITE, OAK_SPRITE_FULL),
+		SPRUCE(SPRUCE_SPRITE, SPRUCE_SPRITE_FULL),
+		BIRCH(BIRCH_SPRITE, BIRCH_SPRITE_FULL),
+		ASH(ASH_SPRITE, ASH_SPRITE_FULL),
+		ASPEN(ASPEN_SPRITE, ASPEN_SPRITE_FULL),
+		FIR(FIR_SPRITE, FIR_SPRITE_FULL),
+		WILLOW(WILLOW_SPRITE, WILLOW_SPRITE_FULL);
 
 		private final LinkedSprite treeSprite;
 		private final LinkedSprite treeSpriteFull;

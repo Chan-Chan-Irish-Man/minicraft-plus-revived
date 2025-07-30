@@ -52,10 +52,10 @@ import java.util.function.ToIntFunction;
 public class Level {
 	private final Random random;
 
-	private static final String[] levelNames = { "Sky", "Surface", "Iron", "Gold", "Lava", "Dungeon" };
+	private static final String[] LEVEL_NAMES = { "Sky", "Surface", "Iron", "Gold", "Lava", "Dungeon" };
 
 	public static String getLevelName(int depth) {
-		return levelNames[-1 * depth + 1];
+		return LEVEL_NAMES[-1 * depth + 1];
 	}
 
 	public static String getDepthString(int depth) {
@@ -214,8 +214,8 @@ public class Level {
 				for (int x = 0; x < w; x++) { // Loop through width
 					if (parentLevel.getTile(x, y) == Tiles.get("Stairs Down")) { // If the tile in the level above the current one is a stairs down then...
 						if (level == -4) { /// Make the obsidian wall formation around the stair in the dungeon level
-							Structure.dungeonGate.draw(this, x, y); // Te gate should not intersect with the boss room.
-							Structure.dungeonBossRoom.draw(this, w / 2, h / 2); // Generating the boss room at the center.
+							Structure.DUNGEON_GATE.draw(this, x, y); // Te gate should not intersect with the boss room.
+							Structure.DUNGEON_BOSS_ROOM.draw(this, w / 2, h / 2); // Generating the boss room at the center.
 						} else if (level == 0) { // Surface
 							Logging.WORLD.trace("Setting tiles around " + x + "," + y + " to hard rock");
 							setAreaTiles(x, y, 1, Tiles.get("Hard Rock"), 0); // surround the sky stairs with hard rock
@@ -235,7 +235,7 @@ public class Level {
 
 				if (this.getTile(x - 3, y - 2) == Tiles.get("Cloud") && this.getTile(x + 3, y - 2) == Tiles.get("Cloud")) {
 					if (this.getTile(x - 3, y + 2) == Tiles.get("Cloud") && this.getTile(x + 3, y + 2) == Tiles.get("Cloud")) {
-						Structure.airWizardHouse.draw(this, x, y);
+						Structure.AIR_WIZARD_HOUSE.draw(this, x, y);
 
 						placedHouse = true;
 					}
@@ -281,8 +281,8 @@ public class Level {
 					if (level.parentLevel.getTile(x, y) == Tiles.get("Stairs Down")) { // If the tile in the level above the current one is a stairs down then...
 						if (level.depth == -4) { /// Make the obsidian wall formation around the stair in the dungeon level
 							level.generateDungeonStructures();
-							Structure.dungeonGate.draw(level, x, y); // Te gate should not intersect with the boss room.
-							Structure.dungeonBossRoom.draw(level, level.w / 2, level.h / 2); // Generating the boss room at the center.
+							Structure.DUNGEON_GATE.draw(level, x, y); // Te gate should not intersect with the boss room.
+							Structure.DUNGEON_BOSS_ROOM.draw(level, level.w / 2, level.h / 2); // Generating the boss room at the center.
 						} else if (level.depth == 0) { // Surface
 							Logging.WORLD.trace("Setting tiles around " + x + "," + y + " to hard rock");
 							level.setAreaTiles(x, y, 1, Tiles.get("Hard Rock"), 0); // surround the sky stairs with hard rock
@@ -304,7 +304,7 @@ public class Level {
 
 					get("Cloud")) {
 					if (level.getTile(x - 3, y + 2) == Tiles.get("Cloud") && level.getTile(x + 3, y + 2) == Tiles.get("Cloud")) {
-						Structure.airWizardHouse.draw(level, x, y);
+						Structure.AIR_WIZARD_HOUSE.draw(level, x, y);
 
 						placedHouse = true;
 					}
@@ -501,8 +501,8 @@ public class Level {
 				for (int j = y * S; j < y * S + S; j++) {
 					if (parentLevel.getTile(i, j) == Tiles.get("Stairs Down")) { // If the tile in the level above the current one is a stairs down then...
 						if (depth == -4) { /// Make the obsidian wall formation around the stair in the dungeon level
-							Structure.dungeonGate.draw(this, i, j); // Te gate should not intersect with the boss room.
-							Structure.dungeonBossRoom.draw(this, w / 2, h / 2); // Generating the boss room at the center.
+							Structure.DUNGEON_GATE.draw(this, i, j); // Te gate should not intersect with the boss room.
+							Structure.DUNGEON_BOSS_ROOM.draw(this, w / 2, h / 2); // Generating the boss room at the center.
 						} else if (depth == 0) { // Surface
 							Logging.WORLD.trace("Setting tiles around " + i + "," + j + " to hard rock");
 							setAreaTiles(i, j, 1, Tiles.get("Hard Rock"), 0); // surround the sky stairs with hard rock
@@ -584,8 +584,8 @@ public class Level {
 	public void renderBackground(Screen screen, int xScroll, int yScroll) {
 		int xo = xScroll >> Tile.TILE_SIZE_SHIFT; // Latches to the nearest tile coordinate
 		int yo = yScroll >> Tile.TILE_SIZE_SHIFT;
-		int w = (Screen.w) >> Tile.TILE_SIZE_SHIFT; // There used to be a "+15" as in below method
-		int h = (Screen.h) >> Tile.TILE_SIZE_SHIFT;
+		int w = (Screen.W) >> Tile.TILE_SIZE_SHIFT; // There used to be a "+15" as in below method
+		int h = (Screen.H) >> Tile.TILE_SIZE_SHIFT;
 		screen.setOffset(xScroll, yScroll);
 		for (int y = yo; y <= h + yo; y++) {
 			for (int x = xo; x <= w + xo; x++) {
@@ -598,8 +598,8 @@ public class Level {
 	public void renderSprites(Screen screen, int xScroll, int yScroll) {
 		int xo = xScroll >> Tile.TILE_SIZE_SHIFT; // Latches to the nearest tile coordinate
 		int yo = yScroll >> Tile.TILE_SIZE_SHIFT;
-		int w = (Screen.w + 15) >> Tile.TILE_SIZE_SHIFT;
-		int h = (Screen.h + 15) >> Tile.TILE_SIZE_SHIFT;
+		int w = (Screen.W + 15) >> Tile.TILE_SIZE_SHIFT;
+		int h = (Screen.H + 15) >> Tile.TILE_SIZE_SHIFT;
 
 		screen.setOffset(xScroll, yScroll);
 		sortAndRender(screen, getEntitiesInTiles(xo - 1, yo - 1, xo + w + 1, yo + h + 1));
@@ -610,8 +610,8 @@ public class Level {
 	public void renderLight(Screen screen, int xScroll, int yScroll, int brightness) {
 		int xo = xScroll >> Tile.TILE_SIZE_SHIFT;
 		int yo = yScroll >> Tile.TILE_SIZE_SHIFT;
-		int w = (Screen.w + 15) >> Tile.TILE_SIZE_SHIFT;
-		int h = (Screen.h + 15) >> Tile.TILE_SIZE_SHIFT;
+		int w = (Screen.W + 15) >> Tile.TILE_SIZE_SHIFT;
+		int h = (Screen.H + 15) >> Tile.TILE_SIZE_SHIFT;
 
 		screen.setOffset(xScroll, yScroll);
 
@@ -1110,19 +1110,19 @@ public class Level {
 						setTile(sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT, Tiles.get("dirt"));
 					}
 
-					Structure.mobDungeonCenter.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT);
+					Structure.MOB_DUNGEON_CENTER.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT);
 
 					if (getTile(sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) - 4) == Tiles.get("dirt")) {
-						Structure.mobDungeonNorth.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) - 5);
+						Structure.MOB_DUNGEON_NORTH.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) - 5);
 					}
 					if (getTile(sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) + 4) == Tiles.get("dirt")) {
-						Structure.mobDungeonSouth.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) + 5);
+						Structure.MOB_DUNGEON_SOUTH.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, (sp.y >> Tile.TILE_SIZE_SHIFT) + 5);
 					}
 					if (getTile((sp.x >> Tile.TILE_SIZE_SHIFT) + 4, sp.y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("dirt")) {
-						Structure.mobDungeonEast.draw(this, (sp.x >> Tile.TILE_SIZE_SHIFT) + 5, sp.y >> Tile.TILE_SIZE_SHIFT);
+						Structure.MOB_DUNGEON_EAST.draw(this, (sp.x >> Tile.TILE_SIZE_SHIFT) + 5, sp.y >> Tile.TILE_SIZE_SHIFT);
 					}
 					if (getTile((sp.x >> Tile.TILE_SIZE_SHIFT) - 4, sp.y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("dirt")) {
-						Structure.mobDungeonWest.draw(this, (sp.x >> Tile.TILE_SIZE_SHIFT) - 5, sp.y >> Tile.TILE_SIZE_SHIFT);
+						Structure.MOB_DUNGEON_WEST.draw(this, (sp.x >> Tile.TILE_SIZE_SHIFT) - 5, sp.y >> Tile.TILE_SIZE_SHIFT);
 					}
 
 					add(sp);
@@ -1181,7 +1181,7 @@ public class Level {
 						setTile(sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT, Tiles.get("dirt"));
 					}
 
-					Structure.dungeonSpawner.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT);
+					Structure.DUNGEON_SPAWNER.draw(this, sp.x >> Tile.TILE_SIZE_SHIFT, sp.y >> Tile.TILE_SIZE_SHIFT);
 
 					add(sp);
 					for (int rpt = 0; rpt < 2; rpt++) {
@@ -1231,16 +1231,16 @@ public class Level {
 						yo += random.nextInt(5) - 2;
 
 						if (twoDoors) {
-							Structure.villageHouseTwoDoor.draw(this, x + xo, y + yo);
+							Structure.VILLAGE_HOUSE_TWO_DOOR.draw(this, x + xo, y + yo);
 						} else {
-							Structure.villageHouseNormal.draw(this, x + xo, y + yo);
+							Structure.VILLAGE_HOUSE_NORMAL.draw(this, x + xo, y + yo);
 						}
 
 						// Make the village look ruined
 						if (overlay == 1) {
-							Structure.villageRuinedOverlay1.draw(this, x + xo, y + yo);
+							Structure.VILLAGE_RUINED_OVERLAY_1.draw(this, x + xo, y + yo);
 						} else { // overlay == 2
-							Structure.villageRuinedOverlay2.draw(this, x + xo, y + yo);
+							Structure.VILLAGE_RUINED_OVERLAY_2.draw(this, x + xo, y + yo);
 						}
 
 						// Add a chest to some of the houses
@@ -1265,9 +1265,9 @@ public class Level {
 			if (x > 8 && y > 8) {
 				if (x < w - 8 && y < w - 8) {
 					if (random.nextInt(2) == 1) {
-						Structure.dungeonGarden.draw(this, x, y);
+						Structure.DUNGEON_GARDEN.draw(this, x, y);
 					} else {
-						Structure.dungeonChest.draw(this, x, y, furniture -> {
+						Structure.DUNGEON_CHEST.draw(this, x, y, furniture -> {
 							if (furniture instanceof DungeonChest)
 								((DungeonChest) furniture).populateInv(random);
 						});
@@ -1282,7 +1282,7 @@ public class Level {
 	 */
 	public void regenerateBossRoom() {
 		if (depth == -4) {
-			Structure.dungeonBossRoom.draw(chunkManager, w / 2, h / 2); // Generating the boss room at the center.
+			Structure.DUNGEON_BOSS_ROOM.draw(chunkManager, w / 2, h / 2); // Generating the boss room at the center.
 			for (int x = w / 2 - 4; x < w / 2 + 5; x++) { // Resetting tile data.
 				for (int y = h / 2 - 4; y < h / 2 + 5; y++) {
 					setData(x, y, 0);

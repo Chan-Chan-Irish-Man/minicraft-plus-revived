@@ -26,15 +26,15 @@ public class Updater extends Game {
 
 	// TIME AND TICKS
 
-	public static final int normSpeed = 60; // Measured in ticks / second.
+	public static final int NORM_SPEED = 60; // Measured in ticks / second.
 	public static float gamespeed = 1; // Measured in MULTIPLES OF NORMSPEED.
 	public static boolean paused = true; // If the game is paused.
 
 	public static int tickCount = 0; // The number of ticks since the beginning of the game day.
 	static int time = 0; // Facilites time of day / sunlight.
-	public static final int dayLength = 64800; // This value determines how long one game day is.
-	public static final int sleepEndTime = dayLength / 8; // This value determines when the player "wakes up" in the morning.
-	public static final int sleepStartTime = dayLength / 2 + dayLength / 8; // This value determines when the player allowed to sleep.
+	public static final int DAY_LENGTH = 64800; // This value determines how long one game day is.
+	public static final int SLEEP_END_TIME = DAY_LENGTH / 8; // This value determines when the player "wakes up" in the morning.
+	public static final int SLEEP_START_TIME = DAY_LENGTH / 2 + DAY_LENGTH / 8; // This value determines when the player allowed to sleep.
 	//public static int noon = 32400; // This value determines when the sky switches from getting lighter to getting darker.
 	private static final int NORMAL_SPEED = 1; // Tick speed when awake.
 	private static final int SLEEP_SPEED = 20; // Tick speed when asleep.
@@ -53,7 +53,7 @@ public class Updater extends Game {
 	public static boolean updateNoteTick = false;
 	public static int notetick = 0; // "note"= notifications.
 
-	private static final int astime = 7200; // tands for Auto-Save Time (interval)
+	private static final int AUTO_SAVE_TIME = 7200; // tands for Auto-Save Time (interval)
 	public static int asTick = 0; // The time interval between autosaves.
 	public static boolean saving = false; // If the game is performing a save.
 	public static int savecooldown; // Prevents saving many times too fast, I think.
@@ -61,9 +61,9 @@ public class Updater extends Game {
 
 	public enum Time {
 		Morning(0),
-		Day(dayLength / 4),
-		Evening(dayLength / 2),
-		Night(dayLength / 4 * 3);
+		Day(DAY_LENGTH / 4),
+		Evening(DAY_LENGTH / 2),
+		Night(DAY_LENGTH / 4 * 3);
 
 		public int tickTime;
 
@@ -134,12 +134,12 @@ public class Updater extends Game {
 			if (gamespeed != SLEEP_SPEED) {
 				gamespeed = SLEEP_SPEED;
 			}
-			if (tickCount > sleepEndTime) {
+			if (tickCount > SLEEP_END_TIME) {
 				Logging.WORLD.trace("Passing midnight in bed.");
 				pastDay1 = true;
 				tickCount = 0;
 			}
-			if (tickCount <= sleepStartTime && tickCount >= sleepEndTime) { // It has reached morning.
+			if (tickCount <= SLEEP_START_TIME && tickCount >= SLEEP_END_TIME) { // It has reached morning.
 				Logging.WORLD.trace("Reached morning, getting out of bed.");
 				gamespeed = NORMAL_SPEED;
 				Bed.restorePlayers();
@@ -149,7 +149,7 @@ public class Updater extends Game {
 		// Auto-save tick; marks when to do autosave.
 		if (!paused)
 			asTick++;
-		if (asTick > astime) {
+		if (asTick > AUTO_SAVE_TIME) {
 			if ((boolean) Settings.get("autosave") && !gameOver && player.health > 0) {
 
 				new Save(WorldSelectDisplay.getWorldName());
@@ -260,7 +260,7 @@ public class Updater extends Game {
 					}
 
 					if (isMode("minicraft.settings.mode.score") && input.getMappedKey("F3-SHIFT-T").isClicked()) {
-						scoreTime = normSpeed * 5; // 5 seconds
+						scoreTime = NORM_SPEED * 5; // 5 seconds
 					}
 
 					float prevSpeed = gamespeed;
@@ -270,12 +270,12 @@ public class Updater extends Game {
 					}
 					if (input.getMappedKey("F3-S-equals").isClicked()) {
 						if (gamespeed < 1) gamespeed *= 2;
-						else if (normSpeed * gamespeed < 2000) gamespeed++;
+						else if (NORM_SPEED * gamespeed < 2000) gamespeed++;
 						Logging.WORLDNAMED.trace("Tick speed increased from {} into {}.", prevSpeed, gamespeed);
 					}
 					if (input.getMappedKey("F3-S-minus").isClicked()) {
 						if (gamespeed > 1) gamespeed--;
-						else if (normSpeed * gamespeed > 5) gamespeed /= 2;
+						else if (NORM_SPEED * gamespeed > 5) gamespeed /= 2;
 						Logging.WORLDNAMED.trace("Tick speed decreased from {} into {}.", prevSpeed, gamespeed);
 					}
 
@@ -305,7 +305,7 @@ public class Updater extends Game {
 		if (ticks < Time.Day.tickTime) time = 0; // Morning
 		else if (ticks < Time.Evening.tickTime) time = 1; // Day
 		else if (ticks < Time.Night.tickTime) time = 2; // Evening
-		else if (ticks < dayLength) time = 3; // Night
+		else if (ticks < DAY_LENGTH) time = 3; // Night
 		else { // Back to morning
 			time = 0;
 			ticks = 0;

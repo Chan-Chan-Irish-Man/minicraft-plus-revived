@@ -49,8 +49,8 @@ public class LanguageSettingsDisplay extends Display {
 			new Menu.Builder(false, 2, RelPos.CENTER, entries.getKey())
 				.setTitle("minicraft.displays.language_settings.title")
 				.setSelectable(true)
-				.setPositioning(new Point(Screen.w / 2, 10), RelPos.BOTTOM)
-				.setSize(Screen.w, Screen.h - 30)
+				.setPositioning(new Point(Screen.W / 2, 10), RelPos.BOTTOM)
+				.setSize(Screen.W, Screen.H - 30)
 				.setSelection(entries.getValue())
 				.createMenu()
 		};

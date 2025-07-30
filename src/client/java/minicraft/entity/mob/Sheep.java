@@ -18,8 +18,8 @@ import minicraft.level.tile.Tiles;
 import java.util.HashMap;
 
 public class Sheep extends PassiveMob {
-	private static final HashMap<DyeItem.DyeColor, LinkedSprite[][]> sprites = new HashMap<>();
-	private static final HashMap<DyeItem.DyeColor, LinkedSprite[][]> cutSprites = new HashMap<>();
+	private static final HashMap<DyeItem.DyeColor, LinkedSprite[][]> SPRITES = new HashMap<>();
+	private static final HashMap<DyeItem.DyeColor, LinkedSprite[][]> CUT_SPRITES = new HashMap<>();
 	private static final int SPRITE_X_OFFSET = 8;
 	private static final int SPRITE_Y_OFFSET = 11;
 
@@ -34,14 +34,14 @@ public class Sheep extends PassiveMob {
 					linkedSprite.setColor(color.color);
 				}
 			}
-			sprites.put(color, mobSprites);
+			SPRITES.put(color, mobSprites);
 			mobSprites = Mob.compileMobSpriteAnimations(0, 2, "sheep");
 			for (LinkedSprite[] mobSprite : mobSprites) {
 				for (LinkedSprite linkedSprite : mobSprite) {
 					linkedSprite.setColor(color.color);
 				}
 			}
-			cutSprites.put(color, mobSprites);
+			CUT_SPRITES.put(color, mobSprites);
 		}
 	}
 
@@ -62,7 +62,7 @@ public class Sheep extends PassiveMob {
 		int xo = x - SPRITE_X_OFFSET;
 		int yo = y - SPRITE_Y_OFFSET;
 
-		LinkedSprite[][] curAnim = cut ? cutSprites.get(color) : sprites.get(color);
+		LinkedSprite[][] curAnim = cut ? CUT_SPRITES.get(color) : SPRITES.get(color);
 
 		LinkedSprite curSprite = curAnim[dir.getDir()][(walkDist >> 3) % curAnim[dir.getDir()].length];
 		if (hurtTime > 0) {

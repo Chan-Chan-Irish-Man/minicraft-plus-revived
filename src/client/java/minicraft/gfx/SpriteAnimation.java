@@ -20,26 +20,26 @@ import java.util.HashMap;
  * This is not applicable for mob sprite animations. Only for generic sprite animations.
  */
 public class SpriteAnimation implements Destroyable {
-	private static final ArrayList<SpriteAnimation> spriteAnimations = new ArrayList<>();
-	private static final HashMap<String, SpriteMeta> metas = new HashMap<>();
+	private static final ArrayList<SpriteAnimation> SPRITE_ANIMATIONS = new ArrayList<>();
+	private static final HashMap<String, SpriteMeta> METAS = new HashMap<>();
 
 	public static void setMetadata(String key, SpriteMeta meta) {
-		metas.put(key, meta);
+		METAS.put(key, meta);
 	}
 
 	public static void resetMetadata() {
-		metas.clear();
+		METAS.clear();
 	}
 
 	public static SpriteMeta getMetadata(String key) {
-		return metas.get(key);
+		return METAS.get(key);
 	}
 
 	/**
 	 * Refreshing all currently registered animations.
 	 */
 	public static void refreshAnimations() {
-		spriteAnimations.forEach(a -> a.refreshAnimation(metas.get(a.key)));
+		SPRITE_ANIMATIONS.forEach(a -> a.refreshAnimation(METAS.get(a.key)));
 	}
 
 	private LinkedSprite[] animations;
@@ -66,7 +66,7 @@ public class SpriteAnimation implements Destroyable {
 	 * @param key The sprite resource key.
 	 */
 	public SpriteAnimation(SpriteType type, String key) {
-		this(metas.get(key), type, key);
+		this(METAS.get(key), type, key);
 	}
 
 	/**
@@ -80,7 +80,7 @@ public class SpriteAnimation implements Destroyable {
 		this.key = key;
 		refreshAnimation(meta);
 
-		spriteAnimations.add(this);
+		SPRITE_ANIMATIONS.add(this);
 	}
 
 	@FunctionalInterface
@@ -322,7 +322,7 @@ public class SpriteAnimation implements Destroyable {
 
 	@Override
 	public void destroy() throws DestroyFailedException {
-		spriteAnimations.remove(this);
+		SPRITE_ANIMATIONS.remove(this);
 		if (animations != null) for (LinkedSprite sprite : animations) sprite.destroy();
 		if (border != null) border.destroy();
 		if (corner != null) corner.destroy();

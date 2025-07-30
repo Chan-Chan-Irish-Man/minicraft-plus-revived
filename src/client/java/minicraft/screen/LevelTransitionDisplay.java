@@ -36,7 +36,7 @@ public class LevelTransitionDisplay extends Display {
 					if (dir > 0)
 						screen.render(x * 8, y * 8, 5, 2, 0, hudSheet.getSheet()); // If the direction is upwards then render the squares going up
 					else
-						screen.render(x * 8, Screen.h - y * 8 - 8, 5, 2, 0, hudSheet.getSheet());  // If the direction is negative, then the squares will go down.
+						screen.render(x * 8, Screen.H - y * 8 - 8, 5, 2, 0, hudSheet.getSheet());  // If the direction is negative, then the squares will go down.
 				}
 			}
 		}

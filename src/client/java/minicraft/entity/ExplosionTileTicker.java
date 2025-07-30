@@ -29,7 +29,7 @@ public class ExplosionTileTicker extends Entity {
 	}
 
 	private static boolean explodeBlacklistCheck(Tile tile, int x, int y) {
-		return !Tiles.explosionBlacklist.contains(tile.id);
+		return !Tiles.EXPLOSION_BLACKLIST.contains(tile.id);
 	}
 
 	private static boolean explodedTileCheck(Tile tile, int x, int y) {

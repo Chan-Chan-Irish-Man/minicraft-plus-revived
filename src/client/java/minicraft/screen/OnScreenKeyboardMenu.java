@@ -21,16 +21,16 @@ import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class OnScreenKeyboardMenu extends Menu {
-	private static final Builder builder = getBuilder();
+	private static final Builder BUILDER = getBuilder();
 
 	private static Builder getBuilder() {
 		return new Builder(false, 0, RelPos.CENTER)
-			.setPositioning(new Point(0, Screen.h), RelPos.TOP_RIGHT)
-			.setMenuSize(new Dimension(Screen.w, 59));
+			.setPositioning(new Point(0, Screen.H), RelPos.TOP_RIGHT)
+			.setMenuSize(new Dimension(Screen.W, 59));
 	}
 
 	public OnScreenKeyboardMenu() {
-		super(builder.createMenu());
+		super(BUILDER.createMenu());
 		initKeyboard();
 	}
 
@@ -280,7 +280,7 @@ public class OnScreenKeyboardMenu extends Menu {
 			int totalLength = (keys[r].length * keyWidth);
 			totalLength += keyWidth * 2 * (int) Stream.of(keys[r]).filter(k -> k == spaceBar).count();
 			totalLength += keyWidth * (int) Stream.of(keys[r]).filter(k -> k == shiftKey).count();
-			int xOffset = (Screen.w - totalLength) / 2;
+			int xOffset = (Screen.W - totalLength) / 2;
 			int y = top + 2 + r * keyHeight;
 			int x = xOffset;
 			for (int c = 0; c < keys[r].length; c++) {

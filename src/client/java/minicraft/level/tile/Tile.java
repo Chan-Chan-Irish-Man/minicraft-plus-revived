@@ -29,7 +29,7 @@ public abstract class Tile {
 		Stone(ToolType.Pickaxe),
 		Obsidian(ToolType.Pickaxe);
 
-		public static final Material[] values = Material.values();
+		public static final Material[] VALUES = Material.values();
 		private final ToolType requiredTool;
 
 		Material(ToolType requiredTool) {

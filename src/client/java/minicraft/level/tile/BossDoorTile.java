@@ -12,7 +12,7 @@ import minicraft.item.ToolItem;
 import minicraft.level.Level;
 
 public class BossDoorTile extends DoorTile {
-	private static final String doorMsg = "minicraft.notification.defeat_obsidian_knight_first";
+	private static final String DOOR_MSG = "minicraft.notification.defeat_obsidian_knight_first";
 
 	protected BossDoorTile() {
 		super(Material.Obsidian, "Boss Door");
@@ -24,7 +24,7 @@ public class BossDoorTile extends DoorTile {
 				ToolItem tool = (ToolItem) item;
 				if (tool.type == type.getRequiredTool()) {
 					if (player.payStamina(1)) {
-						Game.notifications.add(Localization.getLocalized(doorMsg));
+						Game.notifications.add(Localization.getLocalized(DOOR_MSG));
 						Sound.play("monsterhurt");
 						return true;
 					}
@@ -41,7 +41,7 @@ public class BossDoorTile extends DoorTile {
 	public boolean hurt(Level level, int x, int y, Mob source, int dmg, Direction attackDir) {
 		if (source instanceof Player) {
 			if (ObsidianKnight.active && !Game.isMode("minicraft.settings.mode.creative")) {
-				Game.notifications.add(doorMsg);
+				Game.notifications.add(DOOR_MSG);
 				return true;
 			}
 		}

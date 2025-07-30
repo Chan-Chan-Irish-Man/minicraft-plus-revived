@@ -20,7 +20,7 @@ import minicraft.item.StackableItem;
 
 public class ContainerDisplay extends Display {
 
-	private static final int padding = 10;
+	private static final int PADDING = 10;
 
 	private final MinicraftImage counterSheet =
 		Renderer.spriteLinker.getSheet(SpriteLinker.SpriteType.Gui, "inventory_counter");
@@ -41,7 +41,7 @@ public class ContainerDisplay extends Display {
 			onScreenKeyboardMenu.setVisible(false);
 		}
 
-		menus[1].translate(menus[0].getBounds().getWidth() + padding, 0);
+		menus[1].translate(menus[0].getBounds().getWidth() + PADDING, 0);
 
 		if (menus[1].getNumOptions() == 0) onSelectionChange(1, 0);
 	}
@@ -57,8 +57,8 @@ public class ContainerDisplay extends Display {
 
 		int shift = 0;
 
-		if (newSel == 0) shift = padding - menus[0].getBounds().getLeft();
-		if (newSel == 1) shift = (Screen.w - padding) - menus[1].getBounds().getRight();
+		if (newSel == 0) shift = PADDING - menus[0].getBounds().getLeft();
+		if (newSel == 1) shift = (Screen.W - PADDING) - menus[1].getBounds().getRight();
 
 		for (Menu m : menus) {
 			m.translate(shift, 0);
@@ -360,7 +360,7 @@ public class ContainerDisplay extends Display {
 	private void update() {
 		menus[0] = new InventoryMenu((InventoryMenu) menus[0]);
 		menus[1] = new InventoryMenu((InventoryMenu) menus[1]);
-		menus[1].translate(menus[0].getBounds().getWidth() + padding, 0);
+		menus[1].translate(menus[0].getBounds().getWidth() + PADDING, 0);
 		onSelectionChange(0, selection);
 	}
 }

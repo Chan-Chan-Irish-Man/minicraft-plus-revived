@@ -22,7 +22,7 @@ import minicraft.util.Logging;
 
 public class PlayerInvDisplay extends Display {
 
-	private static final int padding = 10;
+	private static final int PADDING = 10;
 
 	private final Player player;
 	private final MinicraftImage counterSheet =
@@ -40,7 +40,7 @@ public class PlayerInvDisplay extends Display {
 		descriptionMenuBuilder = new Menu.Builder(true, 3, RelPos.TOP_LEFT);
 		creativeMode = Game.isMode("minicraft.settings.mode.creative");
 		itemDescription = getDescription();
-		Menu descriptionMenu = descriptionMenuBuilder.setPositioning(new Point(padding, menus[0].getBounds().getBottom() + 8), RelPos.BOTTOM_RIGHT)
+		Menu descriptionMenu = descriptionMenuBuilder.setPositioning(new Point(PADDING, menus[0].getBounds().getBottom() + 8), RelPos.BOTTOM_RIGHT)
 			.setEntries(StringEntry.useLines(Color.WHITE, false, itemDescription.split("\n")))
 			.setSelectable(false)
 			.createMenu();
@@ -52,7 +52,7 @@ public class PlayerInvDisplay extends Display {
 				descriptionMenu
 			};
 
-			menus[1].translate(menus[0].getBounds().getWidth() + padding, 0);
+			menus[1].translate(menus[0].getBounds().getWidth() + PADDING, 0);
 			update();
 
 			if (menus[0].getNumOptions() == 0) onSelectionChange(0, 1);
@@ -258,7 +258,7 @@ public class PlayerInvDisplay extends Display {
 
 		// Searcher help text
 		String text = Localization.getLocalized("minicraft.displays.player_inv.display.help", Game.input.getMapping("SEARCHER-BAR"));
-		Font.draw(text, screen, selection == 0 ? 12 : Screen.w - 12 - Font.textWidth(text), menus[creativeMode ? 2 : 1].getBounds().getBottom() + 8, Color.WHITE);
+		Font.draw(text, screen, selection == 0 ? 12 : Screen.W - 12 - Font.textWidth(text), menus[creativeMode ? 2 : 1].getBounds().getBottom() + 8, Color.WHITE);
 
 		if (onScreenKeyboardMenu != null)
 			onScreenKeyboardMenu.render(screen);
@@ -341,14 +341,14 @@ public class PlayerInvDisplay extends Display {
 			if (oldSel == newSel)
 				return; // this also serves as a protection against access to menus[0] when such may not exist.
 			int shift = 0;
-			if (newSel == 0) shift = padding - menus[0].getBounds().getLeft();
-			if (newSel == 1) shift = (Screen.w - padding) - menus[1].getBounds().getRight();
+			if (newSel == 0) shift = PADDING - menus[0].getBounds().getLeft();
+			if (newSel == 1) shift = (Screen.W - PADDING) - menus[1].getBounds().getRight();
 			menus[0].translate(shift, 0);
 			menus[1].translate(shift, 0);
 			if (newSel == 0)
-				descriptionMenuBuilder.setPositioning(new Point(padding, menus[0].getBounds().getBottom() + 8), RelPos.BOTTOM_RIGHT);
+				descriptionMenuBuilder.setPositioning(new Point(PADDING, menus[0].getBounds().getBottom() + 8), RelPos.BOTTOM_RIGHT);
 			if (newSel == 1)
-				descriptionMenuBuilder.setPositioning(new Point(Screen.w - padding, menus[1].getBounds().getBottom() + 8), RelPos.BOTTOM_LEFT);
+				descriptionMenuBuilder.setPositioning(new Point(Screen.W - PADDING, menus[1].getBounds().getBottom() + 8), RelPos.BOTTOM_LEFT);
 		}
 	}
 
@@ -360,7 +360,7 @@ public class PlayerInvDisplay extends Display {
 		menus[0] = new InventoryMenu((InventoryMenu) menus[0]);
 		if (creativeMode) {
 			menus[1] = new InventoryMenu((InventoryMenu) menus[1]);
-			menus[1].translate(menus[0].getBounds().getWidth() + padding, 0);
+			menus[1].translate(menus[0].getBounds().getWidth() + PADDING, 0);
 			onSelectionChange(0, selection);
 		}
 		itemDescription = getDescription();

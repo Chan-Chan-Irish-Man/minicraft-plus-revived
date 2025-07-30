@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Boat extends Entity implements PlayerRideable {
-	private static final SpriteLinker.LinkedSprite[][] boatSprites = new SpriteLinker.LinkedSprite[][] {
+	private static final SpriteLinker.LinkedSprite[][] BOAT_SPRITES = new SpriteLinker.LinkedSprite[][] {
 		Mob.compileSpriteList(0, 0, 3, 3, 0, 4, "boat"), //
 		Mob.compileSpriteList(0, 3, 3, 3, 0, 4, "boat")
 	};
@@ -56,16 +56,16 @@ public class Boat extends Entity implements PlayerRideable {
 
 		switch (dir) {
 			case UP: // if currently riding upwards...
-				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[0][spriteIndex + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, BOAT_SPRITES[0][spriteIndex + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
 				break;
 			case LEFT: // Riding to the left... (Same as above)
-				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][spriteIndex].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, BOAT_SPRITES[1][spriteIndex].getSprite());
 				break;
 			case RIGHT: // Riding to the right (Same as above)
-				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[1][spriteIndex + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, BOAT_SPRITES[1][spriteIndex + SPRITE_INDEX_OFFSET_UP_RIGHT].getSprite());
 				break;
 			case DOWN: // Riding downwards (Same as above)
-				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, boatSprites[0][((walkDist >> BOAT_DIST) & 1)].getSprite());
+				screen.render(xo - SCREEN_RENDER_DIST, yo - SCREEN_RENDER_DIST, BOAT_SPRITES[0][((walkDist >> BOAT_DIST) & 1)].getSprite());
 				break;
 			default:
 				throw new UnsupportedOperationException("dir must be defined when on world");

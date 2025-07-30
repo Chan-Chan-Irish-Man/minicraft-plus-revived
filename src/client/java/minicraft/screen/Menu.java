@@ -416,11 +416,11 @@ public class Menu {
 	private void renderFrame(Screen screen) {
 		if (!hasFrame) return;
 
-		int bottom = bounds.getBottom() - MinicraftImage.boxWidth;
-		int right = bounds.getRight() - MinicraftImage.boxWidth;
+		int bottom = bounds.getBottom() - MinicraftImage.BOX_WIDTH;
+		int right = bounds.getRight() - MinicraftImage.BOX_WIDTH;
 
-		for (int y = bounds.getTop(); y <= bottom; y += MinicraftImage.boxWidth) { // loop through the height of the bounds
-			for (int x = bounds.getLeft(); x <= right; x += MinicraftImage.boxWidth) { // loop through the width of the bounds
+		for (int y = bounds.getTop(); y <= bottom; y += MinicraftImage.BOX_WIDTH) { // loop through the height of the bounds
+			for (int x = bounds.getLeft(); x <= right; x += MinicraftImage.BOX_WIDTH) { // loop through the width of the bounds
 
 				boolean xend = x == bounds.getLeft() || x == right;
 				boolean yend = y == bounds.getTop() || y == bottom;
@@ -429,12 +429,12 @@ public class Menu {
 
 				screen.render(x, y, spriteoffset, 6, mirrors, hudSheet.getSheet());
 
-				if (x < right && x + MinicraftImage.boxWidth > right)
-					x = right - MinicraftImage.boxWidth;
+				if (x < right && x + MinicraftImage.BOX_WIDTH > right)
+					x = right - MinicraftImage.BOX_WIDTH;
 			}
 
-			if (y < bottom && y + MinicraftImage.boxWidth > bottom)
-				y = bottom - MinicraftImage.boxWidth;
+			if (y < bottom && y + MinicraftImage.BOX_WIDTH > bottom)
+				y = bottom - MinicraftImage.BOX_WIDTH;
 		}
 	}
 
@@ -442,7 +442,7 @@ public class Menu {
 	// This needs to be in the Menu class, to have access to the private constructor and fields.
 	public static class Builder {
 
-		private static final Point center = new Point(Screen.w / 2, Screen.h / 2);
+		private static final Point CENTER = new Point(Screen.W / 2, Screen.H / 2);
 
 		private Menu menu;
 
@@ -455,7 +455,7 @@ public class Menu {
 		private int titleCol = Color.YELLOW;
 
 		@NotNull
-		private Point anchor = center;
+		private Point anchor = CENTER;
 		@NotNull
 		private RelPos menuPos = RelPos.CENTER;
 		private Dimension menuSize = null;
@@ -623,14 +623,14 @@ public class Menu {
 
 			Insets border;
 			if (menu.hasFrame)
-				border = new Insets(MinicraftImage.boxWidth); // add frame insets
+				border = new Insets(MinicraftImage.BOX_WIDTH); // add frame insets
 			else {
 				border = new Insets();
 
 				// add title insets
 				if (menu.title.length() > 0 && titlePos != RelPos.CENTER) {
 					RelPos c = titlePos;
-					int space = MinicraftImage.boxWidth * 2;
+					int space = MinicraftImage.BOX_WIDTH * 2;
 					if (c.yIndex == 0)
 						border.top = space;
 					else if (c.yIndex == 2)
@@ -644,8 +644,8 @@ public class Menu {
 
 			if (menu.isSelectable()) {
 				// add spacing for selection cursors
-				border.left += MinicraftImage.boxWidth * 2;
-				border.right += MinicraftImage.boxWidth * 2;
+				border.left += MinicraftImage.BOX_WIDTH * 2;
+				border.right += MinicraftImage.BOX_WIDTH * 2;
 			}
 
 			if (menu.wrap && menu.displayLength > 0)
@@ -659,7 +659,7 @@ public class Menu {
 				for (ListEntry entry : menu.entries) {
 					int entryWidth = entry.getWidth();
 					if (menu.isSelectable() && !entry.isSelectable())
-						entryWidth = Math.max(0, entryWidth - MinicraftImage.boxWidth * 4);
+						entryWidth = Math.max(0, entryWidth - MinicraftImage.BOX_WIDTH * 4);
 					width = Math.max(width, entryWidth);
 				}
 
@@ -674,9 +674,9 @@ public class Menu {
 					if (menuPos.yIndex == 0) // anchor is lowest down coordinate (highest y value)
 						maxHeight = anchor.y;
 					else if (menuPos.yIndex == 2)
-						maxHeight = Screen.h - anchor.y;
+						maxHeight = Screen.H - anchor.y;
 					else // is centered; take the lowest value of the other two, and double it
-						maxHeight = Math.min(anchor.y, Screen.h - anchor.y) * 2;
+						maxHeight = Math.min(anchor.y, Screen.H - anchor.y) * 2;
 
 					maxHeight -= border.top + border.bottom; // reserve border space
 
@@ -704,9 +704,9 @@ public class Menu {
 			menu.titleLoc = titlePos.positionRect(titleDim, menu.bounds);
 
 			if (titlePos.xIndex == 0 && titlePos.yIndex != 1)
-				menu.titleLoc.x += MinicraftImage.boxWidth;
+				menu.titleLoc.x += MinicraftImage.BOX_WIDTH;
 			if (titlePos.xIndex == 2 && titlePos.yIndex != 1)
-				menu.titleLoc.x -= MinicraftImage.boxWidth;
+				menu.titleLoc.x -= MinicraftImage.BOX_WIDTH;
 
 			// set the menu title color
 			if (menu.title.length() > 0) {

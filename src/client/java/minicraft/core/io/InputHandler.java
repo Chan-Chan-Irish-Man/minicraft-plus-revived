@@ -363,8 +363,8 @@ public class InputHandler implements KeyListener {
 		}
 	}
 
-	private static final Predicate<String> maskAll = k -> true;
-	private static final Key keyMask = new Key() {
+	private static final Predicate<String> MASK_ALL = k -> true;
+	private static final Key KEY_MASK = new Key() {
 		@Override
 		public boolean isDown() {
 			return false;
@@ -378,7 +378,7 @@ public class InputHandler implements KeyListener {
 	private @Nullable Predicate<String> inputMask = null;
 
 	public void maskInput(@Nullable Predicate<String> filter) {
-		if (filter == null) filter = maskAll;
+		if (filter == null) filter = MASK_ALL;
 		inputMask = inputMask == null ? filter : inputMask.and(filter);
 	}
 
@@ -473,7 +473,7 @@ public class InputHandler implements KeyListener {
 	// Physical keys only
 	private Key getKey(String keytext) {
 		// If the passed-in key is blank, or null, then return null.
-		if (keytext == null || keytext.isEmpty()) return keyMask;
+		if (keytext == null || keytext.isEmpty()) return KEY_MASK;
 
 		keytext = keytext.toUpperCase(java.util.Locale.ENGLISH); // Prevent errors due to improper "casing"
 
@@ -494,7 +494,7 @@ public class InputHandler implements KeyListener {
 			for (String s : split) {
 				if (keyboard.containsKey(s))
 					// Gets the key object from keyboard, if it exists.
-					keys.add(inputMask == null || !inputMask.test(s) ? keyboard.get(s) : keyMask);
+					keys.add(inputMask == null || !inputMask.test(s) ? keyboard.get(s) : KEY_MASK);
 				else {
 					// If the specified key does not yet exist in keyboard, then create a new Key, and put it there.
 					PhysicalKey key = new PhysicalKey(); // Make new key
@@ -652,7 +652,7 @@ public class InputHandler implements KeyListener {
 		keyTypedBuffer = String.valueOf(ke.getKeyChar());
 	}
 
-	private static final String control = "[\\p{Print}\n]+"; // Should match only printable characters.
+	private static final String CONTROL = "[\\p{Print}\n]+"; // Should match only printable characters.
 	public String addKeyTyped(String typing, @Nullable String pattern) {
 		return handleBackspaceChars(getKeysTyped(typing, pattern));
 	}
@@ -665,7 +665,7 @@ public class InputHandler implements KeyListener {
 		if (lastKeyTyped.length() > 0) {
 			for (char letter : lastKeyTyped.toCharArray()) {
 				String letterString = String.valueOf(letter);
-				if (letter == '\b' || letterString.matches(control) && (letter != '\n' || multiline) && (pattern == null || letterString.matches(pattern)))
+				if (letter == '\b' || letterString.matches(CONTROL) && (letter != '\n' || multiline) && (pattern == null || letterString.matches(pattern)))
 					typed.append(letter);
 			}
 			lastKeyTyped = "";

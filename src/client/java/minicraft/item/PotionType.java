@@ -74,5 +74,5 @@ public enum PotionType {
 		// For the case of the Health potion, the player health is not transmitted separately until after the potion effect finishes, so having it send just gets the change there earlier.
 	}
 
-	public static final PotionType[] values = PotionType.values();
+	public static final PotionType[] VALUES = PotionType.values();
 }

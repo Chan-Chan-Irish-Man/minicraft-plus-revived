@@ -103,7 +103,7 @@ public class Load {
 
 	private String location = Game.gameDir;
 
-	private static final String extension = Save.extension;
+	private static final String EXTENSION = Save.extension;
 	private float percentInc;
 
 	private ArrayList<String> data;
@@ -125,7 +125,7 @@ public class Load {
 	}
 
 	public Load(String worldname, boolean loadGame) {
-		loadFromFile(location + "/saves/" + worldname + "/Game" + extension);
+		loadFromFile(location + "/saves/" + worldname + "/Game" + EXTENSION);
 		if (data.get(0).contains(".")) worldVer = new Version(data.get(0));
 		if (worldVer == null) worldVer = new Version("1.8");
 
@@ -399,7 +399,7 @@ public class Load {
 			loadPrefs("Preferences", partialLoad);
 
 			// Check if Preferences.miniplussave exists. (old version)
-		} else if (new File(location + "Preferences" + extension).exists()) {
+		} else if (new File(location + "Preferences" + EXTENSION).exists()) {
 			loadPrefsOld("Preferences", partialLoad);
 			Logging.SAVELOAD.info("Upgrading preferences to JSON.");
 			resave = true;
@@ -413,8 +413,8 @@ public class Load {
 		if (partialLoad) return; // Partial loading only loads partial preferences
 
 		// Load unlocks. (new version)
-		File testFileOld = new File(location + "unlocks" + extension);
-		File testFile = new File(location + "Unlocks" + extension);
+		File testFileOld = new File(location + "unlocks" + EXTENSION);
+		File testFile = new File(location + "Unlocks" + EXTENSION);
 		if (new File(location + "Unlocks.json").exists()) {
 			loadUnlocks("Unlocks");
 		} else if (testFile.exists() || testFileOld.exists()) { // Load old version
@@ -477,7 +477,7 @@ public class Load {
 
 		if (filename.contains("Level")) {
 			try {
-				total = Load.loadFromFile(filename.substring(0, filename.lastIndexOf("/") + 7) + "data" + extension, true);
+				total = Load.loadFromFile(filename.substring(0, filename.lastIndexOf("/") + 7) + "data" + EXTENSION, true);
 				extradata.addAll(Arrays.asList(total.split(",")));
 			} catch (IOException ex) {
 				ex.printStackTrace();
@@ -575,7 +575,7 @@ public class Load {
 	}
 
 	private void loadGame(String filename) {
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 
 		worldVer = new Version(data.remove(0)); // Gets the world version
 
@@ -642,7 +642,7 @@ public class Load {
 	}
 
 	private void loadPrefsOld(String filename, boolean partialLoad) {
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 		Version prefVer = new Version("2.0.2"); // the default, b/c this doesn't really matter much being specific past this if it's not set below.
 
 		if (!data.get(2).contains(";")) // signifies that this file was last written to by a version after 2.0.2.
@@ -778,7 +778,7 @@ public class Load {
 	}
 
 	private void loadUnlocksOld(String filename) {
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 
 		for (String unlock : data) {
 			unlock = unlock.replace("HOURMODE", "H_ScoreTime").replace("MINUTEMODE", "M_ScoreTime").replace("M_ScoreTime", "_ScoreTime").replace("2H_ScoreTime", "120_ScoreTime");
@@ -807,10 +807,10 @@ public class Load {
 	}
 
 	private void loadWorld(String filename) {
-		for (int l = World.maxLevelDepth; l >= World.minLevelDepth; l--) {
+		for (int l = World.MAX_LEVEL_DEPTH; l >= World.MIN_LEVEL_DEPTH; l--) {
 			LoadingDisplay.setMessage(Level.getDepthString(l), false);
 			int lvlidx = World.lvlIdx(l);
-			loadFromFile(location + filename + lvlidx + extension);
+			loadFromFile(location + filename + lvlidx + EXTENSION);
 
 			int lvlw = Integer.parseInt(data.get(0));
 			int lvlh = Integer.parseInt(data.get(1));
@@ -860,7 +860,7 @@ public class Load {
 						} else if (worldVer.compareTo(new Version("2.3.0-dev1")) < 0) {
 							tilename = "White Wool";
 						}
-					} else if (l == World.minLevelDepth + 1 && tilename.equalsIgnoreCase("Lapis") && worldVer.compareTo(new Version("2.0.3-dev6")) < 0) {
+					} else if (l == World.MIN_LEVEL_DEPTH + 1 && tilename.equalsIgnoreCase("Lapis") && worldVer.compareTo(new Version("2.0.3-dev6")) < 0) {
 						if (Math.random() < 0.8) // don't replace *all* the lapis
 							tilename = "Gem Ore";
 					} else if (tilename.equalsIgnoreCase("Cloud Cactus")) {
@@ -980,12 +980,12 @@ public class Load {
 	}
 
 	private void loadWorldInf(String filename) {
-		loadFromFile(location + "/Game" + extension, extradata);
+		loadFromFile(location + "/Game" + EXTENSION, extradata);
 		long seed = Long.parseLong(extradata.get(1));
-		for (int l = World.maxLevelDepth; l >= World.minLevelDepth; l--) {
+		for (int l = World.MAX_LEVEL_DEPTH; l >= World.MIN_LEVEL_DEPTH; l--) {
 			LoadingDisplay.setMessage(Level.getDepthString(l), false);
 			int lvlidx = World.lvlIdx(l);
-			loadFromFile(location + filename + lvlidx + "/index" + extension, data);
+			loadFromFile(location + filename + lvlidx + "/index" + EXTENSION, data);
 
 			Set<Point> chunks = new HashSet<>();
 			while(data.size() >= 2)
@@ -998,8 +998,8 @@ public class Load {
 			Level curLevel = World.levels[lvlidx];
 			curLevel.chunkManager = map;
 			for(Point c : chunks) {
-				loadFromFile(location + filename + lvlidx + "/t." + c.x + "." + c.y + extension, data);
-				loadFromFile(location + filename + lvlidx + "/d." + c.x + "." + c.y + extension, extradata);
+				loadFromFile(location + filename + lvlidx + "/t." + c.x + "." + c.y + EXTENSION, data);
+				loadFromFile(location + filename + lvlidx + "/d." + c.x + "." + c.y + EXTENSION, extradata);
 				for(int x = 0; x < ChunkManager.CHUNK_SIZE; x++) {
 					for(int y = 0; y < ChunkManager.CHUNK_SIZE; y++) {
 						int tileidx = y + x * ChunkManager.CHUNK_SIZE; // the tiles are saved with x outer loop, and y inner loop, meaning that the list reads down, then right one, rather than right, then down one.
@@ -1108,7 +1108,7 @@ public class Load {
 
 	public void loadPlayer(String filename, Player player) {
 		LoadingDisplay.setMessage("Player");
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 		loadPlayer(player, data);
 	}
 
@@ -1273,7 +1273,7 @@ public class Load {
 
 	public void loadInventory(String filename, Inventory inventory) {
 		deathChest = new DeathChest();
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 		loadInventory(inventory, data);
 	}
 
@@ -1320,7 +1320,7 @@ public class Load {
 
 	private void loadEntities(String filename) {
 		LoadingDisplay.setMessage("minicraft.displays.loading.message.entities");
-		loadFromFile(location + filename + extension);
+		loadFromFile(location + filename + EXTENSION);
 
 		for (int i = 0; i < World.levels.length; i++) {
 			World.levels[i].clearEntities();
@@ -1494,7 +1494,7 @@ public class Load {
 				int ownerID = Integer.parseInt(info.get(2));
 				Mob m = (Mob) Network.getEntity(ownerID);
 				if (m != null) {
-					Direction dir = Direction.values[Integer.parseInt(info.get(3))];
+					Direction dir = Direction.VALUES[Integer.parseInt(info.get(3))];
 					int dmg = Integer.parseInt(info.get(5));
 					newEntity = new Arrow(m, x, y, dir, dmg);
 				}

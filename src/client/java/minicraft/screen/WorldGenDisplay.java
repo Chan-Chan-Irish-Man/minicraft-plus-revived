@@ -22,15 +22,15 @@ import java.util.OptionalLong;
 import java.util.regex.Pattern;
 
 public class WorldGenDisplay extends Display {
-	private static final Pattern detailedFilenamePattern;
+	private static final Pattern DETAILED_FILENAME_PATTERN;
 
-	private static final String worldNameRegex;
+	private static final String WORLD_NAME_REGEX;
 
 	static {
 		if (FileHandler.OS.contains("windows")) {
 			// Reference: https://stackoverflow.com/a/6804755
-			worldNameRegex = "[^<>:\"/\\\\|?*\\x00-\\x1F]+";
-			detailedFilenamePattern = Pattern.compile(
+			WORLD_NAME_REGEX = "[^<>:\"/\\\\|?*\\x00-\\x1F]+";
+			DETAILED_FILENAME_PATTERN = Pattern.compile(
 				"# Match a valid Windows filename (unspecified file system).          \n" +
 					"^                                # Anchor to start of string.        \n" +
 					"(?!                              # Assert filename is not: CON, PRN, \n" +
@@ -46,11 +46,11 @@ public class WorldGenDisplay extends Display {
 					"$                                # Anchor to end of string.            ",
 				Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE | Pattern.COMMENTS);
 		} else if (FileHandler.OS.contains("mac")) {
-			worldNameRegex = "[^/:]+";
-			detailedFilenamePattern = null;
+			WORLD_NAME_REGEX = "[^/:]+";
+			DETAILED_FILENAME_PATTERN = null;
 		} else { // Reference: https://en.wikipedia.org/wiki/Filename#Length_restrictions
-			worldNameRegex = "[^/\0]+";
-			detailedFilenamePattern = null;
+			WORLD_NAME_REGEX = "[^/\0]+";
+			DETAILED_FILENAME_PATTERN = null;
 		}
 	}
 
@@ -80,7 +80,7 @@ public class WorldGenDisplay extends Display {
 	}
 
 	public static InputEntry makeWorldNameInput(String prompt, List<String> takenNames, String initValue, boolean isGen) {
-		return new InputEntry(prompt, worldNameRegex, 36, initValue) {
+		return new InputEntry(prompt, WORLD_NAME_REGEX, 36, initValue) {
 			private String lastName;
 
 			@Override
@@ -108,8 +108,8 @@ public class WorldGenDisplay extends Display {
 					return false;
 				}
 
-				if (detailedFilenamePattern != null) {
-					if (!detailedFilenamePattern.matcher(name).matches()) {
+				if (DETAILED_FILENAME_PATTERN != null) {
+					if (!DETAILED_FILENAME_PATTERN.matcher(name).matches()) {
 						if (!name.equals(lastName)) {
 							Logging.WORLD.debug("Invalid file name (Not matches to the valid pattern with the corresponding system) \"{}\".", name);
 							lastName = name;

@@ -40,8 +40,8 @@ public class Spawner extends Furniture {
 	private final Random rnd = new Random();
 
 	private static final int ACTIVE_RADIUS = 8 << 4;
-	private static final int minSpawnInterval = 200, maxSpawnInterval = 500;
-	private static final int minMobSpawnChance = 10; // 1 in minMobSpawnChance chance of calling trySpawn every interval.
+	private static final int MIN_SPAWN_INTERVAL = 200, MAX_SPAWN_INTERVAL = 500;
+	private static final int MIN_MOB_SPAWN_CHANCE = 10; // 1 in minMobSpawnChance chance of calling trySpawn every interval.
 
 	public MobAi mob;
 	private int health, lvl, maxMobLevel;
@@ -104,7 +104,7 @@ public class Spawner extends Furniture {
 
 		spawnTick--;
 		if (spawnTick <= 0) {
-			int chance = (int) (minMobSpawnChance * Math.pow(level.mobCount, 2) / Math.pow(level.maxMobCount, 2)); // This forms a quadratic function that determines the mob spawn chance.
+			int chance = (int) (MIN_MOB_SPAWN_CHANCE * Math.pow(level.mobCount, 2) / Math.pow(level.maxMobCount, 2)); // This forms a quadratic function that determines the mob spawn chance.
 			if (chance <= 0 || random.nextInt(chance) == 0)
 				trySpawn();
 			resetSpawnInterval();
@@ -115,7 +115,7 @@ public class Spawner extends Furniture {
 	 * Resets the spawner so it can spawn another mob.
 	 */
 	private void resetSpawnInterval() {
-		spawnTick = rnd.nextInt(maxSpawnInterval - minSpawnInterval + 1) + minSpawnInterval;
+		spawnTick = rnd.nextInt(MAX_SPAWN_INTERVAL - MIN_SPAWN_INTERVAL + 1) + MIN_SPAWN_INTERVAL;
 	}
 
 	/**
@@ -125,7 +125,7 @@ public class Spawner extends Furniture {
 		if (level == null) return;
 		if (level.mobCount >= level.maxMobCount) return; // Can't spawn more entities
 		if (mob instanceof EnemyMob) {
-			if (level.depth >= 0 && Updater.tickCount > Updater.sleepEndTime && Updater.tickCount < Updater.sleepStartTime)
+			if (level.depth >= 0 && Updater.tickCount > Updater.SLEEP_END_TIME && Updater.tickCount < Updater.SLEEP_START_TIME)
 				return; // Do not spawn if it is on the surface or above and it is under daylight.
 			if (level.isLight(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT))
 				return;

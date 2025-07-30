@@ -15,10 +15,10 @@ import java.util.Arrays;
 public class BookDisplay extends Display {
 
 	// null characters "\0" denote page breaks.
-	private static final String defaultBook = "This book has no text.";
+	private static final String DEFAULT_BOOK = "This book has no text.";
 
-	private static final int spacing = 3;
-	private static final int minX = 15, maxX = 15 + 8 * 32, minY = 8 * 5, maxY = 8 * 5 + (8 << 4);
+	private static final int SPACING = 3;
+	private static final int MIN_X = 15, MAX_X = 15 + 8 * 32, MIN_Y = 8 * 5, MAX_Y = 8 * 5 + (8 << 4);
 
 	// First array is page and second is line.
 	private String[][] lines;
@@ -37,7 +37,7 @@ public class BookDisplay extends Display {
 		page = 0;
 
 		if (book == null) {
-			book = defaultBook;
+			book = DEFAULT_BOOK;
 			hasTitle = false;
 		}
 
@@ -48,7 +48,7 @@ public class BookDisplay extends Display {
 		for (String content : splitContents) {
 			String[] remainder = { content };
 			while (remainder[remainder.length - 1].length() > 0) {
-				remainder = Font.getLines(remainder[remainder.length - 1], maxX - minX, maxY - minY, spacing, true);
+				remainder = Font.getLines(remainder[remainder.length - 1], MAX_X - MIN_X, MAX_Y - MIN_Y, SPACING, true);
 				pages.add(Arrays.copyOf(remainder, remainder.length - 1)); // Removes the last element of remainder, which is the leftover.
 			}
 		}
@@ -58,17 +58,17 @@ public class BookDisplay extends Display {
 		showPageCount = hasTitle || lines.length != 1;
 		pageOffset = showPageCount ? 1 : 0;
 
-		Menu.Builder builder = new Menu.Builder(true, spacing, RelPos.CENTER);
+		Menu.Builder builder = new Menu.Builder(true, SPACING, RelPos.CENTER);
 
 		Menu pageCount = builder // The small rect for the title
-			.setPositioning(new Point(Screen.w / 2, 0), RelPos.BOTTOM)
+			.setPositioning(new Point(Screen.W / 2, 0), RelPos.BOTTOM)
 			.setEntries(StringEntry.useLines(Color.BLACK, "Page", hasTitle ? "Title" : "1/" + lines.length))
 			.setSelection(1)
 			.createMenu();
 
 		builder
-			.setPositioning(new Point(Screen.w / 2, pageCount.getBounds().getBottom() + spacing), RelPos.BOTTOM)
-			.setSize(maxX - minX + MinicraftImage.boxWidth * 2, maxY - minY + MinicraftImage.boxWidth * 2)
+			.setPositioning(new Point(Screen.W / 2, pageCount.getBounds().getBottom() + SPACING), RelPos.BOTTOM)
+			.setSize(MAX_X - MIN_X + MinicraftImage.BOX_WIDTH * 2, MAX_Y - MIN_Y + MinicraftImage.BOX_WIDTH * 2)
 			.setShouldRender(false);
 
 		menus = new Menu[lines.length + pageOffset];

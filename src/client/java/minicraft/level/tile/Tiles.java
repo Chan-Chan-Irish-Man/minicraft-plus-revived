@@ -28,7 +28,7 @@ public final class Tiles {
 
 	// Standard tile explosion blacklist
 	// Tiles (as IDs) included cannot be damaged by explosions such as by TNTs and creepers.
-	public static final Set<Short> explosionBlacklist;
+	public static final Set<Short> EXPLOSION_BLACKLIST;
 
 	public static void initTileList() {
 		Logging.TILES.debug("Initializing tile list...");
@@ -217,7 +217,7 @@ public final class Tiles {
 		oldids.set(54, "torch yellow wool");
 		oldids.set(55, "torch black wool");
 
-		explosionBlacklist = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
+		EXPLOSION_BLACKLIST = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
 			(short) 4, // Stairs Up
 			(short) 5, // Stairs Down
 			(short) 22, // Hard Rock

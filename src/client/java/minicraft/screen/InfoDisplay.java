@@ -22,7 +22,7 @@ public class InfoDisplay extends Display {
 			))
 				.setTitle("minicraft.displays.info.title")
 				.setTitlePos(RelPos.TOP_LEFT)
-				.setPositioning(new Point(MinicraftImage.boxWidth, MinicraftImage.boxWidth), RelPos.BOTTOM_RIGHT)
+				.setPositioning(new Point(MinicraftImage.BOX_WIDTH, MinicraftImage.BOX_WIDTH), RelPos.BOTTOM_RIGHT)
 				.createMenu()
 		);
 	}
@@ -34,7 +34,7 @@ public class InfoDisplay extends Display {
 	}
 
 	public static String getTimeString() {
-		int seconds = Updater.gameTime / Updater.normSpeed;
+		int seconds = Updater.gameTime / Updater.NORM_SPEED;
 		int minutes = seconds / 60;
 		int hours = minutes / 60;
 		minutes %= 60;

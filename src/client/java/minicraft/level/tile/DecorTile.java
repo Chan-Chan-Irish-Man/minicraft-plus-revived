@@ -14,18 +14,18 @@ import minicraft.level.Level;
 import minicraft.util.AdvancementElement;
 
 public class DecorTile extends Tile {
-	private static final SpriteAnimation stoneSprite = new SpriteAnimation(SpriteType.Tile, "ornate_stone");
-	private static final SpriteAnimation obsidianSprite = new SpriteAnimation(SpriteType.Tile, "ornate_obsidian");
-	private static final SpriteAnimation woodSprite = new SpriteAnimation(SpriteType.Tile, "ornate_wood");
-	private static final SpriteAnimation sandStoneSprite = new SpriteAnimation(SpriteType.Tile, "sandstone");
-	private static final SpriteAnimation rawEtherealSprite = new SpriteAnimation(SpriteType.Tile, "cloud");//"raw_ethereal");
+	private static final SpriteAnimation STONE_SPRITE = new SpriteAnimation(SpriteType.Tile, "ornate_stone");
+	private static final SpriteAnimation OBSIDIAN_SPRITE = new SpriteAnimation(SpriteType.Tile, "ornate_obsidian");
+	private static final SpriteAnimation WOOD_SPRITE = new SpriteAnimation(SpriteType.Tile, "ornate_wood");
+	private static final SpriteAnimation SANDSTONE_SPRITE = new SpriteAnimation(SpriteType.Tile, "sandstone");
+	private static final SpriteAnimation RAW_ETHEREAL_SPRITE = new SpriteAnimation(SpriteType.Tile, "cloud");//"raw_ethereal");
 
 	public enum decorType {
-		ORNATE_OBSIDIAN(obsidianSprite, "Ornate Obsidian", Material.Obsidian),
-		ORNATE_STONE(stoneSprite, "Ornate Stone", Material.Stone),
-		ORNATE_WOOD(woodSprite, "Ornate Wood", Material.Wood),
-		SANDSTONE(sandStoneSprite, "Sandstone", Material.Stone),
-		RAW_ETHEREAL(rawEtherealSprite, "Raw Ethereal", Material.Obsidian),;
+		ORNATE_OBSIDIAN(OBSIDIAN_SPRITE, "Ornate Obsidian", Material.Obsidian),
+		ORNATE_STONE(STONE_SPRITE, "Ornate Stone", Material.Stone),
+		ORNATE_WOOD(WOOD_SPRITE, "Ornate Wood", Material.Wood),
+		SANDSTONE(SANDSTONE_SPRITE, "Sandstone", Material.Stone),
+		RAW_ETHEREAL(RAW_ETHEREAL_SPRITE, "Raw Ethereal", Material.Obsidian),;
 
 		private final SpriteAnimation decorSprite;
 		private final String name;

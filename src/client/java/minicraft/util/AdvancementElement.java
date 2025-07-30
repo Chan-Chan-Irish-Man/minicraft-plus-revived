@@ -36,11 +36,11 @@ import java.util.concurrent.Executors;
  * World-wide.
  */
 public class AdvancementElement {
-	private static final HashSet<AdvancementElement> recipeUnlockingElements;
+	private static final HashSet<AdvancementElement> RECIPE_UNLOCKING_ELEMENTS;
 
 	static {
 		try {
-			recipeUnlockingElements = loadAdvancementFile("/resources/recipes.json", false);
+			RECIPE_UNLOCKING_ELEMENTS = loadAdvancementFile("/resources/recipes.json", false);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -135,13 +135,13 @@ public class AdvancementElement {
 	}
 
 	public static void resetRecipeUnlockingElements() {
-		recipeUnlockingElements.forEach(AdvancementElement::reset);
+		RECIPE_UNLOCKING_ELEMENTS.forEach(AdvancementElement::reset);
 	}
 
 	public static void loadRecipeUnlockingElements(JSONObject json) {
 		resetRecipeUnlockingElements();
 		for (String k : json.keySet()) {
-			recipeUnlockingElements.stream().filter(e -> e.key.equals(k))
+			RECIPE_UNLOCKING_ELEMENTS.stream().filter(e -> e.key.equals(k))
 				.findFirst().ifPresent(element -> element.load(json.getJSONObject(k)));
 		}
 	}
@@ -150,7 +150,7 @@ public class AdvancementElement {
 	 * Saving and writing all data into the given JSONObject.
 	 */
 	public static void saveRecipeUnlockingElements(JSONObject json) {
-		recipeUnlockingElements.forEach(element -> element.save(json));
+		RECIPE_UNLOCKING_ELEMENTS.forEach(element -> element.save(json));
 	}
 
 
@@ -438,17 +438,17 @@ public class AdvancementElement {
 
 	public static abstract class AdvancementTrigger {
 		// Used for threaded trigger handling.
-		private static final Set<ElementCriterion> pendingCompletedCriteria = ConcurrentHashMap.newKeySet();
+		private static final Set<ElementCriterion> PENDING_COMPLETED_CRITERIA = ConcurrentHashMap.newKeySet();
 
 		public static void tick() {
-			for (Iterator<ElementCriterion> it = pendingCompletedCriteria.iterator(); it.hasNext(); ) {
+			for (Iterator<ElementCriterion> it = PENDING_COMPLETED_CRITERIA.iterator(); it.hasNext(); ) {
 				ElementCriterion criterion = it.next();
 				criterion.markAsCompleted(false, null);
 				it.remove(); // Action done.
 			}
 		}
 
-		private static final ExecutorService executorService = Executors.newCachedThreadPool();
+		private static final ExecutorService EXECUTOR_SERVICE = Executors.newCachedThreadPool();
 
 		protected final AdvancementTriggerConditionHandler conditions;
 
@@ -456,19 +456,19 @@ public class AdvancementElement {
 			this.conditions = conditions;
 		}
 
-		private static final HashMap<String, AdvancementTrigger> triggers = new HashMap<>();
+		private static final HashMap<String, AdvancementTrigger> TRIGGERS = new HashMap<>();
 
 		static {
-			triggers.put("impossible", ImpossibleTrigger.INSTANCE);
-			triggers.put("inventory_changed", InventoryChangedTrigger.INSTANCE);
-			triggers.put("placed_tile", PlacedTileTrigger.INSTANCE);
+			TRIGGERS.put("impossible", ImpossibleTrigger.INSTANCE);
+			TRIGGERS.put("inventory_changed", InventoryChangedTrigger.INSTANCE);
+			TRIGGERS.put("placed_tile", PlacedTileTrigger.INSTANCE);
 			//noinspection StaticInitializerReferencesSubClass
-			triggers.put("item_used_on_tile", ItemUsedOnTileTrigger.INSTANCE);
+			TRIGGERS.put("item_used_on_tile", ItemUsedOnTileTrigger.INSTANCE);
 		}
 
 		@NotNull
 		public static AdvancementElement.AdvancementTrigger getTrigger(String key) {
-			return triggers.getOrDefault(key, ImpossibleTrigger.INSTANCE);
+			return TRIGGERS.getOrDefault(key, ImpossibleTrigger.INSTANCE);
 		}
 
 		protected final HashSet<ElementCriterion> registeredCriteria = new HashSet<>();
@@ -479,7 +479,7 @@ public class AdvancementElement {
 
 		/**
 		 * This should be called by another thread if method {@link #singleThreadNeeded()} is not
-		 * implemented to return true. If false, this should use {@link #pendingCompletedCriteria}
+		 * implemented to return true. If false, this should use {@link #PENDING_COMPLETED_CRITERIA}
 		 * to mark completed criteria instead of calling it directly as this method should be called
 		 * by the global game tick updater to ensure the synchronization.
 		 */
@@ -496,7 +496,7 @@ public class AdvancementElement {
 		 * Triggering and checking passes by another thread.
 		 */
 		public void trigger(AdvancementTriggerConditionHandler.AdvancementTriggerConditions conditions) {
-			if (!singleThreadNeeded()) executorService.submit(() -> trigger0(conditions));
+			if (!singleThreadNeeded()) EXECUTOR_SERVICE.submit(() -> trigger0(conditions));
 			else trigger0(conditions);
 		}
 
@@ -756,7 +756,7 @@ public class AdvancementElement {
 							if (!criterionConditions.items.isEmpty() && !isConditionalMatched(items, criterionConditions.items)) {
 								continue;
 							}
-							pendingCompletedCriteria.add(criterion); // All conditions passed.
+							PENDING_COMPLETED_CRITERIA.add(criterion); // All conditions passed.
 						}
 					}
 				}

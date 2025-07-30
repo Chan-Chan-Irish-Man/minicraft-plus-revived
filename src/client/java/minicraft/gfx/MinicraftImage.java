@@ -16,7 +16,7 @@ public class MinicraftImage {
 	/**
 	 * Each sprite tile size.
 	 */
-	public static final int boxWidth = 8;
+	public static final int BOX_WIDTH = 8;
 
 	public final int width, height; // Width and height of the sprite sheet
 	public final int[] pixels; // Integer array of the image's pixels

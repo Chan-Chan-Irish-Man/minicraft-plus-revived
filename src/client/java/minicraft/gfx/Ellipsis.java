@@ -33,7 +33,7 @@ public abstract class Ellipsis {
 
 	public static class SequentialEllipsis extends Ellipsis {
 		public SequentialEllipsis() {
-			this(new CallUpdater(Updater.normSpeed * 2 / 3));
+			this(new CallUpdater(Updater.NORM_SPEED * 2 / 3));
 		}
 
 		public SequentialEllipsis(DotUpdater updater) {
@@ -57,16 +57,16 @@ public abstract class Ellipsis {
 
 	public static class SmoothEllipsis extends Ellipsis {
 
-		private static final String dotString = "   ";
+		private static final String DOT_STRING = "   ";
 
-		private final char[] dots = dotString.toCharArray();
+		private final char[] dots = DOT_STRING.toCharArray();
 
 		public SmoothEllipsis() {
 			this(new TimeUpdater());
 		}
 
 		public SmoothEllipsis(DotUpdater updater) {
-			super(updater, dotString.length() * 2);
+			super(updater, DOT_STRING.length() * 2);
 			updater.setEllipsis(this);
 		}
 
@@ -148,7 +148,7 @@ public abstract class Ellipsis {
 			private int lastTick;
 
 			public TickUpdater() {
-				this(Updater.normSpeed);
+				this(Updater.NORM_SPEED);
 			}
 
 			public TickUpdater(int ticksPerCycle) {

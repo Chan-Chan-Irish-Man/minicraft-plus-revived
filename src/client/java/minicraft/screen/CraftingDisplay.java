@@ -34,7 +34,7 @@ public class CraftingDisplay extends Display {
 
 	private final boolean isPersonalCrafter;
 
-	private static final HashSet<Recipe> unlockedRecipes = new HashSet<>();
+	private static final HashSet<Recipe> UNLOCKED_RECIPES = new HashSet<>();
 
 	public CraftingDisplay(List<Recipe> recipes, String title, Player player) {
 		this(recipes, title, player, false);
@@ -59,10 +59,10 @@ public class CraftingDisplay extends Display {
 	}
 
 	private void refreshDisplayRecipes() {
-		List<Recipe> recipes = availableRecipes.stream().filter(unlockedRecipes::contains).collect(Collectors.toList());
+		List<Recipe> recipes = availableRecipes.stream().filter(UNLOCKED_RECIPES::contains).collect(Collectors.toList());
 		recipeMenu = new RecipeMenu(recipes, title, player);
 		this.recipes = recipes.toArray(new Recipe[0]);
-		itemCountMenu.setPositioning(new Point(recipeMenu.getBounds().getRight() + MinicraftImage.boxWidth, recipeMenu.getBounds().getTop()), RelPos.BOTTOM_RIGHT);
+		itemCountMenu.setPositioning(new Point(recipeMenu.getBounds().getRight() + MinicraftImage.BOX_WIDTH, recipeMenu.getBounds().getTop()), RelPos.BOTTOM_RIGHT);
 		costsMenu.setPositioning(new Point(itemCountMenu.createMenu().getBounds().getLeft(), recipeMenu.getBounds().getBottom()), RelPos.TOP_RIGHT);
 
 		menus = new Menu[] { recipeMenu, itemCountMenu.createMenu(), costsMenu.createMenu() };
@@ -212,20 +212,20 @@ public class CraftingDisplay extends Display {
 	}
 
 	public static void resetRecipeUnlocks() {
-		unlockedRecipes.clear();
+		UNLOCKED_RECIPES.clear();
 	}
 
 	public static void unlockRecipe(@NotNull Recipe recipe) {
-		unlockedRecipes.add(recipe);
+		UNLOCKED_RECIPES.add(recipe);
 		refreshInstanceIfNeeded();
 	}
 
 	public static Set<Recipe> getUnlockedRecipes() {
-		return new HashSet<>(unlockedRecipes);
+		return new HashSet<>(UNLOCKED_RECIPES);
 	}
 
 	public static void loadUnlockedRecipes(Collection<Recipe> recipes) {
 		resetRecipeUnlocks();
-		unlockedRecipes.addAll(recipes);
+		UNLOCKED_RECIPES.addAll(recipes);
 	}
 }

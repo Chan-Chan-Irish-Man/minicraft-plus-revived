@@ -23,11 +23,11 @@ import java.util.stream.IntStream;
 
 public class Screen {
 
-	public static final int w = Renderer.WIDTH; // Width of the screen
-	public static final int h = Renderer.HEIGHT; // Height of the screen
-	public static final Point center = new Point(w / 2, h / 2);
+	public static final int W = Renderer.WIDTH; // Width of the screen
+	public static final int H = Renderer.HEIGHT; // Height of the screen
+	public static final Point CENTER = new Point(W / 2, H / 2);
 
-	private static final int MAXDARK = 128;
+	private static final int MAX_DARK = 128;
 
 	/// x and y offset of screen:
 	private int xOffset;
@@ -78,14 +78,14 @@ public class Screen {
 		public void render(Graphics2D graphics) {
 
 			graphics.setColor(new java.awt.Color(color));
-			graphics.fillRect(0, 0, Screen.w, Screen.h);
+			graphics.fillRect(0, 0, Screen.W, Screen.H);
 		}
 	}
 
 	private static class PlainClearRendering extends ClearRendering {
 		@Override
 		public void render(Graphics2D graphics) {
-			graphics.clearRect(0, 0, Screen.w, Screen.h);
+			graphics.clearRect(0, 0, Screen.W, Screen.H);
 		}
 	}
 
@@ -117,15 +117,15 @@ public class Screen {
 			boolean mirrorY = (mirrors & BIT_MIRROR_Y) > 0; // Vertically.
 			for (int y = 0; y < th; ++y) { // Relative
 				if (y + yp < 0) continue; // If the pixel is out of bounds, then skip the rest of the loop.
-				if (y + yp >= h) break;
+				if (y + yp >= H) break;
 				int sy = mirrorY ? th - 1 - y : y; // Source relative; reverse if necessary
 				for (int x = 0; x < tw; ++x) { // Relative
 					if (x + xp < 0) continue; // Skip rest if out of bounds.
-					if (x + xp >= w) break;
+					if (x + xp >= W) break;
 					int sx = mirrorX ? tw - 1 - x : x; // Source relative; reverse if necessary
 					int col = sheet.pixels[toffs + sx + sy * sheet.width]; // Gets the color of the current pixel from the value stored in the sheet.
 					if (col >> 24 != 0) { // if not transparent
-						int index = (xp + x) + (yp + y) * w;
+						int index = (xp + x) + (yp + y) * W;
 						if (whiteTint != -1 && col == 0x1FFFFFF) {
 							// If this is white, write the whiteTint over it
 							pixels[index] = Color.upgrade(whiteTint);
@@ -218,13 +218,13 @@ public class Screen {
 			switch (axis) {
 				case 0:
 					for (int i = 0; i < l; i++) { // 1 pixel high and 8 pixel wide
-						int idx = x0 + i + y0 * Screen.w;
+						int idx = x0 + i + y0 * Screen.W;
 						pixels[idx] = Color.getLightnessFromRGB(pixels[idx]) >= .5 ? Color.BLACK : Color.WHITE;
 					}
 					break;
 				case 1:
 					for (int i = 0; i < l; i++) { // 8 pixel high and 1 pixel wide
-						int idx = x0 + (y0 + i) * Screen.w;
+						int idx = x0 + (y0 + i) * Screen.W;
 						pixels[idx] = Color.getLightnessFromRGB(pixels[idx]) >= .5 ? Color.BLACK : Color.WHITE;
 					}
 					break;
@@ -249,7 +249,7 @@ public class Screen {
 			BufferedImage overlay = lightOverlay.render(xa, ya);
 			graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .02f)); // Lightening
 			graphics.setColor(java.awt.Color.WHITE);
-			graphics.fillRect(0, 0, w, h);
+			graphics.fillRect(0, 0, W, H);
 			graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) alpha)); // Shaders
 			graphics.drawImage(overlay, null, 0, 0);
 		}
@@ -437,27 +437,27 @@ public class Screen {
 	public void overlay(int currentLevel, int xa, int ya) {
 		double darkFactor = 0;
 		if (currentLevel >= 3 && currentLevel < 5) {
-			int transTime = Updater.dayLength / 4;
+			int transTime = Updater.DAY_LENGTH / 4;
 			double relTime = (Updater.tickCount % transTime) * 1.0 / transTime;
 
 			switch (Updater.getTime()) {
 				case Morning:
-					darkFactor = Updater.pastDay1 ? (1 - relTime) * MAXDARK : 0;
+					darkFactor = Updater.pastDay1 ? (1 - relTime) * MAX_DARK : 0;
 					break;
 				case Day:
 					darkFactor = 0;
 					break;
 				case Evening:
-					darkFactor = relTime * MAXDARK;
+					darkFactor = relTime * MAX_DARK;
 					break;
 				case Night:
-					darkFactor = MAXDARK;
+					darkFactor = MAX_DARK;
 					break;
 			}
 
 			if (currentLevel > 3) darkFactor -= (darkFactor < 10 ? darkFactor : 10);
 		} else if (currentLevel >= 5)
-			darkFactor = MAXDARK;
+			darkFactor = MAX_DARK;
 
 		// The Integer array of pixels to overlay the screen with.
 		queue(new OverlayRendering(currentLevel, xa, ya, darkFactor));
@@ -469,7 +469,7 @@ public class Screen {
 	}
 
 	private static class LightOverlay {
-		private static final int[] dither = new int[] {
+		private static final int[] DITHER = new int[] {
 			0, 8, 2, 10,
 			12, 4, 14, 6,
 			3, 11, 1, 9,
@@ -478,9 +478,9 @@ public class Screen {
 
 		public final float[] graFractions;
 		public final java.awt.Color[] graColors;
-		public final BufferedImage buffer = new BufferedImage(w, h, BufferedImage.TYPE_BYTE_GRAY);
+		public final BufferedImage buffer = new BufferedImage(W, H, BufferedImage.TYPE_BYTE_GRAY);
 		public final byte[] bufPixels;
-		public final BufferedImage overlay = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+		public final BufferedImage overlay = new BufferedImage(W, H, BufferedImage.TYPE_INT_ARGB);
 		public final int[] olPixels;
 		public final HashMap<@NotNull Point, @NotNull Integer> lights = new HashMap<>();
 
@@ -524,7 +524,7 @@ public class Screen {
 		public BufferedImage render(int xa, int ya) {
 			Graphics2D g2d = buffer.createGraphics();
 			g2d.setBackground(java.awt.Color.BLACK);
-			g2d.clearRect(0, 0, w, h);
+			g2d.clearRect(0, 0, W, H);
 			for (Map.Entry<Point, Integer> e : lights.entrySet()) {
 				int x = e.getKey().x, y = e.getKey().y, r = e.getValue();
 				boolean[] surrounds = new boolean[8];
@@ -553,13 +553,13 @@ public class Screen {
 			g2d.dispose();
 			lights.clear();
 
-			for (int x = 0; x < w; ++x) {
-				for (int y = 0; y < h; ++y) {
-					int i = x + y * w;
+			for (int x = 0; x < W; ++x) {
+				for (int y = 0; y < H; ++y) {
+					int i = x + y * W;
 					// Grade of lightness
 					int grade = bufPixels[i] & 0xFF;
 					// (a + b) & 3 acts like (a + b) % 4
-					if (grade / 10 <= dither[((x + xa) & 3) + ((y + ya) & 3) * 4]) {
+					if (grade / 10 <= DITHER[((x + xa) & 3) + ((y + ya) & 3) * 4]) {
 						olPixels[i] = (255 - grade) << 24;
 					} else {
 						olPixels[i] = 0;

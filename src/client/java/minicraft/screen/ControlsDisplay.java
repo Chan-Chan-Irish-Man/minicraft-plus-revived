@@ -22,7 +22,7 @@ public class ControlsDisplay extends Display {
 	public ControlsDisplay() {
 		super(true, true, new Menu.Builder(false, 0, RelPos.CENTER)
 			.setSelectable(true)
-			.setPositioning(new Point(Screen.w / 2, 20), RelPos.BOTTOM)
+			.setPositioning(new Point(Screen.W / 2, 20), RelPos.BOTTOM)
 			.setDisplayLength(17)
 			.createMenu()
 		);
@@ -63,13 +63,13 @@ public class ControlsDisplay extends Display {
 		Font.drawCentered(Localization.getLocalized(displaying == 0 ? "minicraft.displays.controls.display.keyboard" : "minicraft.displays.controls.display.controller"), screen, 10, Color.WHITE);
 
 		if (displaying == 0) { // If displaying keyboard mappings.
-			Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.keyboard.desc"), screen, Screen.h - 16, Color.GRAY);
+			Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.keyboard.desc"), screen, Screen.H - 16, Color.GRAY);
 		} else { // If displaying controller mappings.
-			Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.controller.desc.0"), screen, Screen.h - 24, Color.GRAY);
-			Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.controller.desc.1"), screen, Screen.h - 16, Color.GRAY);
+			Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.controller.desc.0"), screen, Screen.H - 24, Color.GRAY);
+			Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.controller.desc.1"), screen, Screen.H - 16, Color.GRAY);
 		}
 
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.help.0", Game.input.getMapping("cursor-left"), Game.input.getMapping("cursor-right")), screen, Screen.h - 8, Color.GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.controls.display.help.0", Game.input.getMapping("cursor-left"), Game.input.getMapping("cursor-right")), screen, Screen.H - 8, Color.GRAY);
 	}
 
 	@Override

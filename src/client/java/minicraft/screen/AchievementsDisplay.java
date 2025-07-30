@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 
 public class AchievementsDisplay extends Display {
 
-	private static final HashMap<String, Achievement> achievements = new HashMap<>();
+	private static final HashMap<String, Achievement> ACHIEVEMENTS = new HashMap<>();
 
 	private static Achievement selectedAchievement;
 	private static int achievementScore;
@@ -56,7 +56,7 @@ public class AchievementsDisplay extends Display {
 						obj.getInt("score")
 					);
 
-					achievements.put(obj.getString("id"), a);
+					ACHIEVEMENTS.put(obj.getString("id"), a);
 				}
 			} else {
 				Logging.ACHIEVEMENT.error("Could not find achievements json.");
@@ -72,13 +72,13 @@ public class AchievementsDisplay extends Display {
 	public AchievementsDisplay() {
 		super(true, true,
 			new Menu.Builder(false, 2, RelPos.CENTER, getAchievemensAsEntries()).setSize(48, 48).createMenu(),
-			new Menu.Builder(false, 2, RelPos.BOTTOM, new StringEntry("")).setSize(200, 32).setPositioning(new Point(Screen.w / 2, Screen.h / 2 + 32), RelPos.BOTTOM).createMenu());
+			new Menu.Builder(false, 2, RelPos.BOTTOM, new StringEntry("")).setSize(200, 32).setPositioning(new Point(Screen.W / 2, Screen.H / 2 + 32), RelPos.BOTTOM).createMenu());
 	}
 
 	@Override
 	public void init(@Nullable Display parent) {
 		super.init(parent);
-		if (achievements.isEmpty()) {
+		if (ACHIEVEMENTS.isEmpty()) {
 			Game.setDisplay(new TitleDisplay());
 			Logging.ACHIEVEMENT.error("Could not open achievements menu because no achievements could be found.");
 			return;
@@ -86,7 +86,7 @@ public class AchievementsDisplay extends Display {
 
 		ListEntry curEntry = menus[0].getCurEntry();
 		if (curEntry instanceof SelectEntry) {
-			selectedAchievement = achievements.get(((SelectEntry) curEntry).getText());
+			selectedAchievement = ACHIEVEMENTS.get(((SelectEntry) curEntry).getText());
 		}
 	}
 
@@ -103,7 +103,7 @@ public class AchievementsDisplay extends Display {
 
 		ListEntry curEntry = menus[0].getCurEntry();
 		if (curEntry instanceof SelectEntry) {
-			selectedAchievement = achievements.get(((SelectEntry) curEntry).getText());
+			selectedAchievement = ACHIEVEMENTS.get(((SelectEntry) curEntry).getText());
 		}
 	}
 
@@ -131,7 +131,7 @@ public class AchievementsDisplay extends Display {
 		}
 
 		// Help text.
-		Font.drawCentered(Localization.getLocalized("minicraft.displays.achievements.display.help", Game.input.getMapping("cursor-down"), Game.input.getMapping("cursor-up")), screen, Screen.h - 8, Color.DARK_GRAY);
+		Font.drawCentered(Localization.getLocalized("minicraft.displays.achievements.display.help", Game.input.getMapping("cursor-down"), Game.input.getMapping("cursor-up")), screen, Screen.H - 8, Color.DARK_GRAY);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class AchievementsDisplay extends Display {
 	}
 
 	private static boolean setAchievement(String id, boolean unlocked, boolean save, boolean allowCreative) {
-		Achievement a = achievements.get(id);
+		Achievement a = ACHIEVEMENTS.get(id);
 
 		// Return if it is in creative mode
 		if (!allowCreative && Game.isMode("minicraft.settings.mode.creative")) return false;
@@ -185,8 +185,8 @@ public class AchievementsDisplay extends Display {
 	public static String[] getUnlockedAchievements() {
 		ArrayList<String> strings = new ArrayList<>();
 
-		for (String id : achievements.keySet()) {
-			if (achievements.get(id).getUnlocked()) {
+		for (String id : ACHIEVEMENTS.keySet()) {
+			if (ACHIEVEMENTS.get(id).getUnlocked()) {
 				strings.add(id);
 			}
 		}
@@ -196,7 +196,7 @@ public class AchievementsDisplay extends Display {
 
 	public static List<ListEntry> getAchievemensAsEntries() {
 		List<ListEntry> l = new ArrayList<>();
-		for (String id : achievements.keySet()) {
+		for (String id : ACHIEVEMENTS.keySet()) {
 			// Add entry to list.
 			l.add(new SelectEntry(id, null, true) {
 				/**
@@ -204,7 +204,7 @@ public class AchievementsDisplay extends Display {
 				 */
 				@Override
 				public int getColor(boolean isSelected) {
-					if (achievements.get(id).getUnlocked()) {
+					if (ACHIEVEMENTS.get(id).getUnlocked()) {
 						return Color.GREEN;
 					} else {
 						return Color.WHITE;

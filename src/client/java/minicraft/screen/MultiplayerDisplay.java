@@ -24,8 +24,8 @@ import minicraft.util.Logging;
 @Deprecated
 public class MultiplayerDisplay extends Display {
 
-	private static final String domain = "https://playminicraft.com";
-	private static final String apiDomain = domain + "/api";
+	private static final String DOMAIN = "https://playminicraft.com";
+	private static final String API_DOMAIN = DOMAIN + "/api";
 
 	public static String savedIP = "";
 	public static String savedUUID = "";
@@ -68,7 +68,7 @@ public class MultiplayerDisplay extends Display {
 	private void contactAccountServer(Action sitePingCallback) {
 		setWaitMessage("testing connection");
 
-		Unirest.get(domain).asEmptyAsync(new Callback<Empty>() {
+		Unirest.get(DOMAIN).asEmptyAsync(new Callback<Empty>() {
 			@Override
 			public void completed(HttpResponse<Empty> response) {
 				if (response.getStatus() == 200)
@@ -132,7 +132,7 @@ public class MultiplayerDisplay extends Display {
 		HttpResponse<JsonNode> response = null;
 
 		try {
-			response = Unirest.post(apiDomain + "/fetch-name")
+			response = Unirest.post(API_DOMAIN + "/fetch-name")
 				.field("uuid", savedUUID)
 				.asJson();
 		} catch (UnirestException e) {
@@ -187,54 +187,54 @@ public class MultiplayerDisplay extends Display {
 				Font.drawCentered("Logged in as: " + savedUsername, screen, 6, Color.get(1, 102, 255, 102));
 
 				if (!online)
-					Font.drawCentered("Offline mode: local servers only", screen, Screen.h / 2 - Font.textHeight() * 6, Color.get(1, 153, 153, 255));
+					Font.drawCentered("Offline mode: local servers only", screen, Screen.H / 2 - Font.textHeight() * 6, Color.get(1, 153, 153, 255));
 
-				Font.drawCentered("Enter ip address to connect to:", screen, Screen.h / 2 - Font.textHeight() * 2 - 2, Color.get(1, 255));
-				Font.drawCentered(typing, screen, Screen.h / 2 - Font.textHeight(), Color.get(1, 255, 255, 102));
+				Font.drawCentered("Enter ip address to connect to:", screen, Screen.H / 2 - Font.textHeight() * 2 - 2, Color.get(1, 255));
+				Font.drawCentered(typing, screen, Screen.H / 2 - Font.textHeight(), Color.get(1, 255, 255, 102));
 
-				Font.drawCentered("Press Shift-Escape to logout", screen, Screen.h - Font.textHeight() * 7, Color.get(1, 204));
+				Font.drawCentered("Press Shift-Escape to logout", screen, Screen.H - Font.textHeight() * 7, Color.get(1, 204));
 				break;
 
 			case LOGIN:
 				String msg = "Enter email:";
 				if (!typingEmail)
 					msg = "Enter password:";
-				Font.drawCentered(msg, screen, Screen.h / 2 - 6, Color.WHITE);
+				Font.drawCentered(msg, screen, Screen.H / 2 - 6, Color.WHITE);
 
 				msg = typing;
 				if (!typingEmail)
 					//noinspection ReplaceAllDot
 					msg = msg.replaceAll(".", ".");
-				Font.drawCentered(msg, screen, Screen.h / 2 + 6, (inputIsValid ? Color.get(1, 204) : Color.RED));
+				Font.drawCentered(msg, screen, Screen.H / 2 + 6, (inputIsValid ? Color.get(1, 204) : Color.RED));
 				if (!inputIsValid) {
-					Font.drawCentered("field is blank", screen, Screen.h / 2 + 20, Color.RED);
+					Font.drawCentered("field is blank", screen, Screen.H / 2 + 20, Color.RED);
 				}
 
 				Font.drawCentered("get an account at:", screen, Font.textHeight() / 2 - 1, Color.get(1, 153, 204, 255));
-				Font.drawCentered(domain.substring(domain.indexOf("://") + 3) + "/register", screen, Font.textHeight() * 3 / 2, Color.get(1, 153, 204, 255));
+				Font.drawCentered(DOMAIN.substring(DOMAIN.indexOf("://") + 3) + "/register", screen, Font.textHeight() * 3 / 2, Color.get(1, 153, 204, 255));
 
 				break;
 
 			case WAITING:
-				Font.drawCentered(waitingMessage + ellipsis.updateAndGet(), screen, Screen.h / 2, Color.WHITE);
+				Font.drawCentered(waitingMessage + ellipsis.updateAndGet(), screen, Screen.H / 2, Color.WHITE);
 				break;
 
 			case LOADING:
-				Font.drawCentered("Loading " + loadingMessage + " from server" + ellipsis.updateAndGet(), screen, Screen.h / 2, Color.WHITE);
+				Font.drawCentered("Loading " + loadingMessage + " from server" + ellipsis.updateAndGet(), screen, Screen.H / 2, Color.WHITE);
 				//Font.drawCentered(transferPercent + "%", screen, Screen.h / 2 + 6, Color.WHITE);
 				break;
 
 			case ERROR:
 				//if(Updater.tickCount % 10 == 0) System.out.println("error message: " + errorMessage);
-				Font.drawCentered("Could not connect to server:", screen, Screen.h / 2 - 6, Color.RED);
-				FontStyle style = new FontStyle(Color.get(1, 255, 51, 51)).setYPos(Screen.h / 2 + 6);
+				Font.drawCentered("Could not connect to server:", screen, Screen.H / 2 - 6, Color.RED);
+				FontStyle style = new FontStyle(Color.get(1, 255, 51, 51)).setYPos(Screen.H / 2 + 6);
 				Font.drawParagraph(errorMessage, screen, style, 1);
 				//Font.drawCentered(errorMessage, screen, Screen.h/2+6, Color.get(1, 255, 51, 51));
 				break;
 		}
 
 		if (curState == State.ENTERIP || curState == State.ERROR) {
-			Font.drawCentered("Press " + Game.input.getMapping("exit") + " to return", screen, Screen.h - Font.textHeight() * 2, Color.GRAY);
+			Font.drawCentered("Press " + Game.input.getMapping("exit") + " to return", screen, Screen.H - Font.textHeight() * 2, Color.GRAY);
 		}
 	}
 }

@@ -9,16 +9,16 @@ import minicraft.item.StackableItem;
 import org.jetbrains.annotations.Nullable;
 
 public class Composter extends Furniture {
-	private static final SpriteLinker.LinkedSprite sprite = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "composter");
-	private static final SpriteLinker.LinkedSprite spriteFilled = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "composter_filled");
-	private static final SpriteLinker.LinkedSprite spriteFull = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "composter_full");
-	private static final SpriteLinker.LinkedSprite itemSprite = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Item, "composter");
+	private static final SpriteLinker.LinkedSprite SPRITE = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "composter");
+	private static final SpriteLinker.LinkedSprite SPRITE_FILLED = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "composter_filled");
+	private static final SpriteLinker.LinkedSprite SPRITE_FULL = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Entity, "composter_full");
+	private static final SpriteLinker.LinkedSprite ITEM_SPRITE = new SpriteLinker.LinkedSprite(SpriteLinker.SpriteType.Item, "composter");
 
 	private static final int MAX_COMPOST = 7;
 	private int compost = 0;
 
 	public Composter() {
-		super("Composter", sprite, itemSprite);
+		super("Composter", SPRITE, ITEM_SPRITE);
 	}
 
 	@Override
@@ -68,10 +68,10 @@ public class Composter extends Furniture {
 
 	private void refreshStatus() {
 		if (compost == 0)
-			super.sprite = sprite;
+			super.sprite = SPRITE;
 		else if (compost < MAX_COMPOST)
-			super.sprite = spriteFilled;
+			super.sprite = SPRITE_FILLED;
 		else
-			super.sprite = spriteFull;
+			super.sprite = SPRITE_FULL;
 	}
 }

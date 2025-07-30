@@ -8,13 +8,13 @@ import java.util.List;
 
 public class FishingData {
 
-	public static final List<String> fishData = getData("fish");
+	public static final List<String> FISH_DATA = getData("fish");
 
-	public static final List<String> toolData = getData("tool");
+	public static final List<String> TOOL_DATA = getData("tool");
 
-	public static final List<String> junkData = getData("junk");
+	public static final List<String> JUNK_DATA = getData("junk");
 
-	public static final List<String> rareData = getData("rare");
+	public static final List<String> RARE_DATA = getData("rare");
 
 	public static List<String> getData(String name) {
 		List<String> data;

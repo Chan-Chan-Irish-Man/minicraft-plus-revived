@@ -226,27 +226,27 @@ public class QuestsDisplay extends Display {
 
 		menus = new Menu[] {
 			new Menu.Builder(false, 1, RelPos.CENTER)
-				.setPositioning(new Point(Screen.w / 2, Screen.h / 2 - 20), RelPos.CENTER)
+				.setPositioning(new Point(Screen.W / 2, Screen.H / 2 - 20), RelPos.CENTER)
 				.setDisplayLength(5)
 				.setSelectable(true)
 				.createMenu(),
 			new Menu.Builder(false, 0, RelPos.LEFT)
-				.setPositioning(new Point(Screen.w / 2 - 8 * (2 + Localization.getLocalized("minicraft.displays.quests.display.header.unlocked").length()), 30), RelPos.RIGHT)
+				.setPositioning(new Point(Screen.W / 2 - 8 * (2 + Localization.getLocalized("minicraft.displays.quests.display.header.unlocked").length()), 30), RelPos.RIGHT)
 				.setEntries(new StringEntry("minicraft.displays.quests.display.header.unlocked", Color.GRAY))
 				.setSelectable(false)
 				.createMenu(),
 			new Menu.Builder(false, 0, RelPos.LEFT)
-				.setPositioning(new Point(Screen.w / 2 + 8 * 2, 30), RelPos.RIGHT)
+				.setPositioning(new Point(Screen.W / 2 + 8 * 2, 30), RelPos.RIGHT)
 				.setEntries(new StringEntry("minicraft.displays.quests.display.header.completed", Color.GRAY))
 				.setSelectable(false)
 				.createMenu(),
 			new Menu.Builder(false, 0, RelPos.CENTER)
-				.setPositioning(new Point(Screen.w / 2, Screen.h / 2 + 35), RelPos.CENTER)
+				.setPositioning(new Point(Screen.W / 2, Screen.H / 2 + 35), RelPos.CENTER)
 				.setEntries(new StringEntry(Localization.getLocalized("minicraft.displays.quests.display.no_quest_desc")))
 				.setSelectable(false)
 				.createMenu(),
 			new Menu.Builder(false, 0, RelPos.CENTER)
-				.setPositioning(new Point(Screen.w / 2, 10), RelPos.CENTER)
+				.setPositioning(new Point(Screen.W / 2, 10), RelPos.CENTER)
 				.setEntries(new StringEntry(Settings.getEntry("quests").toString(), Color.WHITE))
 				.setSelectable(false)
 				.createMenu()
@@ -280,12 +280,12 @@ public class QuestsDisplay extends Display {
 
 			menus = new Menu[] {
 				new Menu.Builder(true, 0, RelPos.CENTER)
-					.setPositioning(new Point(Screen.w / 2, 5), RelPos.BOTTOM)
+					.setPositioning(new Point(Screen.W / 2, 5), RelPos.BOTTOM)
 					.setEntries(new StringEntry(Localization.getLocalized(series.key)))
 					.setSelectable(false)
 					.createMenu(),
 				new Menu.Builder(true, 2, RelPos.CENTER)
-					.setPositioning(new Point(Screen.w / 2, 30), RelPos.BOTTOM)
+					.setPositioning(new Point(Screen.W / 2, 30), RelPos.BOTTOM)
 					.setEntries(entries)
 					.setSelectable(true)
 					.createMenu()
@@ -295,8 +295,8 @@ public class QuestsDisplay extends Display {
 		}
 
 		private static class SeriesQuestViewerDisplay extends Display {
-			private static final int entryPadding = 3;
-			private static final int entryGap = 5; // 2x for y-axis only when between entries.
+			private static final int ENTRY_PADDING = 3;
+			private static final int ENTRY_GAP = 5; // 2x for y-axis only when between entries.
 			private final Menu[] menus;
 			private final Quest[][] questsTree;
 			private final Rectangle[][] treeDimensions;
@@ -307,7 +307,7 @@ public class QuestsDisplay extends Display {
 			private final int rasterY;
 			private final MinicraftImage image;
 			private final int[] rasterPixels;
-			private final Screen simulatedRasterScreen = new Screen(new BufferedImage(Screen.w, Screen.h, BufferedImage.TYPE_INT_RGB)) {
+			private final Screen simulatedRasterScreen = new Screen(new BufferedImage(Screen.W, Screen.H, BufferedImage.TYPE_INT_RGB)) {
 				@Override
 				public void render(int xp, int yp, int xt, int yt, int bits, MinicraftImage sheet, int whiteTint, boolean fullbright, int color) {
 					if (sheet == null) return; // Verifying that sheet is not null.
@@ -360,11 +360,11 @@ public class QuestsDisplay extends Display {
 				super(false, true);
 				menus = new Menu[] {
 					new Menu.Builder(true, 0, RelPos.CENTER, StringEntry.useLines("minicraft.displays.quests", series.key))
-						.setPositioning(new Point(Screen.w / 2, 6), RelPos.BOTTOM)
+						.setPositioning(new Point(Screen.W / 2, 6), RelPos.BOTTOM)
 						.createMenu(),
 					new Menu.Builder(true, 0, RelPos.CENTER)
-						.setPositioning(new Point(Screen.w / 2, 40), RelPos.BOTTOM)
-						.setSize(Screen.w - 16, Screen.h - 60)
+						.setPositioning(new Point(Screen.W / 2, 40), RelPos.BOTTOM)
+						.setSize(Screen.W - 16, Screen.H - 60)
 						.createMenu()
 				};
 
@@ -410,11 +410,11 @@ public class QuestsDisplay extends Display {
 						int height = Font.textHeight();
 						for (int j = 0; j < questsTree[i].length; j++) { // x-axis
 							int width = Font.textWidth(Localization.getLocalized(questsTree[i][j].key));
-							treeDimensions[i][j] = new Rectangle(entryGap, entryGap, entryPadding * 2 + width, entryPadding * 2 + height, 0);
+							treeDimensions[i][j] = new Rectangle(ENTRY_GAP, ENTRY_GAP, ENTRY_PADDING * 2 + width, ENTRY_PADDING * 2 + height, 0);
 							if (j > 0)
-								treeDimensions[i][j].translate(treeDimensions[i][j - 1].getRight() + entryGap, 0);
+								treeDimensions[i][j].translate(treeDimensions[i][j - 1].getRight() + ENTRY_GAP, 0);
 							if (i > 0)
-								treeDimensions[i][j].translate(0, treeDimensions[i - 1][0].getBottom() + entryGap * 2);
+								treeDimensions[i][j].translate(0, treeDimensions[i - 1][0].getBottom() + ENTRY_GAP * 2);
 						}
 					}
 				} else {
@@ -423,12 +423,12 @@ public class QuestsDisplay extends Display {
 				}
 
 				Rectangle menuBounds = menus[1].getBounds();
-				rasterWidth = menuBounds.getWidth() - MinicraftImage.boxWidth * 2;
-				rasterHeight = menuBounds.getHeight() - MinicraftImage.boxWidth * 2;
+				rasterWidth = menuBounds.getWidth() - MinicraftImage.BOX_WIDTH * 2;
+				rasterHeight = menuBounds.getHeight() - MinicraftImage.BOX_WIDTH * 2;
 				image = new MinicraftImage(rasterWidth, rasterHeight);
 				rasterPixels = image.pixels;
-				rasterX = menuBounds.getLeft() + MinicraftImage.boxWidth;
-				rasterY = menuBounds.getTop() + MinicraftImage.boxWidth;
+				rasterX = menuBounds.getLeft() + MinicraftImage.BOX_WIDTH;
+				rasterY = menuBounds.getTop() + MinicraftImage.BOX_WIDTH;
 			}
 
 			@Override
@@ -488,15 +488,15 @@ public class QuestsDisplay extends Display {
 			}
 
 			private void scrollIfNeeded() {
-				if (xScroll > treeDimensions[cursorY][cursorX].getLeft() - entryGap)
-					xScroll = treeDimensions[cursorY][cursorX].getLeft() - entryGap;
-				else if (xScroll + rasterWidth < treeDimensions[cursorY][cursorX].getRight() + entryGap)
-					xScroll = treeDimensions[cursorY][cursorX].getRight() + entryGap - rasterWidth;
+				if (xScroll > treeDimensions[cursorY][cursorX].getLeft() - ENTRY_GAP)
+					xScroll = treeDimensions[cursorY][cursorX].getLeft() - ENTRY_GAP;
+				else if (xScroll + rasterWidth < treeDimensions[cursorY][cursorX].getRight() + ENTRY_GAP)
+					xScroll = treeDimensions[cursorY][cursorX].getRight() + ENTRY_GAP - rasterWidth;
 
-				if (yScroll > treeDimensions[cursorY][cursorX].getTop() - entryGap)
-					yScroll = treeDimensions[cursorY][cursorX].getTop() - entryGap;
-				else if (yScroll + rasterHeight < treeDimensions[cursorY][cursorX].getBottom() + entryGap)
-					yScroll = treeDimensions[cursorY][cursorX].getBottom() + entryGap - rasterHeight;
+				if (yScroll > treeDimensions[cursorY][cursorX].getTop() - ENTRY_GAP)
+					yScroll = treeDimensions[cursorY][cursorX].getTop() - ENTRY_GAP;
+				else if (yScroll + rasterHeight < treeDimensions[cursorY][cursorX].getBottom() + ENTRY_GAP)
+					yScroll = treeDimensions[cursorY][cursorX].getBottom() + ENTRY_GAP - rasterHeight;
 			}
 
 			@Override
@@ -570,7 +570,7 @@ public class QuestsDisplay extends Display {
 						int x = rec.getLeft();
 						int y = rec.getTop();
 						boolean selected = c == cursorX && r == cursorY;
-						Font.draw(Localization.getLocalized(quest.key), simulatedRasterScreen, x + entryPadding, y + entryPadding,
+						Font.draw(Localization.getLocalized(quest.key), simulatedRasterScreen, x + ENTRY_PADDING, y + ENTRY_PADDING,
 							selected ? (quest.isCompleted() ? Color.tint(Color.GREEN, 1, true) :
 								Color.WHITE) : Color.tint(Color.GRAY, 1, true));
 						for (int i = 0; i < rec.getWidth(); i++) { // Border.
@@ -658,7 +658,7 @@ public class QuestsDisplay extends Display {
 					int color = quest.isCompleted() ? Color.GREEN : quest.isUnlocked() ? Color.WHITE : Color.GRAY;
 					menus = new Menu[] {
 						new Menu.Builder(true, 1, RelPos.CENTER)
-							.setPositioning(new Point(Screen.w / 2, 5), RelPos.BOTTOM)
+							.setPositioning(new Point(Screen.W / 2, 5), RelPos.BOTTOM)
 							.setEntries(new StringEntry(quest.getSeries().key),
 								new StringEntry(Localization.getLocalized(quest.key) + ": " + Localization.getLocalized(state), color, false),
 								new StringEntry(quest.shouldAllCriteriaBeCompleted() ?
@@ -669,7 +669,7 @@ public class QuestsDisplay extends Display {
 							.createMenu(),
 						new Menu.Builder(true, 2, RelPos.CENTER,
 							StringEntry.useLines(quest.description))
-							.setPositioning(new Point(Screen.w / 2, 52), RelPos.BOTTOM)
+							.setPositioning(new Point(Screen.W / 2, 52), RelPos.BOTTOM)
 							.setSelectable(false)
 							.createMenu()
 					};

@@ -18,10 +18,10 @@ public class Items {
 	 * <p>
 	 * If you want to access one of those items, you do it through this class, by calling get("item name"); casing does not matter.
 	 */
-	private static final ArrayList<Item> items = new ArrayList<>();
+	private static final ArrayList<Item> ITEMS = new ArrayList<>();
 
 	private static void add(Item i) {
-		items.add(i);
+		ITEMS.add(i);
 	}
 
 	private static void addAll(ArrayList<Item> items) {
@@ -50,7 +50,7 @@ public class Items {
 	}
 
 	public static ArrayList<Item> getAll() {
-		return new ArrayList<>(items);
+		return new ArrayList<>(ITEMS);
 	}
 
 	/**
@@ -99,7 +99,7 @@ public class Items {
 			return new UnknownItem("BLANK");
 
 		Item i = null;
-		for (Item cur : items) {
+		for (Item cur : ITEMS) {
 			if (cur.getName().equalsIgnoreCase(name)) {
 				i = cur;
 				break;
@@ -140,7 +140,7 @@ public class Items {
 	public static class CreativeModeInventory extends Inventory {
 		CreativeModeInventory() {
 			unlimited = true;
-			items.forEach(i -> {
+			ITEMS.forEach(i -> {
 				if (!(i instanceof PowerGloveItem)) add(i.copy());
 			});
 		}

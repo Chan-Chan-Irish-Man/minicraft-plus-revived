@@ -14,13 +14,13 @@ import java.util.ArrayList;
 public class Crafter extends Furniture {
 
 	public enum Type {
-		Workbench(new LinkedSprite(SpriteType.Entity, "workbench"), new LinkedSprite(SpriteType.Item, "workbench"), 3, 2, Recipes.workbenchRecipes),
-		Oven(new LinkedSprite(SpriteType.Entity, "oven"), new LinkedSprite(SpriteType.Item, "oven"), 3, 2, Recipes.ovenRecipes),
-		Furnace(new LinkedSprite(SpriteType.Entity, "furnace"), new LinkedSprite(SpriteType.Item, "furnace"), 3, 2, Recipes.furnaceRecipes),
-		Anvil(new LinkedSprite(SpriteType.Entity, "anvil"), new LinkedSprite(SpriteType.Item, "anvil"), 3, 2, Recipes.anvilRecipes),
-		Enchanter(new LinkedSprite(SpriteType.Entity, "enchanter"), new LinkedSprite(SpriteType.Item, "enchanter"), 7, 2, Recipes.enchantRecipes),
-		Loom(new LinkedSprite(SpriteType.Entity, "loom"), new LinkedSprite(SpriteType.Item, "loom"), 7, 2, Recipes.loomRecipes),
-		DyeVat(new LinkedSprite(SpriteType.Entity, "dyevat"), new LinkedSprite(SpriteType.Item, "dyevat"), 0, 0, Recipes.dyeVatRecipes);
+		Workbench(new LinkedSprite(SpriteType.Entity, "workbench"), new LinkedSprite(SpriteType.Item, "workbench"), 3, 2, Recipes.WORKBENCH_RECIPES),
+		Oven(new LinkedSprite(SpriteType.Entity, "oven"), new LinkedSprite(SpriteType.Item, "oven"), 3, 2, Recipes.OVEN_RECIPES),
+		Furnace(new LinkedSprite(SpriteType.Entity, "furnace"), new LinkedSprite(SpriteType.Item, "furnace"), 3, 2, Recipes.FURNACE_RECIPES),
+		Anvil(new LinkedSprite(SpriteType.Entity, "anvil"), new LinkedSprite(SpriteType.Item, "anvil"), 3, 2, Recipes.ANVIL_RECIPES),
+		Enchanter(new LinkedSprite(SpriteType.Entity, "enchanter"), new LinkedSprite(SpriteType.Item, "enchanter"), 7, 2, Recipes.ENCHANT_RECIPES),
+		Loom(new LinkedSprite(SpriteType.Entity, "loom"), new LinkedSprite(SpriteType.Item, "loom"), 7, 2, Recipes.LOOM_RECIPES),
+		DyeVat(new LinkedSprite(SpriteType.Entity, "dyevat"), new LinkedSprite(SpriteType.Item, "dyevat"), 0, 0, Recipes.DYE_VAT_RECIPES);
 
 		public ArrayList<Recipe> recipes;
 		protected LinkedSprite sprite;

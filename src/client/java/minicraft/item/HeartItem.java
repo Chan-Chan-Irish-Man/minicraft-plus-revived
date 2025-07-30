@@ -39,7 +39,7 @@ public class HeartItem extends StackableItem {
 	public boolean interactOn(Tile tile, Level level, int xt, int yt, Player player, Direction attackDir) {
 		boolean success = false;
 
-		if ((Player.baseHealth + Player.extraHealth) < Player.maxHealth) {
+		if ((Player.baseHealth + Player.extraHealth) < Player.MAX_HEALTH) {
 			Player.extraHealth += health; // Permanent increase of health by health variable (Basically 5)
 			player.health += health; // Adds health to the player when used. (Almost like absorbing the item's power first time)
 			success = true;

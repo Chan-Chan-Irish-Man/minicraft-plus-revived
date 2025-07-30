@@ -6,7 +6,7 @@ import minicraft.gfx.SpriteLinker.SpriteType;
 import java.util.Random;
 
 public class SandParticle extends Particle {
-	public static final LinkedSprite sprite = new LinkedSprite(SpriteType.Entity, "sand_footsteps");
+	public static final LinkedSprite SPRITE = new LinkedSprite(SpriteType.Entity, "sand_footsteps");
 
 	/**
 	 * Creating a sand particle.
@@ -14,6 +14,6 @@ public class SandParticle extends Particle {
 	 * @param y Y map position
 	 */
 	public SandParticle(int x, int y) {
-		super(x, y, 180 + new Random().nextInt(81) - 40, sprite);
+		super(x, y, 180 + new Random().nextInt(81) - 40, SPRITE);
 	}
 }

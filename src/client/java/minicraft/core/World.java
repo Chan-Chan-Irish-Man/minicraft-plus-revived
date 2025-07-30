@@ -26,8 +26,8 @@ public class World extends Game {
 	private World() {
 	}
 
-	public static final int[] idxToDepth = { -3, -2, -1, 0, 1, -4 }; /// This is to map the level depths to each level's index in Game's levels array. This must ALWAYS be the same length as the levels array, of course.
-	public static final int minLevelDepth, maxLevelDepth;
+	public static final int[] INDEX_TO_DEPTH = { -3, -2, -1, 0, 1, -4 }; /// This is to map the level depths to each level's index in Game's levels array. This must ALWAYS be the same length as the levels array, of course.
+	public static final int MIN_LEVEL_DEPTH, MAX_LEVEL_DEPTH;
 
 	static int worldSize = 128; // The size of the world
 	private static final int LEVEL_AMOUNT = 6; // Amount of levels generated.
@@ -46,23 +46,23 @@ public class World extends Game {
 
 	static {
 		int min, max;
-		min = max = idxToDepth[0];
-		for (int depth : idxToDepth) {
+		min = max = INDEX_TO_DEPTH[0];
+		for (int depth : INDEX_TO_DEPTH) {
 			if (depth < min)
 				min = depth;
 			if (depth > max)
 				max = depth;
 		}
-		minLevelDepth = min;
-		maxLevelDepth = max;
+		MIN_LEVEL_DEPTH = min;
+		MAX_LEVEL_DEPTH = max;
 	}
 
 	/**
 	 * This is for a contained way to find the index in the levels array of a level, based on it's depth. This is also helpful because add a new level in the future could change this.
 	 */
 	public static int lvlIdx(int depth) {
-		if (depth > maxLevelDepth) return lvlIdx(minLevelDepth);
-		if (depth < minLevelDepth) return lvlIdx(maxLevelDepth);
+		if (depth > MAX_LEVEL_DEPTH) return lvlIdx(MIN_LEVEL_DEPTH);
+		if (depth < MIN_LEVEL_DEPTH) return lvlIdx(MAX_LEVEL_DEPTH);
 
 		if (depth == -4) return 5;
 
@@ -121,7 +121,7 @@ public class World extends Game {
 
 		levels = new Level[LEVEL_AMOUNT];
 
-		Updater.scoreTime = (Integer) Settings.get("scoretime") * 60 * Updater.normSpeed;
+		Updater.scoreTime = (Integer) Settings.get("scoretime") * 60 * Updater.NORM_SPEED;
 
 		LoadingDisplay.setPercentage(0); // This actually isn't necessary, I think; it's just in case.
 
@@ -137,8 +137,8 @@ public class World extends Game {
 			seed = WorldGenDisplay.getSeed().orElse(new Random().nextLong());
 			random = new Random(seed);
 
-			float loadingInc = 100f / (maxLevelDepth - minLevelDepth + 1); // The .002 is for floating point errors, in case they occur.
-			for (int i = maxLevelDepth; i >= minLevelDepth; i--) {
+			float loadingInc = 100f / (MAX_LEVEL_DEPTH - MIN_LEVEL_DEPTH + 1); // The .002 is for floating point errors, in case they occur.
+			for (int i = MAX_LEVEL_DEPTH; i >= MIN_LEVEL_DEPTH; i--) {
 				// i = level depth; the array starts from the top because the parent level is used as a reference, so it should be constructed first. It is expected that the highest level will have a null parent.
 
 				Logging.WORLD.trace("Generating level " + i + "...");

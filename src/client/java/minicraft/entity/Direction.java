@@ -11,7 +11,7 @@ public enum Direction {
 		this.y = y;
 	}
 
-	public static final Direction[] values = Direction.values();
+	public static final Direction[] VALUES = Direction.values();
 
 	public int getX() {
 		return x;
@@ -40,7 +40,7 @@ public enum Direction {
 	}
 
 	public static Direction getDirection(int dir) {
-		return values[dir + 1];
+		return VALUES[dir + 1];
 	}
 
 	public int getDir() {
