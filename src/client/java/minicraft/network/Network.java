@@ -70,7 +70,7 @@ public class Network extends Game {
 		for (Level level : levels) {
 			if (level == null) continue;
 			for (Entity e : level.getEntityArray())
-				if (e.eid == eid)
+				if (e.eID == eid)
 					return e;
 		}
 
@@ -98,7 +98,7 @@ public class Network extends Game {
 		for (Level level : levels) {
 			if (level == null) continue;
 			for (Entity e : level.getEntityArray()) {
-				if (e.eid == eid)
+				if (e.eID == eid)
 					return false;
 			}
 		}

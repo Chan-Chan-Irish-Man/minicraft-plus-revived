@@ -90,7 +90,7 @@ public class FireSpark extends Entity {
 
 	@Override
 	public void render(Screen screen) {
-		int randmirror = 0;
+		int randMirror = 0;
 
 		// If we are in a menu, or we are on a server.
 		if (Game.getDisplay() == null) {
@@ -99,14 +99,14 @@ public class FireSpark extends Entity {
 				if (time / 6 % 2 == 0) return; // If time is divisible by 12, then skip the rest of the code.
 			}
 
-			randmirror = random.nextInt(4);
+			randMirror = random.nextInt(4);
 		}
 
 		int xt = 8;
 		int yt = 13;
 
-		screen.render(x - 4, y - 4 + 2, SPRITE.getSprite(), randmirror, false, Color.BLACK); // renders the shadow on the ground
-		screen.render(x - 4, y - 4 - 2, SPRITE.getSprite(), randmirror, false, Color.RED); // Renders the spark
+		screen.render(x - 4, y - 4 + 2, SPRITE.getSprite(), randMirror, false, Color.BLACK); // renders the shadow on the ground
+		screen.render(x - 4, y - 4 - 2, SPRITE.getSprite(), randMirror, false, Color.RED); // Renders the spark
 	}
 
 	/**
@@ -114,6 +114,6 @@ public class FireSpark extends Entity {
 	 * @return the owners id as a string.
 	 */
 	public String getData() {
-		return owner.eid + "";
+		return owner.eID + "";
 	}
 }

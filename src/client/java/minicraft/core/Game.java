@@ -117,7 +117,7 @@ public class Game {
 		Renderer.initScreen();
 
 		World.resetGame(); // "half"-starts a new game, to set up initial variables
-		player.eid = 0;
+		player.eID = 0;
 		new Load(true, false); // This loads any saved preferences.
 
 		// Update fullscreen frame if Updater.FULLSCREEN was updated previously

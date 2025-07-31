@@ -46,7 +46,7 @@ public abstract class Entity implements Tickable {
 	public int col; // Current color.
 
 	// Numeric unique identifier for the entity.
-	public int eid;
+	public int eID;
 
 	/**
 	 * Default constructor for the Entity class.
@@ -64,7 +64,7 @@ public abstract class Entity implements Tickable {
 		removed = true;
 		col = 0;
 
-		eid = -1;
+		eID = -1;
 	}
 
 	public abstract void render(Screen screen); // Used to render the entity on screen.
@@ -374,8 +374,8 @@ public abstract class Entity implements Tickable {
 		this.x = x;
 		this.y = y;
 
-		if (eid < 0)
-			eid = Network.generateUniqueEntityId();
+		if (eID < 0)
+			eID = Network.generateUniqueEntityId();
 	}
 
 	public boolean isWithin(int tileRadius, Entity other) {
@@ -419,7 +419,7 @@ public abstract class Entity implements Tickable {
 
 	protected List<String> getDataPrints() {
 		List<String> prints = new ArrayList<>();
-		prints.add("eid=" + eid);
+		prints.add("eid=" + eID);
 		return prints;
 	}
 
@@ -430,6 +430,6 @@ public abstract class Entity implements Tickable {
 
 	@Override
 	public final int hashCode() {
-		return eid;
+		return eID;
 	}
 }

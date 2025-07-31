@@ -64,7 +64,7 @@ public class Spark extends Entity {
 
 	@Override
 	public void render(Screen screen) {
-		int randmirror = 0;
+		int randMirror = 0;
 
 		// If we are in a menu, or we are on a server.
 		if (Game.getDisplay() == null) {
@@ -74,10 +74,10 @@ public class Spark extends Entity {
 			}
 
 
-			randmirror = random.nextInt(4);
+			randMirror = random.nextInt(4);
 		}
 
-		sprite.setMirror(randmirror);
+		sprite.setMirror(randMirror);
 		screen.render(x - 4, y - 4 + 2, sprite.getSprite(), 0, false, Color.BLACK); // renders the shadow on the ground
 		screen.render(x - 4, y - 4 - 2, sprite); // Renders the spark
 	}
@@ -87,6 +87,6 @@ public class Spark extends Entity {
 	 * @return the owners id as a string.
 	 */
 	public String getData() {
-		return owner.eid + "";
+		return owner.eID + "";
 	}
 }

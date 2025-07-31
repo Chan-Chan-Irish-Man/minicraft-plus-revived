@@ -422,7 +422,7 @@ public class Save {
 			return "";
 
 		if (!isLocalSave)
-			extradata.append(":").append(e.eid);
+			extradata.append(":").append(e.eID);
 
 		if (e instanceof Mob) {
 			Mob m = (Mob) e;

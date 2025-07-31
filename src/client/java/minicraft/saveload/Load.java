@@ -1516,7 +1516,7 @@ public class Load {
 			}
 		}
 
-		newEntity.eid = eid; // This will be -1 unless set earlier, so a new one will be generated when adding it to the level.
+		newEntity.eID = eid; // This will be -1 unless set earlier, so a new one will be generated when adding it to the level.
 		if (newEntity instanceof ItemEntity && eid == -1)
 			Logging.SAVELOAD.warn("Item entity was loaded with no eid");
 
