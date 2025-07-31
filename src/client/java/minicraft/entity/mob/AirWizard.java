@@ -25,7 +25,7 @@ public class AirWizard extends EnemyMob {
 	public static boolean active = false;
 	public static AirWizard entity = null;
 	private static int LVL = 1;
-	private static int HEALTH = 2000;
+	private static int MAX_HEALTH = 2000;
 	private static boolean HEALTH_AFFECTED_BY_DIFFICULTY = false;
 	private static int DETECT_RADIUS = Tile.TILE_PIXELS * 8; // tile pixel size by amount of tiles
 	private static int LIFETIME = -1; // does not despawn
@@ -49,7 +49,7 @@ public class AirWizard extends EnemyMob {
 	 * Constructor for the AirWizard.
 	 */
 	public AirWizard() {
-		super(LVL, SPRITES, HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
+		super(LVL, SPRITES, MAX_HEALTH, HEALTH_AFFECTED_BY_DIFFICULTY, DETECT_RADIUS, LIFETIME, RAND_WALK_DURATION, RAND_WALK_CHANCE);
 
 		active = true;
 		speed = 2;
@@ -137,23 +137,23 @@ public class AirWizard extends EnemyMob {
 	public void render(Screen screen) {
 		super.render(screen);
 
-		int textcol = Color.get(1, 0, 204, 0);
-		int textcol2 = Color.get(1, 0, 51, 0);
+		int textCol = Color.get(1, 0, 204, 0);
+		int textCol2 = Color.get(1, 0, 51, 0);
 		int percent = health / (maxHealth / 100);
 		String h = percent + "%";
 
 		if (percent < 1) h = "1%";
 
 		if (percent < 16) {
-			textcol = Color.get(1, 204, 0, 0);
-			textcol2 = Color.get(1, 51, 0, 0);
+			textCol = Color.get(1, 204, 0, 0);
+			textCol2 = Color.get(1, 51, 0, 0);
 		} else if (percent < 51) {
-			textcol = Color.get(1, 204, 204, 9);
-			textcol2 = Color.get(1, 51, 51, 0);
+			textCol = Color.get(1, 204, 204, 9);
+			textCol2 = Color.get(1, 51, 51, 0);
 		}
-		int textwidth = Font.textWidth(h);
-		Font.draw(h, screen, (x - textwidth / 2) + 1, y - 17, textcol2);
-		Font.draw(h, screen, (x - textwidth / 2), y - 18, textcol);
+		int textWidth = Font.textWidth(h);
+		Font.draw(h, screen, (x - textWidth / 2) + 1, y - 17, textCol2);
+		Font.draw(h, screen, (x - textWidth / 2), y - 18, textCol);
 	}
 
 	@Override

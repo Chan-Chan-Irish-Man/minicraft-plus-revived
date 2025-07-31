@@ -123,9 +123,9 @@ public class ObsidianKnight extends EnemyMob {
 				this.dir = Direction.getDirection(dir);
 				attackDelay--;
 				if (attackDelay == 0) {
-					if (health < MAX_HEALTH / 2)
+					if (health < maxHealth / 2)
 						attackLevel = 1; // If at 1000 health (50%) or lower, attackLevel = 1
-					if (health < MAX_HEALTH / 10)
+					if (health < maxHealth / 10)
 						attackLevel = 2; // If at 200 health (10%) or lower, attackLevel = 2
 					attackTime = 120; // attackTime set to 120 (2 seconds, at default 60 ticks/sec)
 				}
@@ -220,23 +220,23 @@ public class ObsidianKnight extends EnemyMob {
 	public void render(Screen screen) {
 		super.render(screen);
 
-		int textcol = Color.get(1, 0, 204, 0);
-		int textcol2 = Color.get(1, 0, 51, 0);
-		int percent = health / (MAX_HEALTH / 100);
+		int textCol = Color.get(1, 0, 204, 0);
+		int textCol2 = Color.get(1, 0, 51, 0);
+		int percent = health / (maxHealth / 100);
 		String h = percent + "%";
 
 		if (percent < 1) h = "1%";
 
 		if (percent < 16) {
-			textcol = Color.get(1, 204, 0, 0);
-			textcol2 = Color.get(1, 51, 0, 0);
+			textCol = Color.get(1, 204, 0, 0);
+			textCol2 = Color.get(1, 51, 0, 0);
 		} else if (percent < 51) {
-			textcol = Color.get(1, 204, 204, 9);
-			textcol2 = Color.get(1, 51, 51, 0);
+			textCol = Color.get(1, 204, 204, 9);
+			textCol2 = Color.get(1, 51, 51, 0);
 		}
-		int textwidth = Font.textWidth(h);
-		Font.draw(h, screen, (x - textwidth / 2) + 1, y - 17, textcol2);
-		Font.draw(h, screen, (x - textwidth / 2), y - 18, textcol);
+		int textWidth = Font.textWidth(h);
+		Font.draw(h, screen, (x - textWidth / 2) + 1, y - 17, textCol2);
+		Font.draw(h, screen, (x - textWidth / 2), y - 18, textCol);
 	}
 
 	@Override

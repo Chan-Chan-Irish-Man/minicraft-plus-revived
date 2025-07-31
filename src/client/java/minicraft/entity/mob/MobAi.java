@@ -22,7 +22,7 @@ public abstract class MobAi extends Mob {
 	private int lifetime;
 	protected int age = 0; // Not private because it is used in Sheep.java.
 
-	private boolean slowtick = false;
+	private boolean slowTick = false;
 
 	/**
 	 * Constructor for a mob with an ai.
@@ -83,7 +83,7 @@ public abstract class MobAi extends Mob {
 	 * @return true if mob should sleep, false if not.
 	 */
 	protected boolean skipTick() {
-		return slowtick && (tickTime + 1) % 4 == 0;
+		return slowTick && (tickTime + 1) % 4 == 0;
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public abstract class MobAi extends Mob {
 				}
 			}
 
-			slowtick = foundPlayer;
+			slowTick = foundPlayer;
 		}
 
 		if (skipTick()) return;
@@ -189,12 +189,12 @@ public abstract class MobAi extends Mob {
 
 	/**
 	 * Adds some items to the level.
-	 * @param mincount Least amount of items to add.
-	 * @param maxcount Most amount of items to add.
+	 * @param minCount Least amount of items to add.
+	 * @param maxCount Most amount of items to add.
 	 * @param items Which items should be added.
 	 */
-	protected void dropItem(int mincount, int maxcount, Item... items) {
-		int count = random.nextInt(maxcount - mincount + 1) + mincount;
+	protected void dropItem(int minCount, int maxCount, Item... items) {
+		int count = random.nextInt(maxCount - minCount + 1) + minCount;
 		for (int i = 0; i < count; i++)
 			level.dropItem(x, y, items);
 	}
