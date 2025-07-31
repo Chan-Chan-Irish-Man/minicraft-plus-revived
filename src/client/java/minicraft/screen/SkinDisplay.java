@@ -24,7 +24,6 @@ import javax.security.auth.DestroyFailedException;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;

@@ -95,9 +95,9 @@ public class LevelGen {
 		int S = ChunkManager.CHUNK_SIZE;
 
 		// creates a bunch of value maps, some with small size...
-		LevelGen mnoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, 0);
-		LevelGen mnoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, 1);
-		LevelGen mnoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, 2);
+		LevelGen mNoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, 0);
+		LevelGen mNoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, 1);
+		LevelGen mNoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, 2);
 
 		// ...and some with larger size.
 		LevelGen noise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 32, 3);
@@ -110,8 +110,8 @@ public class LevelGen {
 			for (int x = tileX; x < tileX + S; x++) {
 				int i = (x - tileX) + (y - tileY) * S;
 				double val = Math.abs(noise1.values[i] - noise2.values[i]) * 3 - 1;
-				double mval = Math.abs(mnoise1.values[i] - mnoise2.values[i]);
-				mval = Math.abs(mval - mnoise3.values[i]) * 3 - 2;
+				double mVal = Math.abs(mNoise1.values[i] - mNoise2.values[i]);
+				mVal = Math.abs(mVal - mNoise3.values[i]) * 3 - 2;
 
 				// This calculates a sort of distance based on the current coordinate.
 
@@ -123,7 +123,7 @@ public class LevelGen {
 								map.setTile(x, y, Tiles.get("lava"), 0);
 							else
 								map.setTile(x, y, Tiles.get("water"), 0);
-						} else if (val > 0.5 && mval < -1.5) {
+						} else if (val > 0.5 && mVal < -1.5) {
 							rocks.add(new Point(x, y));
 							map.setTile(x, y, Tiles.get("rock"), 0);
 						} else {
@@ -139,7 +139,7 @@ public class LevelGen {
 							} else {
 								map.setTile(x, y, Tiles.get("water"), 0);
 							}
-						} else if (val > 0.5 && mval < -1.5) {
+						} else if (val > 0.5 && mVal < -1.5) {
 							rocks.add(new Point(x, y));
 							map.setTile(x, y, Tiles.get("rock"), 0);
 						} else {
@@ -151,7 +151,7 @@ public class LevelGen {
 
 						if (val < -0.4) {
 							map.setTile(x, y, Tiles.get("grass"), 0);
-						} else if (val > 0.5 && mval < -1.5) {
+						} else if (val > 0.5 && mVal < -1.5) {
 							if (Settings.get("Theme").equals("minicraft.settings.theme.hell")) {
 								map.setTile(x, y, Tiles.get("lava"), 0);
 							} else {
@@ -164,14 +164,14 @@ public class LevelGen {
 						break;
 
 					case "minicraft.settings.type.irregular":
-						if (val < -0.5 && mval < -0.5) {
+						if (val < -0.5 && mVal < -0.5) {
 							if (Settings.get("Theme").equals("minicraft.settings.theme.hell")) {
 								map.setTile(x, y, Tiles.get("lava"), 0);
 							}
 							if (!Settings.get("Theme").equals("minicraft.settings.theme.hell")) {
 								map.setTile(x, y, Tiles.get("water"), 0);
 							}
-						} else if (val > 0.5 && mval < -1.5) {
+						} else if (val > 0.5 && mVal < -1.5) {
 							rocks.add(new Point(x, y));
 							map.setTile(x, y, Tiles.get("rock"), 0);
 						} else {
@@ -394,17 +394,17 @@ public class LevelGen {
 		RANDOM.setSeed(worldSeed);
 		NOISE.setSeed(worldSeed);
 		int S = ChunkManager.CHUNK_SIZE;
-		LevelGen mnoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 0);
-		LevelGen mnoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 1);
-		LevelGen mnoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 2);
+		LevelGen mNoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 0);
+		LevelGen mNoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 1);
+		LevelGen mNoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 2);
 
-		LevelGen nnoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 3);
-		LevelGen nnoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 4);
-		LevelGen nnoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 5);
+		LevelGen nNoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 3);
+		LevelGen nNoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 4);
+		LevelGen nNoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 5);
 
-		LevelGen wnoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 6);
-		LevelGen wnoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 7);
-		LevelGen wnoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 8);
+		LevelGen wNoise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 6);
+		LevelGen wNoise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 7);
+		LevelGen wNoise3 = new LevelGen(chunkX * S, chunkY * S, S, S, 16, depth * 11 + 8);
 
 		LevelGen noise1 = new LevelGen(chunkX * S, chunkY * S, S, S, 32, depth * 11 + 9);
 		LevelGen noise2 = new LevelGen(chunkX * S, chunkY * S, S, S, 32, depth * 11 + 10);
@@ -416,21 +416,21 @@ public class LevelGen {
 
 				double val = Math.abs(noise1.values[i] - noise2.values[i]) * 3 - 2;
 
-				double mval = Math.abs(mnoise1.values[i] - mnoise2.values[i]);
-				mval = Math.abs(mval - mnoise3.values[i]) * 3 - 2;
+				double mVal = Math.abs(mNoise1.values[i] - mNoise2.values[i]);
+				mVal = Math.abs(mVal - mNoise3.values[i]) * 3 - 2;
 
-				double nval = Math.abs(nnoise1.values[i] - nnoise2.values[i]);
-				nval = Math.abs(nval - nnoise3.values[i]) * 3 - 2;
+				double nVal = Math.abs(nNoise1.values[i] - nNoise2.values[i]);
+				nVal = Math.abs(nVal - nNoise3.values[i]) * 3 - 2;
 
-				double wval = Math.abs(wnoise1.values[i] - wnoise2.values[i]);
-				wval = Math.abs(wval - wnoise3.values[i]) * 3 - 2;
+				double wVal = Math.abs(wNoise1.values[i] - wNoise2.values[i]);
+				wVal = Math.abs(wVal - wNoise3.values[i]) * 3 - 2;
 
-				if (val > -1 && wval < -1 + (depth) / 2.0 * 3) {
+				if (val > -1 && wVal < -1 + (depth) / 2.0 * 3) {
 					if (depth == 3) map.setTile(x, y, Tiles.get("lava"), 0);
 					else if (depth == 1) map.setTile(x, y, Tiles.get("dirt"), 0);
 					else map.setTile(x, y, Tiles.get("water"), 0);
 
-				} else if (val > -2 && (mval < -1.7 || nval < -1.4)) {
+				} else if (val > -2 && (mVal < -1.7 || nVal < -1.4)) {
 					map.setTile(x, y, Tiles.get("dirt"), 0);
 
 				} else {

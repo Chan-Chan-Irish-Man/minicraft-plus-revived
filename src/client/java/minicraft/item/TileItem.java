@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
-import java.util.function.IntFunction;
 
 public class TileItem extends StackableItem {
 
@@ -161,8 +160,8 @@ public class TileItem extends StackableItem {
 	}
 
 	public boolean interactOn(Tile tile, Level level, int xt, int yt, Player player, Direction attackDir) {
-		for (String tilename : validTiles) {
-			if (tile.matches(level.getData(xt, yt), tilename)) {
+		for (String tileName : validTiles) {
+			if (tile.matches(level.getData(xt, yt), tileName)) {
 				Tile t = TileModel.getTile(model);
 				level.setTile(xt, yt, t, TileModel.getTileData(model, t, tile, level, xt, yt, player, attackDir));
 				AdvancementElement.AdvancementTrigger.PlacedTileTrigger.INSTANCE.trigger(

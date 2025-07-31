@@ -1,9 +1,7 @@
 package minicraft.gfx;
 
 import minicraft.gfx.SpriteLinker.LinkedSprite;
-import minicraft.util.Logging;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
 
 import java.awt.image.BufferedImage;
 import java.util.Objects;

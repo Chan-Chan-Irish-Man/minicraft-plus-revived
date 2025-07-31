@@ -4,7 +4,6 @@ import minicraft.core.Game;
 import minicraft.entity.mob.Player;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 

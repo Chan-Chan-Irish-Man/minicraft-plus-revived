@@ -107,7 +107,7 @@ public class Load {
 	private float percentInc;
 
 	private ArrayList<String> data;
-	private ArrayList<String> extradata; // These two are changed when loading a new file. (see loadFromFile())
+	private ArrayList<String> extraData; // These two are changed when loading a new file. (see loadFromFile())
 
 	private Version worldVer;
 
@@ -117,15 +117,15 @@ public class Load {
 		worldVer = null;
 
 		data = new ArrayList<>();
-		extradata = new ArrayList<>();
+		extraData = new ArrayList<>();
 	}
 
-	public Load(String worldname) {
-		this(worldname, true);
+	public Load(String worldName) {
+		this(worldName, true);
 	}
 
-	public Load(String worldname, boolean loadGame) {
-		loadFromFile(location + "/saves/" + worldname + "/Game" + EXTENSION);
+	public Load(String worldName, boolean loadGame) {
+		loadFromFile(location + "/saves/" + worldName + "/Game" + EXTENSION);
 		if (data.get(0).contains(".")) worldVer = new Version(data.get(0));
 		if (worldVer == null) worldVer = new Version("1.8");
 
@@ -178,16 +178,16 @@ public class Load {
 						if (doBackup.get()) {
 							Logging.SAVELOAD.info("Performing world backup...");
 							int i = 0;
-							String filename = worldname;
+							String filename = worldName;
 							File f = new File(location + "/saves/", filename);
 							while (f.exists()) { // Increments world name if world exists
 								i++;
-								filename = worldname + " (" + i + ")";
+								filename = worldName + " (" + i + ")";
 								f = new File(location + "/saves/", filename);
 							}
 							f.mkdirs();
 							try {
-								FileHandler.copyFolderContents(Paths.get(location, "saves", worldname),
+								FileHandler.copyFolderContents(Paths.get(location, "saves", worldName),
 									f.toPath(), FileHandler.SKIP, false);
 							} catch (IOException e) {
 								Logging.SAVELOAD.error(e, "Error occurs while performing world backup, loading aborted");
@@ -259,16 +259,16 @@ public class Load {
 						if (doBackup.get()) {
 							Logging.SAVELOAD.info("Performing world backup...");
 							int i = 0;
-							String filename = worldname;
+							String filename = worldName;
 							File f = new File(location + "/saves/", filename);
 							while (f.exists()) { // Increments world name if world exists
 								i++;
-								filename = worldname + " (" + i + ")";
+								filename = worldName + " (" + i + ")";
 								f = new File(location + "/saves/", filename);
 							}
 							f.mkdirs();
 							try {
-								FileHandler.copyFolderContents(Paths.get(location, "saves", worldname),
+								FileHandler.copyFolderContents(Paths.get(location, "saves", worldName),
 									f.toPath(), FileHandler.SKIP, false);
 							} catch (IOException e) {
 								Logging.SAVELOAD.error(e, "Error occurs while performing world backup, loading aborted");
@@ -296,9 +296,9 @@ public class Load {
 		}
 
 		if (worldVer.compareTo(new Version("1.9.2")) < 0)
-			new LegacyLoad(worldname);
+			new LegacyLoad(worldName);
 		else {
-			location += "/saves/" + worldname + "/";
+			location += "/saves/" + worldName + "/";
 
 			percentInc = 5 + World.levels.length - 1; // For the methods below, and world.
 
@@ -357,11 +357,11 @@ public class Load {
 						if (continues.get()) {
 							Logging.SAVELOAD.trace("Regenerating dungeon (B4)...");
 							LoadingDisplay.setMessage("minicraft.displays.loading.message.dungeon_regeneration");
-							int lvlidx = World.lvlIdx(-4);
+							int lvlIDx = World.lvlIdx(-4);
 							boolean reAdd = Game.player.getLevel().depth == -4;
-							Level oriLevel = World.levels[lvlidx];
-							World.levels[lvlidx] = new Level(oriLevel.w, oriLevel.h, oriLevel.getSeed(), -4, World.levels[World.lvlIdx(-3)], true);
-							if (reAdd) World.levels[lvlidx].add(Game.player);
+							Level oriLevel = World.levels[lvlIDx];
+							World.levels[lvlIDx] = new Level(oriLevel.w, oriLevel.h, oriLevel.getSeed(), -4, World.levels[World.lvlIdx(-3)], true);
+							if (reAdd) World.levels[lvlIDx].add(Game.player);
 						} else {
 							throw new RuntimeException(new InterruptedException("World loading interrupted."));
 						}
@@ -463,7 +463,7 @@ public class Load {
 
 	private void loadFromFile(String filename) {
 		data.clear();
-		extradata.clear();
+		extraData.clear();
 
 		String total;
 		try {
@@ -478,7 +478,7 @@ public class Load {
 		if (filename.contains("Level")) {
 			try {
 				total = Load.loadFromFile(filename.substring(0, filename.lastIndexOf("/") + 7) + "data" + EXTENSION, true);
-				extradata.addAll(Arrays.asList(total.split(",")));
+				extraData.addAll(Arrays.asList(total.split(",")));
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
@@ -618,20 +618,20 @@ public class Load {
 		}
 	}
 
-	private void loadMode(String modedata) {
+	private void loadMode(String modeData) {
 		int mode;
-		if (modedata.contains(";")) {
-			String[] modeinfo = modedata.split(";");
-			mode = Integer.parseInt(modeinfo[0]);
+		if (modeData.contains(";")) {
+			String[] modeInfo = modeData.split(";");
+			mode = Integer.parseInt(modeInfo[0]);
 			if (worldVer.compareTo(new Version("2.0.3")) <= 0)
 				mode--; // We changed the min mode idx from 1 to 0.
 			if (mode == 3) {
-				Updater.scoreTime = Integer.parseInt(modeinfo[1]);
+				Updater.scoreTime = Integer.parseInt(modeInfo[1]);
 				if (worldVer.compareTo(new Version("1.9.4")) >= 0)
-					Settings.set("scoretime", modeinfo[2]);
+					Settings.set("scoretime", modeInfo[2]);
 			}
 		} else {
-			mode = Integer.parseInt(modedata);
+			mode = Integer.parseInt(modeData);
 			if (worldVer.compareTo(new Version("2.0.3")) <= 0)
 				mode--; // We changed the min mode idx from 1 to 0.
 
@@ -809,67 +809,67 @@ public class Load {
 	private void loadWorld(String filename) {
 		for (int l = World.MAX_LEVEL_DEPTH; l >= World.MIN_LEVEL_DEPTH; l--) {
 			LoadingDisplay.setMessage(Level.getDepthString(l), false);
-			int lvlidx = World.lvlIdx(l);
-			loadFromFile(location + filename + lvlidx + EXTENSION);
+			int lvlIDx = World.lvlIdx(l);
+			loadFromFile(location + filename + lvlIDx + EXTENSION);
 
-			int lvlw = Integer.parseInt(data.get(0));
-			int lvlh = Integer.parseInt(data.get(1));
+			int lvlW = Integer.parseInt(data.get(0));
+			int lvlH = Integer.parseInt(data.get(1));
 
 			boolean hasSeed = worldVer.compareTo(new Version("2.0.7-dev2")) >= 0;
 			long seed = hasSeed ? Long.parseLong(data.get(2)) : 0;
-			Settings.set("size", lvlw);
+			Settings.set("size", lvlW);
 
 			ChunkManager map = new ChunkManager();
 
-			for (int x = 0; x < lvlw; x++) {
-				for (int y = 0; y < lvlh; y++) {
-					int tileArrIdx = y + x * lvlw;
-					int tileidx = y + x * lvlh; // the tiles are saved with x outer loop, and y inner loop, meaning that the list reads down, then right one, rather than right, then down one.
-					String tilename = data.get(tileidx + (hasSeed ? 4 : 3));
+			for (int x = 0; x < lvlW; x++) {
+				for (int y = 0; y < lvlH; y++) {
+					int tileArrIdx = y + x * lvlW;
+					int tileIDx = y + x * lvlH; // the tiles are saved with x outer loop, and y inner loop, meaning that the list reads down, then right one, rather than right, then down one.
+					String tileName = data.get(tileIDx + (hasSeed ? 4 : 3));
 					if (worldVer.compareTo(new Version("1.9.4-dev6")) < 0) {
-						int tileID = Integer.parseInt(tilename); // they were id numbers, not names, at this point
+						int tileID = Integer.parseInt(tileName); // they were id numbers, not names, at this point
 						if (Tiles.oldids.get(tileID) != null)
-							tilename = Tiles.oldids.get(tileID);
+							tileName = Tiles.oldids.get(tileID);
 						else {
 							Logging.SAVELOAD.warn("Tile list doesn't contain tile " + tileID);
-							tilename = "grass";
+							tileName = "grass";
 						}
 					}
 
-					if (tilename.equalsIgnoreCase("Wool")) {
+					if (tileName.equalsIgnoreCase("Wool")) {
 						if (worldVer.compareTo(new Version("2.0.6-dev4")) < 0) {
-							switch (Integer.parseInt(extradata.get(tileidx))) {
+							switch (Integer.parseInt(extraData.get(tileIDx))) {
 								case 1:
-									tilename = "Red Wool";
+									tileName = "Red Wool";
 									break;
 								case 2:
-									tilename = "Yellow Wool";
+									tileName = "Yellow Wool";
 									break;
 								case 3:
-									tilename = "Green Wool";
+									tileName = "Green Wool";
 									break;
 								case 4:
-									tilename = "Blue Wool";
+									tileName = "Blue Wool";
 									break;
 								case 5:
-									tilename = "Black Wool";
+									tileName = "Black Wool";
 									break;
 								default:
-									tilename = "White Wool";
+									tileName = "White Wool";
 							}
 						} else if (worldVer.compareTo(new Version("2.3.0-dev1")) < 0) {
-							tilename = "White Wool";
+							tileName = "White Wool";
 						}
-					} else if (l == World.MIN_LEVEL_DEPTH + 1 && tilename.equalsIgnoreCase("Lapis") && worldVer.compareTo(new Version("2.0.3-dev6")) < 0) {
+					} else if (l == World.MIN_LEVEL_DEPTH + 1 && tileName.equalsIgnoreCase("Lapis") && worldVer.compareTo(new Version("2.0.3-dev6")) < 0) {
 						if (Math.random() < 0.8) // don't replace *all* the lapis
-							tilename = "Gem Ore";
-					} else if (tilename.equalsIgnoreCase("Cloud Cactus")) {
+							tileName = "Gem Ore";
+					} else if (tileName.equalsIgnoreCase("Cloud Cactus")) {
 
 						// Check the eight tiles around the cloud cactus to see if it is empty.
 						for (int yy = y - 1; yy <= y + 1; yy++) {
 							for (int xx = x - 1; xx <= x + 1; xx++) {
-								if (data.get(xx + yy * lvlw + (hasSeed ? 4 : 3)).equalsIgnoreCase("Infinite Fall")) {
-									tilename = "Infinite Fall";
+								if (data.get(xx + yy * lvlW + (hasSeed ? 4 : 3)).equalsIgnoreCase("Infinite Fall")) {
+									tileName = "Infinite Fall";
 									break;
 								}
 							}
@@ -877,14 +877,14 @@ public class Load {
 					}
 
 					// Tiles are read in an ord
-					loadTile(worldVer, map, x, y, tilename, extradata.get(tileidx));
+					loadTile(worldVer, map, x, y, tileName, extraData.get(tileIDx));
 				}
 			}
 
 			Level parent = World.levels[World.lvlIdx(l + 1)];
-			World.levels[lvlidx] = new Level(lvlw, lvlh, seed, l, parent, false);
+			World.levels[lvlIDx] = new Level(lvlW, lvlH, seed, l, parent, false);
 
-			Level curLevel = World.levels[lvlidx];
+			Level curLevel = World.levels[lvlIDx];
 			curLevel.chunkManager = map;
 
 			// Tile initialization
@@ -980,12 +980,12 @@ public class Load {
 	}
 
 	private void loadWorldInf(String filename) {
-		loadFromFile(location + "/Game" + EXTENSION, extradata);
-		long seed = Long.parseLong(extradata.get(1));
+		loadFromFile(location + "/Game" + EXTENSION, extraData);
+		long seed = Long.parseLong(extraData.get(1));
 		for (int l = World.MAX_LEVEL_DEPTH; l >= World.MIN_LEVEL_DEPTH; l--) {
 			LoadingDisplay.setMessage(Level.getDepthString(l), false);
-			int lvlidx = World.lvlIdx(l);
-			loadFromFile(location + filename + lvlidx + "/index" + EXTENSION, data);
+			int lvlIDx = World.lvlIdx(l);
+			loadFromFile(location + filename + lvlIDx + "/index" + EXTENSION, data);
 
 			Set<Point> chunks = new HashSet<>();
 			while(data.size() >= 2)
@@ -993,18 +993,18 @@ public class Load {
 
 			ChunkManager map = new ChunkManager();
 			Level parent = World.levels[World.lvlIdx(l + 1)];
-			World.levels[lvlidx] = new Level((int)Settings.get("size"), (int)Settings.get("size"), seed, l, parent, false);
+			World.levels[lvlIDx] = new Level((int)Settings.get("size"), (int)Settings.get("size"), seed, l, parent, false);
 
-			Level curLevel = World.levels[lvlidx];
+			Level curLevel = World.levels[lvlIDx];
 			curLevel.chunkManager = map;
 			for(Point c : chunks) {
-				loadFromFile(location + filename + lvlidx + "/t." + c.x + "." + c.y + EXTENSION, data);
-				loadFromFile(location + filename + lvlidx + "/d." + c.x + "." + c.y + EXTENSION, extradata);
+				loadFromFile(location + filename + lvlIDx + "/t." + c.x + "." + c.y + EXTENSION, data);
+				loadFromFile(location + filename + lvlIDx + "/d." + c.x + "." + c.y + EXTENSION, extraData);
 				for(int x = 0; x < ChunkManager.CHUNK_SIZE; x++) {
 					for(int y = 0; y < ChunkManager.CHUNK_SIZE; y++) {
-						int tileidx = y + x * ChunkManager.CHUNK_SIZE; // the tiles are saved with x outer loop, and y inner loop, meaning that the list reads down, then right one, rather than right, then down one.
+						int tileIDx = y + x * ChunkManager.CHUNK_SIZE; // the tiles are saved with x outer loop, and y inner loop, meaning that the list reads down, then right one, rather than right, then down one.
 						int tX = x + c.x * ChunkManager.CHUNK_SIZE, tY = y + c.y * ChunkManager.CHUNK_SIZE;
-						loadTile(worldVer, map, tX, tY, data.get(tileidx), extradata.get(tileidx));
+						loadTile(worldVer, map, tX, tY, data.get(tileIDx), extraData.get(tileIDx));
 						map.getTile(tX, tY).onTileSet(curLevel, tX, tY);
 					}
 				}
@@ -1116,8 +1116,8 @@ public class Load {
 		List<String> data = new ArrayList<>(origData);
 		player.x = Integer.parseInt(data.remove(0));
 		player.y = Integer.parseInt(data.remove(0));
-		player.spawnx = Integer.parseInt(data.remove(0));
-		player.spawny = Integer.parseInt(data.remove(0));
+		player.spawnX = Integer.parseInt(data.remove(0));
+		player.spawnY = Integer.parseInt(data.remove(0));
 		player.health = Integer.parseInt(data.remove(0));
 		if (worldVer.compareTo(new Version("2.2.0-dev3")) >= 0)
 			player.extraHealth = Integer.parseInt(data.remove(0));
@@ -1153,14 +1153,14 @@ public class Load {
 			Logging.SAVELOAD.trace("Game level to add player {} to is null.", player);
 
 		if (worldVer.compareTo(new Version("2.0.4-dev8")) < 0) {
-			String modedata = data.remove(0);
+			String modeData = data.remove(0);
 			if (player == Game.player)
-				loadMode(modedata); // Only load if you're loading the main player
+				loadMode(modeData); // Only load if you're loading the main player
 		}
 
-		String potioneffects = data.remove(0);
-		if (!potioneffects.equals("PotionEffects[]")) {
-			String[] effects = potioneffects.replace("PotionEffects[", "").replace("]", "").split(":");
+		String potionEffects = data.remove(0);
+		if (!potionEffects.equals("PotionEffects[]")) {
+			String[] effects = potionEffects.replace("PotionEffects[", "").replace("]", "").split(":");
 
 			for (String s : effects) {
 				String[] effect = s.split(";");
@@ -1503,15 +1503,15 @@ public class Load {
 				Item item = Items.get(info.get(2));
 				double zz = Double.parseDouble(info.get(3));
 				int lifetime = Integer.parseInt(info.get(4));
-				int timeleft = Integer.parseInt(info.get(5));
+				int timeLeft = Integer.parseInt(info.get(5));
 				double xa = Double.parseDouble(info.get(6));
 				double ya = Double.parseDouble(info.get(7));
 				double za = Double.parseDouble(info.get(8));
-				newEntity = new ItemEntity(item, x, y, zz, lifetime, timeleft, xa, ya, za);
+				newEntity = new ItemEntity(item, x, y, zz, lifetime, timeLeft, xa, ya, za);
 			}
 			if (newEntity instanceof TextParticle) {
-				int textcol = Integer.parseInt(info.get(3));
-				newEntity = new TextParticle(info.get(2), x, y, textcol);
+				int textCol = Integer.parseInt(info.get(3));
+				newEntity = new TextParticle(info.get(2), x, y, textCol);
 				//if (Game.debug) System.out.println("Loaded text particle; color: "+Color.toString(textcol)+", text: " + info.get(2));
 			}
 		}

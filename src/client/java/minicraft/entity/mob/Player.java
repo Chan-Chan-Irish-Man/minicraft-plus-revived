@@ -77,11 +77,11 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	public double moveSpeed = 1; // The number of coordinate squares to move; each tile is 16x16.
 	private int score; // The player's score
 
-	private int multipliertime = MULTIPLIER_TIME; // Time left on the current multiplier.
+	private int multiplierTime = MULTIPLIER_TIME; // Time left on the current multiplier.
 	private int multiplier = 1; // Score multiplier
 
 	// These 2 ints are ints saved from the first spawn - this way the spawn pos is always saved.
-	public int spawnx = 0, spawny = 0; // These are stored as tile coordinates, not entity coordinates.
+	public int spawnX = 0, spawnY = 0; // These are stored as tile coordinates, not entity coordinates.
 
 	// The maximum stats that the player can have.
 	public static final int MAX_STAT = 10;
@@ -129,13 +129,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	private int hungerChargeDelay; // The delay between each time the hunger bar increases your health
 	private int hungerStarveDelay; // The delay between each time the hunger bar decreases your health
 
-	public HashMap<PotionType, Integer> potioneffects; // The potion effects currently applied to the player
-	public boolean showpotioneffects; // Whether to display the current potion effects on screen
+	public HashMap<PotionType, Integer> potionEffects; // The potion effects currently applied to the player
+	public boolean showPotionEffects; // Whether to display the current potion effects on screen
 	public boolean simpPotionEffects;
 	public boolean renderGUI;
 	public int questExpanding; // Lets the display keeps expanded.
-	private int cooldowninfo; // Prevents you from toggling the info pane on and off super fast.
-	private int regentick; // Counts time between each time the regen potion effect heals you.
+	private int cooldownInfo; // Prevents you from toggling the info pane on and off super fast.
+	private int regenTick; // Counts time between each time the regen potion effect heals you.
 
 	public int shirtColor = Color.get(1, 51, 51, 0); // Player shirt color.
 
@@ -197,13 +197,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			}
 		};
 
-		potioneffects = new HashMap<>();
-		showpotioneffects = true;
+		potionEffects = new HashMap<>();
+		showPotionEffects = true;
 		simpPotionEffects = false;
 		renderGUI = true;
 
-		cooldowninfo = 0;
-		regentick = 0;
+		cooldownInfo = 0;
+		regenTick = 0;
 		questExpanding = 0;
 
 		attackDir = dir;
@@ -217,8 +217,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		stamHungerTicks = MAX_HUNGER_TICKS;
 
 		if (previousInstance != null) {
-			spawnx = previousInstance.spawnx;
-			spawny = previousInstance.spawny;
+			spawnX = previousInstance.spawnX;
+			spawnY = previousInstance.spawnY;
 		}
 
 		hudSheet = new LinkedSprite(SpriteType.Gui, "hud");
@@ -232,19 +232,19 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 	void resetMultiplier() {
 		multiplier = 1;
-		multipliertime = MULTIPLIER_TIME;
+		multiplierTime = MULTIPLIER_TIME;
 	}
 
 	public void addMultiplier(int value) {
 		if (!Game.isMode("minicraft.settings.mode.score")) return;
 		multiplier = Math.min(MAX_MULTIPLIER, multiplier + value);
-		multipliertime = Math.max(multipliertime, MULTIPLIER_TIME - 5);
+		multiplierTime = Math.max(multiplierTime, MULTIPLIER_TIME - 5);
 	}
 
 	public void tickMultiplier() {
 		if ((!Updater.paused) && multiplier > 1) {
-			if (multipliertime != 0) multipliertime--;
-			if (multipliertime <= 0) resetMultiplier();
+			if (multiplierTime != 0) multiplierTime--;
+			if (multiplierTime <= 0) resetMultiplier();
 		}
 	}
 
@@ -266,7 +266,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	 * @param duration How long the effect lasts.
 	 */
 	public void addPotionEffect(PotionType type, int duration) {
-		potioneffects.put(type, duration);
+		potionEffects.put(type, duration);
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	 * @return all potion effects on the player.
 	 */
 	public HashMap<PotionType, Integer> getPotionEffects() {
-		return potioneffects;
+		return potionEffects;
 	}
 
 	@Override
@@ -309,12 +309,12 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			Logging.PLAYER.warn("Current Max Health is greater than Max Health, downgrading.");
 		}
 
-		if (potioneffects.size() > 0 && !Bed.inBed(this)) {
-			for (PotionType potionType : potioneffects.keySet().toArray(new PotionType[0])) {
-				if (potioneffects.get(potionType) <= 1) // If time is zero (going to be set to 0 in a moment)...
+		if (potionEffects.size() > 0 && !Bed.inBed(this)) {
+			for (PotionType potionType : potionEffects.keySet().toArray(new PotionType[0])) {
+				if (potionEffects.get(potionType) <= 1) // If time is zero (going to be set to 0 in a moment)...
 					PotionItem.applyPotion(this, potionType, false); // Automatically removes this potion effect.
 				else
-					potioneffects.put(potionType, potioneffects.get(potionType) - 1); // Otherwise, replace it with one less.
+					potionEffects.put(potionType, potionEffects.get(potionType) - 1); // Otherwise, replace it with one less.
 			}
 		}
 
@@ -330,12 +330,12 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			}
 		}
 
-		if (cooldowninfo > 0) cooldowninfo--;
+		if (cooldownInfo > 0) cooldownInfo--;
 		if (questExpanding > 0) questExpanding--;
 
-		if (input.inputPressed("potionEffects") && cooldowninfo == 0) {
-			cooldowninfo = 10;
-			showpotioneffects = !showpotioneffects;
+		if (input.inputPressed("potionEffects") && cooldownInfo == 0) {
+			cooldownInfo = 10;
+			showPotionEffects = !showPotionEffects;
 		}
 
 		if (input.inputPressed("simpPotionEffects")) {
@@ -387,7 +387,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		if (staminaRechargeDelay == 0) {
 			staminaRecharge++; // Ticks since last recharge, accounting for the time potion effect.
 
-			if (isSwimming() && !potioneffects.containsKey(PotionType.Swim) && ride == null)
+			if (isSwimming() && !potionEffects.containsKey(PotionType.Swim) && ride == null)
 				staminaRecharge = 0; // Don't recharge stamina while swimming.
 			if (ride instanceof Boat && ((Boat) ride).isMoving())
 				staminaRecharge = 0; // Don't recharge stamina while rowing the boat.
@@ -455,18 +455,18 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		// regen health
-		if (potioneffects.containsKey(PotionType.Regen)) {
-			regentick++;
-			if (regentick > 60) {
-				regentick = 0;
+		if (potionEffects.containsKey(PotionType.Regen)) {
+			regenTick++;
+			if (regenTick > 60) {
+				regenTick = 0;
 				if (health < 10) {
 					health++;
 				}
 			}
 		}
 
-		if (Updater.savecooldown > 0 && !Updater.saving)
-			Updater.savecooldown--;
+		if (Updater.saveCooldown > 0 && !Updater.saving)
+			Updater.saveCooldown--;
 
 
 		// Handle player input. Input is handled by the menu if we are in one.
@@ -494,7 +494,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 						this.ride = null;
 					}
 				} else {
-					double spd = moveSpeed * (potioneffects.containsKey(PotionType.Speed) ? 1.5D : 1);
+					double spd = moveSpeed * (potionEffects.containsKey(PotionType.Speed) ? 1.5D : 1);
 					int xd = (int) (vec.x * spd);
 					int yd = (int) (vec.y * spd);
 
@@ -508,7 +508,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			}
 
 
-			if (isSwimming() && tickTime % 60 == 0 && !potioneffects.containsKey(PotionType.Swim) && ride == null) { // If drowning... :P
+			if (isSwimming() && tickTime % 60 == 0 && !potionEffects.containsKey(PotionType.Swim) && ride == null) { // If drowning... :P
 				if (stamina > 0) payStamina(1); // Take away stamina
 				else directHurt(1, Direction.NONE); // If no stamina, take damage.
 			}
@@ -532,7 +532,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			}
 
 			if ((activeItem == null || !activeItem.used_pending) && (input.inputPressed("attack")) && stamina != 0 && onFallDelay <= 0) { // This only allows attacks when such action is possible.
-				if (!potioneffects.containsKey(PotionType.Energy)) stamina--;
+				if (!potionEffects.containsKey(PotionType.Energy)) stamina--;
 				staminaRecharge = 0;
 
 				attack();
@@ -570,7 +570,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				}
 				//debug feature:
 				if (input.inputDown("F3-p")) { // Remove all potion effects
-					for (PotionType potionType : potioneffects.keySet()) {
+					for (PotionType potionType : potionEffects.keySet()) {
 						PotionItem.applyPotion(this, potionType, false);
 					}
 				}
@@ -859,19 +859,19 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	}
 
 	private void goFishing() {
-		int fcatch = random.nextInt(100);
+		int fCatch = random.nextInt(100);
 
 		boolean caught = false;
 
 		// Figure out which table to roll for
 		List<String> data = null;
-		if (fcatch > FishingRodItem.getChance(0, fishingLevel)) {
+		if (fCatch > FishingRodItem.getChance(0, fishingLevel)) {
 			data = FishingData.FISH_DATA;
-		} else if (fcatch > FishingRodItem.getChance(1, fishingLevel)) {
+		} else if (fCatch > FishingRodItem.getChance(1, fishingLevel)) {
 			data = FishingData.JUNK_DATA;
-		} else if (fcatch > FishingRodItem.getChance(2, fishingLevel)) {
+		} else if (fCatch > FishingRodItem.getChance(2, fishingLevel)) {
 			data = FishingData.TOOL_DATA;
-		} else if (fcatch >= FishingRodItem.getChance(3, fishingLevel)) {
+		} else if (fCatch >= FishingRodItem.getChance(3, fishingLevel)) {
 			data = FishingData.RARE_DATA;
 		}
 
@@ -1227,8 +1227,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		if (setSpawn) {
 			// Used to save (tile) coordinates of spawn point outside this method.
-			spawnx = spawnPos.x;
-			spawny = spawnPos.y;
+			spawnX = spawnPos.x;
+			spawnY = spawnPos.y;
 		}
 
 		// Set (entity) coordinates of player to the center of the tile.
@@ -1241,13 +1241,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	 * @param level The level.
 	 */
 	public void respawn(Level level) {
-		if (!level.getTile(spawnx, spawny).maySpawn()) {
+		if (!level.getTile(spawnX, spawnY).maySpawn()) {
 			findStartPos(level); // If there's no bed to spawn from, and the stored coordinates don't point to a grass tile, then find a new point.
 		}
 
 		// Move the player to the spawn point
-		this.x = spawnx * Tile.TILE_PIXELS + Tile.TILE_CENTER;
-		this.y = spawny * Tile.TILE_PIXELS + Tile.TILE_CENTER;
+		this.x = spawnX * Tile.TILE_PIXELS + Tile.TILE_CENTER;
+		this.y = spawnY * Tile.TILE_PIXELS + Tile.TILE_CENTER;
 	}
 
 	/**
@@ -1256,7 +1256,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	 * @return true if the player had enough stamina, false if not.
 	 */
 	public boolean payStamina(int cost) {
-		if (potioneffects.containsKey(PotionType.Energy))
+		if (potionEffects.containsKey(PotionType.Energy))
 			return true; // If the player has the potion effect for infinite stamina, return true (without subtracting cost).
 		else if (stamina <= 0) return false; // If the player doesn't have enough stamina, then return false; failure.
 

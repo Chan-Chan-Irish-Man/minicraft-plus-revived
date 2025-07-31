@@ -189,7 +189,7 @@ public class Spawner extends Furniture {
 				if (tool.type == ToolType.Pickaxe)
 					dmg += random.nextInt(5) + 2;
 
-				if (player.potioneffects.containsKey(PotionType.Haste))
+				if (player.potionEffects.containsKey(PotionType.Haste))
 					dmg *= 2;
 			}
 

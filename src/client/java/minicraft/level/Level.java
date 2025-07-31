@@ -125,15 +125,15 @@ public class Level {
 	}
 
 	public void printEntityLocs(Class<? extends Entity> c) {
-		int numfound = 0;
+		int numFound = 0;
 		for (Entity entity : getEntityArray()) {
 			if (c.isAssignableFrom(entity.getClass())) {
 				printLevelLoc(entity.toString(), entity.x >> Tile.TILE_SIZE_SHIFT, entity.y >> Tile.TILE_SIZE_SHIFT);
-				numfound++;
+				numFound++;
 			}
 		}
 
-		Logging.WORLDNAMED.info("Found " + numfound + " entities in level of depth " + depth);
+		Logging.WORLDNAMED.info("Found " + numFound + " entities in level of depth " + depth);
 	}
 
 	private void updateMobCap() {
@@ -365,8 +365,8 @@ public class Level {
 		/// Make DungeonChests!
 		for (int i = numChests; i < 10 * (w / 128); i++) {
 			DungeonChest d = new DungeonChest(random);
-			boolean addedchest = false;
-			while (!addedchest) { // Keep running until we successfully add a DungeonChest
+			boolean addedChest = false;
+			while (!addedChest) { // Keep running until we successfully add a DungeonChest
 
 				// Pick a random tile:
 				int x2 = random.nextInt(w);
@@ -400,7 +400,7 @@ public class Level {
 
 					add(d);
 					chestCount++;
-					addedchest = true;
+					addedChest = true;
 				}
 			}
 		}
@@ -555,8 +555,8 @@ public class Level {
 		}
 	}
 
-	public void dropItem(int x, int y, int mincount, int maxcount, Item... items) {
-		dropItem(x, y, mincount + random.nextInt(maxcount - mincount + 1), items);
+	public void dropItem(int x, int y, int minCount, int maxCount, Item... items) {
+		dropItem(x, y, minCount + random.nextInt(maxCount - minCount + 1), items);
 	}
 
 	public void dropItem(int x, int y, int count, Item... items) {
@@ -570,13 +570,13 @@ public class Level {
 	}
 
 	public ItemEntity dropItem(int x, int y, Item i) {
-		int ranx, rany;
+		int ranX, ranY;
 
 		do {
-			ranx = x + random.nextInt(11) - 5;
-			rany = y + random.nextInt(11) - 5;
-		} while (ranx >> Tile.TILE_SIZE_SHIFT != x >> Tile.TILE_SIZE_SHIFT || rany >> Tile.TILE_SIZE_SHIFT != y >> Tile.TILE_SIZE_SHIFT);
-		ItemEntity ie = new ItemEntity(i, ranx, rany);
+			ranX = x + random.nextInt(11) - 5;
+			ranY = y + random.nextInt(11) - 5;
+		} while (ranX >> Tile.TILE_SIZE_SHIFT != x >> Tile.TILE_SIZE_SHIFT || ranY >> Tile.TILE_SIZE_SHIFT != y >> Tile.TILE_SIZE_SHIFT);
+		ItemEntity ie = new ItemEntity(i, ranX, ranY);
 		add(ie);
 		return ie;
 	}
@@ -661,13 +661,13 @@ public class Level {
 	 * @deprecated Currently unused, but this should be prevented being used.
 	 */
 	@Deprecated
-	public void setTile(int x, int y, String tilewithdata) {
-		if (!tilewithdata.contains("_")) {
-			setTile(x, y, Tiles.get(tilewithdata));
+	public void setTile(int x, int y, String tileWithData) {
+		if (!tileWithData.contains("_")) {
+			setTile(x, y, Tiles.get(tileWithData));
 			return;
 		}
-		String name = tilewithdata.substring(0, tilewithdata.indexOf("_"));
-		int data = Tiles.get(name).getData(tilewithdata.substring(name.length() + 1));
+		String name = tileWithData.substring(0, tileWithData.indexOf("_"));
+		int data = Tiles.get(name).getData(tileWithData.substring(name.length() + 1));
 		setTile(x, y, Tiles.get(name), data);
 	}
 
@@ -1083,9 +1083,9 @@ public class Level {
 				int x3 = random.nextInt(Tile.TILE_PIXELS * w) / Tile.TILE_PIXELS;
 				int y3 = random.nextInt(Tile.TILE_PIXELS * h) / Tile.TILE_PIXELS;
 				if (getTile(x3, y3) == Tiles.get("dirt")) {
-					boolean xaxis2 = random.nextBoolean();
+					boolean xAxis2 = random.nextBoolean();
 
-					if (xaxis2) {
+					if (xAxis2) {
 						for (int s2 = x3; s2 < w - s2; s2++) {
 							if (getTile(s2, y3) == Tiles.get("rock")) {
 								sp.x = (s2 << Tile.TILE_SIZE_SHIFT) - 24;
@@ -1154,9 +1154,9 @@ public class Level {
 				int x3 = random.nextInt(Tile.TILE_PIXELS * w) / Tile.TILE_PIXELS;
 				int y3 = random.nextInt(Tile.TILE_PIXELS * h) / Tile.TILE_PIXELS;
 				if (getTile(x3, y3) == Tiles.get("Obsidian")) {
-					boolean xaxis2 = random.nextBoolean();
+					boolean xAxis2 = random.nextBoolean();
 
-					if (xaxis2) {
+					if (xAxis2) {
 						for (int s2 = x3; s2 < w - s2; s2++) {
 							if (getTile(s2, y3) == Tiles.get("Obsidian Wall")) {
 								sp.x = s2 * Tile.TILE_PIXELS - 24;

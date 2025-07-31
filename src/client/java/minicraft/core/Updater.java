@@ -27,7 +27,7 @@ public class Updater extends Game {
 	// TIME AND TICKS
 
 	public static final int NORM_SPEED = 60; // Measured in ticks / second.
-	public static float gamespeed = 1; // Measured in MULTIPLES OF NORMSPEED.
+	public static float gameSpeed = 1; // Measured in MULTIPLES OF NORMSPEED.
 	public static boolean paused = true; // If the game is paused.
 
 	public static int tickCount = 0; // The number of ticks since the beginning of the game day.
@@ -51,12 +51,12 @@ public class Updater extends Game {
 	// AUTOSAVE AND NOTIFICATIONS
 
 	public static boolean updateNoteTick = false;
-	public static int notetick = 0; // "note"= notifications.
+	public static int noteTick = 0; // "note"= notifications.
 
 	private static final int AUTO_SAVE_TIME = 7200; // tands for Auto-Save Time (interval)
 	public static int asTick = 0; // The time interval between autosaves.
 	public static boolean saving = false; // If the game is performing a save.
-	public static int savecooldown; // Prevents saving many times too fast, I think.
+	public static int saveCooldown; // Prevents saving many times too fast, I think.
 	public static int screenshot = 0; // Counter for screenshot queries.
 
 	public enum Time {
@@ -131,8 +131,8 @@ public class Updater extends Game {
 		Level level = levels[currentLevel];
 		if (Bed.sleeping()) {
 			// IN BED
-			if (gamespeed != SLEEP_SPEED) {
-				gamespeed = SLEEP_SPEED;
+			if (gameSpeed != SLEEP_SPEED) {
+				gameSpeed = SLEEP_SPEED;
 			}
 			if (tickCount > SLEEP_END_TIME) {
 				Logging.WORLD.trace("Passing midnight in bed.");
@@ -141,7 +141,7 @@ public class Updater extends Game {
 			}
 			if (tickCount <= SLEEP_START_TIME && tickCount >= SLEEP_END_TIME) { // It has reached morning.
 				Logging.WORLD.trace("Reached morning, getting out of bed.");
-				gamespeed = NORMAL_SPEED;
+				gameSpeed = NORMAL_SPEED;
 				Bed.restorePlayers();
 			}
 		}
@@ -172,7 +172,7 @@ public class Updater extends Game {
 			scoreTime--;
 		}
 
-		if (updateNoteTick) notetick++;
+		if (updateNoteTick) noteTick++;
 
 		Sound.tick();
 
@@ -263,20 +263,20 @@ public class Updater extends Game {
 						scoreTime = NORM_SPEED * 5; // 5 seconds
 					}
 
-					float prevSpeed = gamespeed;
+					float prevSpeed = gameSpeed;
 					if (input.getMappedKey("F3-S-0").isClicked()) {
-						gamespeed = 1;
+						gameSpeed = 1;
 						Logging.WORLDNAMED.trace("Tick speed reset from {} into 1.", prevSpeed);
 					}
 					if (input.getMappedKey("F3-S-equals").isClicked()) {
-						if (gamespeed < 1) gamespeed *= 2;
-						else if (NORM_SPEED * gamespeed < 2000) gamespeed++;
-						Logging.WORLDNAMED.trace("Tick speed increased from {} into {}.", prevSpeed, gamespeed);
+						if (gameSpeed < 1) gameSpeed *= 2;
+						else if (NORM_SPEED * gameSpeed < 2000) gameSpeed++;
+						Logging.WORLDNAMED.trace("Tick speed increased from {} into {}.", prevSpeed, gameSpeed);
 					}
 					if (input.getMappedKey("F3-S-minus").isClicked()) {
-						if (gamespeed > 1) gamespeed--;
-						else if (NORM_SPEED * gamespeed > 5) gamespeed /= 2;
-						Logging.WORLDNAMED.trace("Tick speed decreased from {} into {}.", prevSpeed, gamespeed);
+						if (gameSpeed > 1) gameSpeed--;
+						else if (NORM_SPEED * gameSpeed > 5) gameSpeed /= 2;
+						Logging.WORLDNAMED.trace("Tick speed decreased from {} into {}.", prevSpeed, gameSpeed);
 					}
 
 					if (input.getMappedKey("F3-h").isClicked()) player.health--;
@@ -343,6 +343,6 @@ public class Updater extends Game {
 	public static void notifyAll(String msg, int notetick) {
 		msg = Localization.getLocalized(msg);
 		notifications.add(msg);
-		Updater.notetick = notetick;
+		Updater.noteTick = notetick;
 	}
 }

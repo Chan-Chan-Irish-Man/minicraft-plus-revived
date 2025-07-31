@@ -1,6 +1,5 @@
 package minicraft.screen;
 
-import minicraft.core.CrashHandler;
 import minicraft.core.Game;
 import minicraft.core.Renderer;
 import minicraft.core.io.InputHandler;
@@ -27,9 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;

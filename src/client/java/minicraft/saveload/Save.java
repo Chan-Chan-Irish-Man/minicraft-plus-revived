@@ -348,8 +348,8 @@ public class Save {
 		data.clear();
 		data.add(String.valueOf(player.x));
 		data.add(String.valueOf(player.y));
-		data.add(String.valueOf(player.spawnx));
-		data.add(String.valueOf(player.spawny));
+		data.add(String.valueOf(player.spawnX));
+		data.add(String.valueOf(player.spawnY));
 		data.add(String.valueOf(player.health));
 		data.add(String.valueOf(player.extraHealth));
 		data.add(String.valueOf(player.hunger));
@@ -361,10 +361,10 @@ public class Save {
 
 		StringBuilder subdata = new StringBuilder("PotionEffects[");
 
-		for (java.util.Map.Entry<PotionType, Integer> potion : player.potioneffects.entrySet())
+		for (java.util.Map.Entry<PotionType, Integer> potion : player.potionEffects.entrySet())
 			subdata.append(potion.getKey()).append(";").append(potion.getValue()).append(":");
 
-		if (player.potioneffects.size() > 0)
+		if (player.potionEffects.size() > 0)
 			subdata = new StringBuilder(subdata.substring(0, subdata.length() - (1)) + "]"); // Cuts off extra ":" and appends "]"
 		else subdata.append("]");
 		data.add(subdata.toString());

@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class EntitySummonItem extends StackableItem {
 	protected static ArrayList<Item> getAllInstances() {

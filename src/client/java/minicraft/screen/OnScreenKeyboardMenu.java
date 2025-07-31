@@ -16,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.Label;
 import java.awt.event.KeyEvent;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 

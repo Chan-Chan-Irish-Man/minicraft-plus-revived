@@ -38,12 +38,12 @@ public class Slime extends EnemyMob {
 		/// jumpTime from 0 to -10 (or less) is the slime deciding where to jump.
 		/// 10 to 0 is it jumping.
 
-		if (jumpTime <= -10 && (xmov != 0 || ymov != 0))
+		if (jumpTime <= -10 && (xMov != 0 || yMov != 0))
 			jumpTime = 10;
 
 		jumpTime--;
 		if (jumpTime == 0) {
-			xmov = ymov = 0;
+			xMov = yMov = 0;
 		}
 	}
 

@@ -64,7 +64,7 @@ public class AirWizard extends EnemyMob {
 		if (Game.isMode("minicraft.settings.mode.creative")) return; // Should not attack if player is in creative
 
 		if (attackDelay > 0) {
-			xmov = ymov = 0;
+			xMov = yMov = 0;
 			int dir = (attackDelay - 45) / 4 % 4; // The direction of attack.
 			dir = (dir * 2 % 4) + (dir / 2); // Direction attack changes
 			if (attackDelay < 45)
@@ -84,7 +84,7 @@ public class AirWizard extends EnemyMob {
 
 		// Send out sparks
 		if (attackTime > 0) {
-			xmov = ymov = 0;
+			xMov = yMov = 0;
 			attackTime *= 0.92; // attackTime will decrease by 7% every time.
 			double dir = attackTime * 0.25 * (attackTime % 2 * 2 - 1); // Assigns a local direction variable from the attack time.
 			double speed = 0.7 + attackType * 0.2; // speed is dependent on the attackType. (higher attackType, faster speeds)
@@ -99,14 +99,14 @@ public class AirWizard extends EnemyMob {
 			if (xd * xd + yd * yd < Tile.TILE_PIXELS * Tile.TILE_PIXELS * 2 * 2) {
 				/// Move away from the player if less than 2 blocks away
 
-				this.xmov = 0; // Accelerations
-				this.ymov = 0;
+				this.xMov = 0; // Accelerations
+				this.yMov = 0;
 
 				// These four statements basically just find which direction is away from the player:
-				if (xd < 0) this.xmov = +1;
-				if (xd > 0) this.xmov = -1;
-				if (yd < 0) this.ymov = +1;
-				if (yd > 0) this.ymov = -1;
+				if (xd < 0) this.xMov = +1;
+				if (xd > 0) this.xMov = -1;
+				if (yd < 0) this.yMov = +1;
+				if (yd > 0) this.yMov = -1;
 			} else if (xd * xd + yd * yd > Tile.TILE_PIXELS * Tile.TILE_PIXELS * 15 * 15) {// 15 squares away
 
 				/// Drags the airwizard to the player, maintaining relative position.

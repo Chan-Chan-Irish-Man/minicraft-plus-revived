@@ -1,10 +1,8 @@
 package minicraft.level.tile;
 
 import minicraft.core.Game;
-import minicraft.core.Renderer;
 import minicraft.core.io.Sound;
 import minicraft.entity.Direction;
-import minicraft.entity.Entity;
 import minicraft.entity.mob.Mob;
 import minicraft.entity.mob.Player;
 import minicraft.gfx.Screen;
@@ -17,9 +15,7 @@ import minicraft.item.ToolType;
 import minicraft.level.Level;
 import minicraft.level.tile.entity.SignTileEntity;
 import minicraft.screen.SignDisplay;
-import minicraft.screen.SignDisplayMenu;
 import minicraft.util.AdvancementElement;
-import org.tinylog.Logger;
 
 public class SignTile extends Tile {
 	protected SignTile() {

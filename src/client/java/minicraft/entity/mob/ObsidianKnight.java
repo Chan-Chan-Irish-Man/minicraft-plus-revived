@@ -114,7 +114,7 @@ public class ObsidianKnight extends EnemyMob {
 
 		if (attackPhase == AttackPhase.Attacking) {
 			if (attackDelay > 0) {
-				xmov = ymov = 0;
+				xMov = yMov = 0;
 				int dir = (attackDelay - 35) / 4 % 4; // The direction of attack.
 				dir = (dir * 2 % 4) + (dir / 2); // Direction attack changes
 				if (attackDelay < 35)
@@ -135,7 +135,7 @@ public class ObsidianKnight extends EnemyMob {
 
 			// Send out sparks
 			if (attackTime > 0) {
-				xmov = ymov = 0;
+				xMov = yMov = 0;
 				attackTime--;
 				int attackDir; // The degree of attack. {0, 45, 90, 135, 180, -45, -90, -135}
 				double atan2 = Math.toDegrees(Math.atan2(player.y - y, player.x - x));
@@ -160,14 +160,14 @@ public class ObsidianKnight extends EnemyMob {
 				if (xd * xd + yd * yd < Tile.TILE_PIXELS * Tile.TILE_PIXELS * 2 * 2) {
 					/// Move away from the player if less than 2 blocks away
 
-					this.xmov = 0; // Velocity
-					this.ymov = 0;
+					this.xMov = 0; // Velocity
+					this.yMov = 0;
 
 					// These four statements basically just find which direction is away from the player:
-					if (xd < 0) this.xmov = +1;
-					if (xd > 0) this.xmov = -1;
-					if (yd < 0) this.ymov = +1;
-					if (yd > 0) this.ymov = -1;
+					if (xd < 0) this.xMov = +1;
+					if (xd > 0) this.xMov = -1;
+					if (yd < 0) this.yMov = +1;
+					if (yd > 0) this.yMov = -1;
 
 				} else if (xd * xd + yd * yd > Tile.TILE_PIXELS * Tile.TILE_PIXELS * 15 * 15) {// 15 squares away
 					/// Drags the Obsidian Knight to the player, maintaining relative position.

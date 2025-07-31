@@ -13,15 +13,9 @@ import minicraft.gfx.SpriteLinker.LinkedSprite;
 import minicraft.gfx.SpriteLinker.SpriteType;
 import minicraft.item.Item;
 import minicraft.item.PowerGloveItem;
-import minicraft.level.Level;
 import minicraft.level.tile.Tile;
-import minicraft.level.tile.Tiles;
 import minicraft.screen.AchievementsDisplay;
 
-import javax.swing.Timer;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class Tnt extends Furniture {
@@ -29,7 +23,7 @@ public class Tnt extends Furniture {
 	private static int BLAST_RADIUS = 32;
 	private static int BLAST_DAMAGE = 75;
 
-	private int ftik = 0;
+	private int fTik = 0;
 	private boolean fuseLit = false;
 
 	/**
@@ -38,7 +32,7 @@ public class Tnt extends Furniture {
 	public Tnt() {
 		super("Tnt", new LinkedSprite(SpriteType.Entity, "tnt"), new LinkedSprite(SpriteType.Item, "tnt"), 3, 2);
 		fuseLit = false;
-		ftik = 0;
+		fTik = 0;
 	}
 
 	@Override
@@ -46,9 +40,9 @@ public class Tnt extends Furniture {
 		super.tick();
 
 		if (fuseLit) {
-			ftik++;
+			fTik++;
 
-			if (ftik >= FUSE_TIME) {
+			if (fTik >= FUSE_TIME) {
 				// Blow up
 				List<Entity> entitiesInRange = level.getEntitiesInRect(new Rectangle(x, y, BLAST_RADIUS * 2, BLAST_RADIUS * 2, Rectangle.CENTER_DIMS));
 
@@ -64,7 +58,7 @@ public class Tnt extends Furniture {
 						if (!tnt.fuseLit) {
 							tnt.fuseLit = true;
 							Sound.play("fuse");
-							tnt.ftik = FUSE_TIME * 2 / 3;
+							tnt.fTik = FUSE_TIME * 2 / 3;
 						}
 					}
 				}
@@ -92,7 +86,7 @@ public class Tnt extends Furniture {
 	@Override
 	public void render(Screen screen) {
 		if (fuseLit) {
-			int colFctr = 100 * ((ftik % 15) / 5) + 200;
+			int colFctr = 100 * ((fTik % 15) / 5) + 200;
 			col = Color.get(-1, colFctr, colFctr + 100, 555);
 		}
 		super.render(screen);

@@ -18,7 +18,7 @@ import minicraft.level.tile.Tile;
 public abstract class MobAi extends Mob {
 
 	int randomWalkTime, randomWalkChance, randomWalkDuration;
-	int xmov, ymov;
+	int xMov, yMov;
 	private int lifetime;
 	protected int age = 0; // Not private because it is used in Sheep.java.
 
@@ -38,8 +38,8 @@ public abstract class MobAi extends Mob {
 		randomWalkTime = 0;
 		randomWalkDuration = rwTime;
 		randomWalkChance = rwChance;
-		xmov = 0;
-		ymov = 0;
+		xMov = 0;
+		yMov = 0;
 		walkTime = 2;
 	}
 
@@ -105,7 +105,7 @@ public abstract class MobAi extends Mob {
 		if (getLevel() != null) {
 			boolean foundPlayer = false;
 			for (Player p : level.getPlayers()) {
-				if (p.isWithin(8, this) && p.potioneffects.containsKey(PotionType.Time)) {
+				if (p.isWithin(8, this) && p.potionEffects.containsKey(PotionType.Time)) {
 					foundPlayer = true;
 					break;
 				}
@@ -116,9 +116,9 @@ public abstract class MobAi extends Mob {
 
 		if (skipTick()) return;
 
-		if (!move(xmov * speed, ymov * speed)) {
-			xmov = 0;
-			ymov = 0;
+		if (!move(xMov * speed, yMov * speed)) {
+			xMov = 0;
+			yMov = 0;
 		}
 
 		if (random.nextInt(randomWalkChance) == 0) { // If the mob could not or did not move, or a random small chance occurred...
@@ -183,8 +183,8 @@ public abstract class MobAi extends Mob {
 		randomWalkTime = randomWalkDuration; // Set the mob to walk about in a random direction for a time
 
 		// Set the random direction; randir is from -1 to 1.
-		xmov = (random.nextInt(3) - 1);
-		ymov = (random.nextInt(3) - 1);
+		xMov = (random.nextInt(3) - 1);
+		yMov = (random.nextInt(3) - 1);
 	}
 
 	/**

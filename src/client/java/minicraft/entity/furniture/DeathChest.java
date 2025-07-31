@@ -13,15 +13,14 @@ import minicraft.gfx.SpriteLinker.LinkedSprite;
 import minicraft.gfx.SpriteLinker.SpriteType;
 import minicraft.item.Inventory;
 import minicraft.item.Item;
-import minicraft.item.StackableItem;
 
 public class DeathChest extends Chest {
 	private static LinkedSprite normalSprite = new LinkedSprite(SpriteType.Entity, "chest");
 	private static LinkedSprite redSprite = new LinkedSprite(SpriteType.Entity, "red_chest");
 
 	public int time; // Time passed (used for death chest despawn)
-	private int redtick = 0; //This is used to determine the shade of red when the chest is about to expire.
-	private boolean reverse; // What direction the red shade (redtick) is changing.
+	private int redTick = 0; //This is used to determine the shade of red when the chest is about to expire.
+	private boolean reverse; // What direction the red shade (redTick) is changing.
 	private Inventory inventory = new Inventory() {{
 		unlimited = true;
 	}}; // Implement the inventory locally instead.
@@ -67,14 +66,14 @@ public class DeathChest extends Chest {
 		}
 
 		if (time < 30 * Updater.NORM_SPEED) { // If there is less than 30 seconds left...
-			redtick += reverse ? -1 : 1; // inc/dec-rement redtick, changing the red shading.
+			redTick += reverse ? -1 : 1; // inc/dec-rement redTick, changing the red shading.
 
 			/// These two statements keep the red color oscillating.
-			if (redtick > 13) {
+			if (redTick > 13) {
 				reverse = true;
 				this.sprite = normalSprite;
 			}
-			if (redtick < 0) {
+			if (redTick < 0) {
 				reverse = false;
 				this.sprite = redSprite;
 			}

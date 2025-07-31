@@ -32,7 +32,6 @@ import minicraft.item.Item;
 import minicraft.item.Items;
 import minicraft.item.PotionItem;
 import minicraft.item.PotionType;
-import minicraft.item.StackableItem;
 import minicraft.level.ChunkManager;
 import minicraft.level.Level;
 import minicraft.level.tile.Tiles;
@@ -56,9 +55,9 @@ public class LegacyLoad {
 	private static final String EXTENSION = Save.extension;
 
 	ArrayList<String> data;
-	ArrayList<String> extradata;
+	ArrayList<String> extraData;
 
-	public boolean hasloadedbigworldalready;
+	public boolean hasLoadedBigWorldAlready;
 	Version currentVer, worldVer;
 	boolean oldSave = false;
 
@@ -71,12 +70,12 @@ public class LegacyLoad {
 		worldVer = null;
 
 		data = new ArrayList<>();
-		extradata = new ArrayList<>();
-		hasloadedbigworldalready = false;
+		extraData = new ArrayList<>();
+		hasLoadedBigWorldAlready = false;
 	}
 
-	public LegacyLoad(String worldname) {
-		location += "/saves/" + worldname + "/";
+	public LegacyLoad(String worldName) {
+		location += "/saves/" + worldName + "/";
 
 		File testFile = new File(location + "KeyPrefs" + EXTENSION);
 		if (!testFile.exists()) {
@@ -106,7 +105,7 @@ public class LegacyLoad {
 
 	public void loadFromFile(String filename) {
 		data.clear();
-		extradata.clear();
+		extraData.clear();
 		BufferedReader br = null;
 		BufferedReader br2 = null;
 
@@ -126,7 +125,7 @@ public class LegacyLoad {
 
 				while ((curLine = br2.readLine()) != null)
 					total.append(curLine);
-				extradata.addAll(Arrays.asList(total.toString().split(",")));
+				extraData.addAll(Arrays.asList(total.toString().split(",")));
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -178,7 +177,7 @@ public class LegacyLoad {
 		}
 	}
 
-	private int playerac = 0; // This is a temp storage var for use to restore player arrow count.
+	private int playerAc = 0; // This is a temp storage var for use to restore player arrow count.
 
 	public void loadGame(String filename) {
 		loadFromFile(location + filename + EXTENSION);
@@ -210,7 +209,7 @@ public class LegacyLoad {
 				}
 				// For backwards compatibility
 				Updater.tickCount = Integer.parseInt(data.get(0));
-				playerac = Integer.parseInt(data.get(3));
+				playerAc = Integer.parseInt(data.get(3));
 				Settings.set("autosave", false);
 			}
 		}
@@ -220,27 +219,27 @@ public class LegacyLoad {
 		for (int l = 0; l < World.levels.length; l++) {
 			loadFromFile(location + filename + l + EXTENSION);
 
-			int lvlw = Integer.parseInt(data.get(0));
-			int lvlh = Integer.parseInt(data.get(1));
-			int lvldepth = Integer.parseInt(data.get(2));
-			Settings.set("size", lvlw);
+			int lvlW = Integer.parseInt(data.get(0));
+			int lvlH = Integer.parseInt(data.get(1));
+			int lvlDepth = Integer.parseInt(data.get(2));
+			Settings.set("size", lvlW);
 
 			ChunkManager map = new ChunkManager();
 
-      for (int x = 0; x < lvlw - 1; x++) {
-				for (int y = 0; y < lvlh - 1; y++) {
-					int tileArrIdx = y + x * lvlw;
-					int tileidx = y + x * lvlh; // The tiles are saved with x outer loop, and y inner loop, meaning that the list reads down, then right one, rather than right, then down one.
-					Load.loadTile(worldVer, map, x, y, Tiles.oldids.get(Integer.parseInt(data.get(tileidx + 3))),
-						extradata.get(tileidx));
+      for (int x = 0; x < lvlW - 1; x++) {
+				for (int y = 0; y < lvlH - 1; y++) {
+					int tileArrIDx = y + x * lvlW;
+					int tileIDx = y + x * lvlH; // The tiles are saved with x outer loop, and y inner loop, meaning that the list reads down, then right one, rather than right, then down one.
+					Load.loadTile(worldVer, map, x, y, Tiles.oldids.get(Integer.parseInt(data.get(tileIDx + 3))),
+						extraData.get(tileIDx));
 				}
 			}
 
-			for(int x = 0; x < lvlw / ChunkManager.CHUNK_SIZE; x++)
-				for(int y = 0; y < lvlh / ChunkManager.CHUNK_SIZE; y++)
+			for(int x = 0; x < lvlW / ChunkManager.CHUNK_SIZE; x++)
+				for(int y = 0; y < lvlH / ChunkManager.CHUNK_SIZE; y++)
 					map.setChunkStage(x, y, ChunkManager.CHUNK_STAGE_DONE);
 
-			World.levels[l] = new Level(lvlw, lvlh, lvldepth, null, false);
+			World.levels[l] = new Level(lvlW, lvlH, lvlDepth, null, false);
 			World.levels[l].chunkManager = map;
 		}
 	}
@@ -249,12 +248,12 @@ public class LegacyLoad {
 		loadFromFile(location + filename + EXTENSION);
 		player.x = Integer.parseInt(data.get(0));
 		player.y = Integer.parseInt(data.get(1));
-		player.spawnx = Integer.parseInt(data.get(2));
-		player.spawny = Integer.parseInt(data.get(3));
+		player.spawnX = Integer.parseInt(data.get(2));
+		player.spawnY = Integer.parseInt(data.get(3));
 		player.health = Integer.parseInt(data.get(4));
 		player.armor = Integer.parseInt(data.get(5));
 
-		String modedata;
+		String modeData;
 		if (!oldSave) {
 			if (data.size() >= 14) {
 				if (worldVer == null) worldVer = new Version("1.9.1-pre1");
@@ -263,24 +262,24 @@ public class LegacyLoad {
 			} else player.armor = 0;
 
 			Game.currentLevel = Integer.parseInt(data.get(8));
-			modedata = data.get(9);
+			modeData = data.get(9);
 
 		} else {
 			// Old, 1.8 save.
 			Game.currentLevel = Integer.parseInt(data.get(7));
-			modedata = data.get(8);
+			modeData = data.get(8);
 		}
 
 		player.setScore(Integer.parseInt(data.get(6)));
 		World.levels[Game.currentLevel].add(player);
 
 		int mode;
-		if (modedata.contains(";")) {
-			mode = Integer.parseInt(modedata.substring(0, modedata.indexOf(";")));
+		if (modeData.contains(";")) {
+			mode = Integer.parseInt(modeData.substring(0, modeData.indexOf(";")));
 			if (mode == 4)
-				Updater.scoreTime = Integer.parseInt(modedata.substring(modedata.indexOf(";") + 1));
+				Updater.scoreTime = Integer.parseInt(modeData.substring(modeData.indexOf(";") + 1));
 		} else {
-			mode = Integer.parseInt(modedata);
+			mode = Integer.parseInt(modeData);
 			if (mode == 4) Updater.scoreTime = 300;
 		}
 
@@ -321,10 +320,10 @@ public class LegacyLoad {
 			loadItemToInventory(item, inventory);
 		}
 
-		if (playerac > 0 && inventory == Game.player.getInventory()) {
-			for (int i = 0; i < playerac; i++)
+		if (playerAc > 0 && inventory == Game.player.getInventory()) {
+			for (int i = 0; i < playerAc; i++)
 				loadItem(inventory, Items.get("arrow"));
-			playerac = 0;
+			playerAc = 0;
 		}
 	}
 
@@ -384,12 +383,12 @@ public class LegacyLoad {
 			Entity newEntity = getEntity(entityName, player, mobLvl);
 
 			if (newEntity != null) { // the method never returns null, but...
-				int currentlevel;
+				int currentLevel;
 				if (newEntity instanceof Mob) {
 					Mob mob = (Mob) newEntity;
 					mob.health = Integer.parseInt(info.get(2));
-					currentlevel = Integer.parseInt(info.get(info.size() - 1));
-					World.levels[currentlevel].add(mob, x, y);
+					currentLevel = Integer.parseInt(info.get(info.size() - 1));
+					World.levels[currentLevel].add(mob, x, y);
 				} else if (newEntity instanceof Chest) {
 					Chest chest = (Chest) newEntity;
 					boolean isDeathChest = chest instanceof DeathChest;
@@ -410,16 +409,16 @@ public class LegacyLoad {
 						((DungeonChest) chest).setLocked(Boolean.parseBoolean(chestInfo.get(chestInfo.size() - 1)));
 					}
 
-					currentlevel = Integer.parseInt(info.get(info.size() - 1));
-					World.levels[currentlevel].add(chest instanceof DeathChest ? chest : chest instanceof DungeonChest ? (DungeonChest) chest : chest, x, y);
+					currentLevel = Integer.parseInt(info.get(info.size() - 1));
+					World.levels[currentLevel].add(chest instanceof DeathChest ? chest : chest instanceof DungeonChest ? (DungeonChest) chest : chest, x, y);
 				} else if (newEntity instanceof Spawner) {
 					MobAi mob = (MobAi) getEntity(info.get(2), player, Integer.parseInt(info.get(3)));
-					currentlevel = Integer.parseInt(info.get(info.size() - 1));
+					currentLevel = Integer.parseInt(info.get(info.size() - 1));
 					if (mob != null)
-						World.levels[currentlevel].add(new Spawner(mob), x, y);
+						World.levels[currentLevel].add(new Spawner(mob), x, y);
 				} else {
-					currentlevel = Integer.parseInt(info.get(2));
-					World.levels[currentlevel].add(newEntity, x, y);
+					currentLevel = Integer.parseInt(info.get(2));
+					World.levels[currentLevel].add(newEntity, x, y);
 				}
 			} // End of entity not null conditional
 		}

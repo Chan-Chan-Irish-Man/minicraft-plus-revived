@@ -12,7 +12,6 @@ import minicraft.gfx.Screen;
 import minicraft.gfx.SpriteLinker.LinkedSprite;
 import minicraft.item.Items;
 import minicraft.level.tile.Tile;
-import minicraft.level.tile.Tiles;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,9 +56,9 @@ public class Creeper extends EnemyMob {
 
 		if (fuseTime > 0) {
 			fuseTime--; // Fuse getting shorter...
-			xmov = ymov = 0;
+			xMov = yMov = 0;
 		} else if (fuseLit) { // fuseLit is set to true when fuseTime is set to max, so this happens after fuseTime hits zero, while fuse is lit.
-			xmov = ymov = 0;
+			xMov = yMov = 0;
 
 			boolean playerInRange = false; // Tells if any players are within the blast
 

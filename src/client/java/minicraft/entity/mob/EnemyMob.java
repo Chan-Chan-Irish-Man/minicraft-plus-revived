@@ -87,11 +87,11 @@ public class EnemyMob extends MobAi {
 
 				/// If player is less than 6.25 tiles away, then set move dir towards player
 				int sig0 = 1; // This prevents too precise estimates, preventing mobs from bobbing up and down.
-				this.xmov = this.ymov = 0;
-				if (xd < sig0) this.xmov = -1;
-				if (xd > sig0) this.xmov = +1;
-				if (yd < sig0) this.ymov = -1;
-				if (yd > sig0) this.ymov = +1;
+				this.xMov = this.yMov = 0;
+				if (xd < sig0) this.xMov = -1;
+				if (xd > sig0) this.xMov = +1;
+				if (yd < sig0) this.yMov = -1;
+				if (yd > sig0) this.yMov = +1;
 			} else {
 				// If the enemy was following the player, but has now lost it, it stops moving.
 				// *That would be nice, but I'll just make it move randomly instead.

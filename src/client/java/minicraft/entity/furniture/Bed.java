@@ -4,7 +4,6 @@ import minicraft.core.Game;
 import minicraft.core.Updater;
 import minicraft.core.io.Localization;
 import minicraft.entity.mob.Player;
-import minicraft.gfx.SpriteAnimation;
 import minicraft.gfx.SpriteLinker.LinkedSprite;
 import minicraft.gfx.SpriteLinker.SpriteType;
 import minicraft.item.DyeItem;
@@ -53,8 +52,8 @@ public class Bed extends Furniture {
 		if (checkCanSleep(player)) { // If it is late enough in the day to sleep...
 
 			// Set the player spawn coord. to their current position, in tile coords (hence " >> 4")
-			player.spawnx = player.x >> Tile.TILE_SIZE_SHIFT;
-			player.spawny = player.y >> Tile.TILE_SIZE_SHIFT;
+			player.spawnX = player.x >> Tile.TILE_SIZE_SHIFT;
+			player.spawnY = player.y >> Tile.TILE_SIZE_SHIFT;
 
 			SLEEPING_PLAYERS.put(player, this);
 			player.remove();

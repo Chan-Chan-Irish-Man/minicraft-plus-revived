@@ -1,6 +1,5 @@
 package minicraft.entity.vehicle;
 
-import minicraft.core.Game;
 import minicraft.core.Updater;
 import minicraft.core.io.Sound;
 import minicraft.entity.Direction;

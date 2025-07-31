@@ -42,11 +42,8 @@ import javax.imageio.ImageIO;
 
 import java.awt.Canvas;
 import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -213,7 +210,7 @@ public class Renderer extends Game {
 
 		// This creates the darkness in the caves
 		if ((currentLevel != 3 || Updater.tickCount < Updater.DAY_LENGTH / 4 || Updater.tickCount > Updater.DAY_LENGTH / 2) && !isMode("minicraft.settings.mode.creative")) {
-			int brightnessMultiplier = player.potioneffects.containsKey(PotionType.Light) ? 12 : 8; // Brightens all light sources by a factor of 1.5 when the player has the Light potion effect. (8 above is normal)
+			int brightnessMultiplier = player.potionEffects.containsKey(PotionType.Light) ? 12 : 8; // Brightens all light sources by a factor of 1.5 when the player has the Light potion effect. (8 above is normal)
 			level.renderLight(screen, xScroll, yScroll, brightnessMultiplier); // Finds (and renders) all the light from objects (like the player, lanterns, and lava).
 			screen.overlay(currentLevel, xScroll, yScroll); // Overlays the light screen over the main screen.
 		}
@@ -276,9 +273,9 @@ public class Renderer extends Game {
 				notifications = notifications.subList(notifications.size() - 3, notifications.size());
 			}
 
-			if (Updater.notetick > 180) { // Display time per notification.
+			if (Updater.noteTick > 180) { // Display time per notification.
 				notifications.remove(0);
-				Updater.notetick = 0;
+				Updater.noteTick = 0;
 			}
 			List<String> print = new ArrayList<>();
 			for (String n : notifications) {
@@ -337,10 +334,10 @@ public class Renderer extends Game {
 		}
 
 		// This renders the potions overlay
-		if (player.showpotioneffects && player.potioneffects.size() > 0) {
+		if (player.showPotionEffects && player.potionEffects.size() > 0) {
 
 			@SuppressWarnings("unchecked")
-			Map.Entry<PotionType, Integer>[] effects = player.potioneffects.entrySet().toArray(new Map.Entry[0]);
+			Map.Entry<PotionType, Integer>[] effects = player.potionEffects.entrySet().toArray(new Map.Entry[0]);
 
 			// The key is potion type, value is remaining potion duration.
 			if (!player.simpPotionEffects) {
@@ -417,7 +414,7 @@ public class Renderer extends Game {
 				renderBossbar((int) ((((float) boss.health) / boss.maxHealth) * 100), "Air wizard");
 			} else if (ObsidianKnight.active && (player.getLevel().depth == -4)) {
 				ObsidianKnight boss = ObsidianKnight.entity;
-				renderBossbar((int) ((((float) boss.health) / boss.MAX_HEALTH) * 100), "Obsidian Knight");
+				renderBossbar((int) ((((float) boss.health) / ObsidianKnight.MAX_HEALTH) * 100), "Obsidian Knight");
 			}
 		}
 
@@ -495,14 +492,14 @@ public class Renderer extends Game {
 	private static void renderDebugInfo() {
 		// Should not localize debug info.
 
-		int textcol = Color.WHITE;
+		int textCol = Color.WHITE;
 
 		if (showDebugInfo) { // Renders show debug info on the screen.
 			ArrayList<String> info = new ArrayList<>();
 			info.add("VERSION: " + Initializer.VERSION);
 			info.add(Initializer.fra + " fps");
 			info.add("Day tiks: " + Updater.tickCount + " (" + Updater.getTime() + ")");
-			info.add((Updater.NORM_SPEED * Updater.gamespeed) + " tps");
+			info.add((Updater.NORM_SPEED * Updater.gameSpeed) + " tps");
 
 			info.add("walk spd: " + player.moveSpeed);
 			info.add("X: " + (player.x >> Tile.TILE_SIZE_SHIFT) + "-" + (player.x % Tile.TILE_PIXELS));
@@ -534,7 +531,7 @@ public class Renderer extends Game {
 				info.add("Seed: " + levels[currentLevel].getSeed());
 			}
 
-			FontStyle style = new FontStyle(textcol).setShadowType(Color.BLACK, true).setXPos(1);
+			FontStyle style = new FontStyle(textCol).setShadowType(Color.BLACK, true).setXPos(1);
 			style.setYPos(2);
 			Font.drawParagraph(info, screen, style, 2);
 		}
