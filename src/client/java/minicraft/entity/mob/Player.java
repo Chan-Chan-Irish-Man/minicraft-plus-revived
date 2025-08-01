@@ -981,6 +981,26 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		carrySprites = selectedSkin[1];
 	}
 
+	private void renderWaterSwimming(Screen screen, int xo, int yo) {
+		if (tickTime / 8 % 2 == 0) {
+			screen.render(xo + 0, yo + 3, 5, 0, 0, hudSheet.getSheet()); // Render the water graphic
+			screen.render(xo + 8, yo + 3, 5, 0, 1, hudSheet.getSheet()); // Render the mirrored water graphic to the right.
+		} else {
+			screen.render(xo + 0, yo + 3, 5, 1, 0, hudSheet.getSheet());
+			screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
+		}
+	}
+
+	private void renderLavaSwimming(Screen screen, int xo, int yo) {
+		if (tickTime / 8 % 2 == 0) {
+			screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic
+			screen.render(xo + 8, yo + 3, 6, 0, 0, hudSheet.getSheet()); // Render the mirrored lava graphic to the right.
+		} else {
+			screen.render(xo + 0, yo + 3, 6, 1, 1, hudSheet.getSheet());
+			screen.render(xo + 8, yo + 3, 6, 1, 0, hudSheet.getSheet());
+		}
+	}
+	
 	private void renderItemPlacementIndicator(Screen screen) {
 		Point t = getInteractionTile();
 		int px = t.x * Tile.TILE_PIXELS;
@@ -1011,25 +1031,9 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		if (isSwimming() && onFallDelay <= 0 && ride == null) {
 			yo += 4; // y offset is moved up by 4
 			if (level.getTile(x >> 4, y >> 4) == Tiles.get("water")) {
-
-				// animation effect
-				if (tickTime / 8 % 2 == 0) {
-					screen.render(xo + 0, yo + 3, 5, 0, 0, hudSheet.getSheet()); // Render the water graphic
-					screen.render(xo + 8, yo + 3, 5, 0, 1, hudSheet.getSheet()); // Render the mirrored water graphic to the right.
-				} else {
-					screen.render(xo + 0, yo + 3, 5, 1, 0, hudSheet.getSheet());
-					screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
-				}
-
+				renderWaterSwimming(screen, xo, yo);
 			} else if (level.getTile(x >> 4, y >> 4) == Tiles.get("lava")) {
-
-				if (tickTime / 8 % 2 == 0) {
-					screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic
-					screen.render(xo + 8, yo + 3, 6, 0, 0, hudSheet.getSheet()); // Render the mirrored lava graphic to the right.
-				} else {
-					screen.render(xo + 0, yo + 3, 6, 1, 1, hudSheet.getSheet());
-					screen.render(xo + 8, yo + 3, 6, 1, 0, hudSheet.getSheet());
-				}
+				renderLavaSwimming(screen, xo, yo);
 			}
 		}
 
