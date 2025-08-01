@@ -286,97 +286,52 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		return potionEffects;
 	}
 
-	@Override
-	public void tick() {
-		if (level == null || isRemoved()) return;
-		if (Game.getDisplay() != null) return; // Don't tick player when menu is open
-		if (input.getMappedKey("F3-Y").isClicked()) {
-			World.scheduleLevelChange(1);
-			return;
-		} else if (input.getMappedKey("F3-H").isClicked()) {
-			World.scheduleLevelChange(-1);
-			return;
+	private void tickPlayerPotionEffect() {
+		for (PotionType potionType : potionEffects.keySet().toArray(new PotionType[0])) {
+			if (potionEffects.get(potionType) <= 1) // If time is zero (going to be set to 0 in a moment)...
+				PotionItem.applyPotion(this, potionType, false); // Automatically removes this potion effect.
+			else
+				potionEffects.put(potionType, potionEffects.get(potionType) - 1); // Otherwise, replace it with one less.
 		}
+	}
 
-		// Ensure chunks generated around player
-		level.loadChunksAround(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
-
-		super.tick(); // Ticks Mob.java
-
-		tickMultiplier();
-
-		if ((baseHealth + extraHealth) > MAX_HEALTH) {
-			extraHealth = MAX_HEALTH - 10;
-			Logging.PLAYER.warn("Current Max Health is greater than Max Health, downgrading.");
-		}
-
-		if (potionEffects.size() > 0 && !Bed.inBed(this)) {
-			for (PotionType potionType : potionEffects.keySet().toArray(new PotionType[0])) {
-				if (potionEffects.get(potionType) <= 1) // If time is zero (going to be set to 0 in a moment)...
-					PotionItem.applyPotion(this, potionType, false); // Automatically removes this potion effect.
-				else
-					potionEffects.put(potionType, potionEffects.get(potionType) - 1); // Otherwise, replace it with one less.
+	private void playerFishing() {
+		if (!Bed.inBed(this) && !isSwimming()) {
+			fishingTicks--;
+			if (fishingTicks <= 0) {
+				goFishing();
 			}
+		} else {
+			isFishing = false;
+			fishingTicks = maxFishingTicks;
 		}
+	}
 
-		if (isFishing) {
-			if (!Bed.inBed(this) && !isSwimming()) {
-				fishingTicks--;
-				if (fishingTicks <= 0) {
-					goFishing();
-				}
-			} else {
-				isFishing = false;
-				fishingTicks = maxFishingTicks;
-			}
-		}
-
-		if (cooldownInfo > 0) cooldownInfo--;
-		if (questExpanding > 0) questExpanding--;
-
-		if (input.inputPressed("potionEffects") && cooldownInfo == 0) {
-			cooldownInfo = 10;
-			showPotionEffects = !showPotionEffects;
-		}
-
-		if (input.inputPressed("simpPotionEffects")) {
-			simpPotionEffects = !simpPotionEffects;
-		}
-
-		if (input.inputPressed("toggleHUD")) {
-			renderGUI = !renderGUI;
-		}
-
-		if (input.inputPressed("expandQuestDisplay")) {
-			questExpanding = 30;
-		}
-
-		Tile onTile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT); // Gets the current tile the player is on.
+	private boolean playerOnStairs(Tile onTile) {
 		if (onTile == Tiles.get("Stairs Down") || onTile == Tiles.get("Stairs Up")) {
 			if (onStairDelay <= 0) { // When the delay time has passed...
 				World.scheduleLevelChange((onTile == Tiles.get("Stairs Up")) ? 1 : -1); // Decide whether to go up or down.
 				onStairDelay = 10; // Resets delay, since the level has now been changed.
-				return; // SKIPS the rest of the tick() method.
+				return true; // SKIPS the rest of the tick() method.
 			}
+		}
 
-			onStairDelay = 10; // Resets the delay, if on a stairs tile, but the delay is greater than 0. In other words, this prevents you from ever activating a level change on a stair tile, UNTIL you get off the tile for 10+ ticks.
-		} else if (onStairDelay > 0)
-			onStairDelay--; // Decrements stairDelay if it's > 0, but not on stair tile... does the player get removed from the tile beforehand, or something?
+		return false;
+	}
 
+	private boolean playerOnInfiniteFalling(Tile onTile) {
 		if (onTile == Tiles.get("Infinite Fall") && !Game.isMode("minicraft.settings.mode.creative")) {
 			if (onFallDelay <= 0) {
 				World.scheduleLevelChange(-1);
 				onFallDelay = 40;
-				return;
+				return true;
 			}
-		} else if (onFallDelay > 0) onFallDelay--;
-
-		if (Game.isMode("minicraft.settings.mode.creative")) {
-			// Prevent stamina/hunger decay in creative mode.
-			stamina = MAX_STAMINA;
-			hunger = MAX_HUNGER;
 		}
 
+		return false;
+	}
+
+	private void calculatePlayerStamina() {
 		// Remember: staminaRechargeDelay is a penalty delay for when the player uses up all their stamina.
 		// staminaRecharge is the rate of stamina recharge, in some sort of unknown units.
 		if (stamina <= 0 && staminaRechargeDelay == 0 && staminaRecharge == 0) {
@@ -399,9 +354,9 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				if (stamina < MAX_STAMINA) stamina++; // Recharge one stamina bolt per "charge".
 			}
 		}
+	}
 
-		int diffIDx = Settings.getIdx("diff");
-
+	private void calculatePlayerHunger(int diffIDx) {
 		if (hunger < 0) hunger = 0; // Error correction
 
 		if (stamina < MAX_STAMINA) {
@@ -409,7 +364,6 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			if (stamina == 0) stamHungerTicks -= diffIDx; // Double effect if no stamina at all.
 		}
 
-		// This if statement encapsulates the hunger system
 		if (!Bed.inBed(this)) {
 			if (hungerChargeDelay > 0) { // If the hunger is recharging health...
 				stamHungerTicks -= 2 + diffIDx; // Penalize the hunger
@@ -454,7 +408,9 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				}
 			}
 		}
+	}
 
+	private void regenerateHealth() {
 		// regen health
 		if (potionEffects.containsKey(PotionType.Regen)) {
 			regenTick++;
@@ -465,6 +421,99 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				}
 			}
 		}
+	}
+
+	private void playerRidingVehicle(Entity ride, Vector2 vec) {
+		if ((ride = getRide()) != null && ride instanceof PlayerRideable) {
+			if (!((PlayerRideable) ride).rideTick(this, vec)) {
+				((PlayerRideable) ride).stopRiding(this);
+				this.ride = null;
+			}
+		} else {
+			double spd = moveSpeed * (potionEffects.containsKey(PotionType.Speed) ? 1.5D : 1);
+			int xd = (int) (vec.x * spd);
+			int yd = (int) (vec.y * spd);
+
+			Direction newDir = Direction.getDirection(xd, yd);
+			if (newDir == Direction.NONE) newDir = dir;
+
+			// Move the player
+			boolean moved = move(xd, yd); // THIS is where the player moves; part of Mob.java
+			if (moved) stepCount++;
+		}
+	}
+
+	@Override
+	public void tick() {
+		if (level == null || isRemoved()) return;
+		if (Game.getDisplay() != null) return; // Don't tick player when menu is open
+		if (input.getMappedKey("F3-Y").isClicked()) {
+			World.scheduleLevelChange(1);
+			return;
+		} else if (input.getMappedKey("F3-H").isClicked()) {
+			World.scheduleLevelChange(-1);
+			return;
+		}
+
+		// Ensure chunks generated around player
+		level.loadChunksAround(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
+
+		super.tick(); // Ticks Mob.java
+
+		tickMultiplier();
+
+		if ((baseHealth + extraHealth) > MAX_HEALTH) {
+			extraHealth = MAX_HEALTH - 10;
+			Logging.PLAYER.warn("Current Max Health is greater than Max Health, downgrading.");
+		}
+
+		if (potionEffects.size() > 0 && !Bed.inBed(this)) {
+			tickPlayerPotionEffect();
+		}
+
+		if (isFishing) {
+			playerFishing();
+		}
+
+		if (cooldownInfo > 0) cooldownInfo--;
+		if (questExpanding > 0) questExpanding--;
+
+		if (input.inputPressed("potionEffects") && cooldownInfo == 0) {
+			cooldownInfo = 10;
+			showPotionEffects = !showPotionEffects;
+		}
+
+		if (input.inputPressed("simpPotionEffects")) {
+			simpPotionEffects = !simpPotionEffects;
+		}
+
+		if (input.inputPressed("toggleHUD")) {
+			renderGUI = !renderGUI;
+		}
+
+		if (input.inputPressed("expandQuestDisplay")) {
+			questExpanding = 30;
+		}
+
+		Tile onTile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT); // Gets the current tile the player is on.
+		
+		if (playerOnStairs(onTile)) return;
+		else if (onStairDelay > 0) onStairDelay--;
+		if (playerOnInfiniteFalling(onTile)) return;
+		else if (onFallDelay > 0) onFallDelay--;
+
+		if (Game.isMode("minicraft.settings.mode.creative")) {
+			// Prevent stamina/hunger decay in creative mode.
+			stamina = MAX_STAMINA;
+			hunger = MAX_HUNGER;
+		}
+
+		calculatePlayerStamina();
+
+		int diffIDx = Settings.getIdx("diff");
+		calculatePlayerHunger(diffIDx);
+
+		regenerateHealth();
 
 		if (Updater.saveCooldown > 0 && !Updater.saving)
 			Updater.saveCooldown--;
@@ -482,30 +531,12 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				if (input.inputDown("move-down")) vec.y++;
 				if (input.inputDown("move-left")) vec.x--;
 				if (input.inputDown("move-right")) vec.x++;
-
-
 			}
 
 			// Executes if not saving; and... essentially halves speed if out of stamina.
 			if ((vec.x != 0 || vec.y != 0) && (staminaRechargeDelay % 2 == 0 || isSwimming()) && !Updater.saving) {
-				Entity ride;
-				if ((ride = getRide()) != null && ride instanceof PlayerRideable) {
-					if (!((PlayerRideable) ride).rideTick(this, vec)) {
-						((PlayerRideable) ride).stopRiding(this);
-						this.ride = null;
-					}
-				} else {
-					double spd = moveSpeed * (potionEffects.containsKey(PotionType.Speed) ? 1.5D : 1);
-					int xd = (int) (vec.x * spd);
-					int yd = (int) (vec.y * spd);
-
-					Direction newDir = Direction.getDirection(xd, yd);
-					if (newDir == Direction.NONE) newDir = dir;
-
-					// Move the player
-					boolean moved = move(xd, yd); // THIS is where the player moves; part of Mob.java
-					if (moved) stepCount++;
-				}
+				Entity ride = null;
+				playerRidingVehicle(ride, vec);
 			}
 
 
@@ -1030,9 +1061,9 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		// Renders swimming
 		if (isSwimming() && onFallDelay <= 0 && ride == null) {
 			yo += 4; // y offset is moved up by 4
-			if (level.getTile(x >> 4, y >> 4) == Tiles.get("water")) {
+			if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("water")) {
 				renderWaterSwimming(screen, xo, yo);
-			} else if (level.getTile(x >> 4, y >> 4) == Tiles.get("lava")) {
+			} else if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("lava")) {
 				renderLavaSwimming(screen, xo, yo);
 			}
 		}
