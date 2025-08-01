@@ -635,45 +635,41 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		return tile.mayPass(level, x, y, this) && !(tile instanceof WaterTile || tile instanceof LavaTile);
 	}
 
+	private @Nullable Point tileForLand(int tileXOffset, int tileYOffset) {
+		int tileX = x >> Tile.TILE_SIZE_SHIFT;
+		int tileY = y >> Tile.TILE_SIZE_SHIFT;
+		if (isTileForLand(level, tileX + tileXOffset, tileY + tileYOffset)) {
+			return new Point(tileX + tileXOffset, tileY + tileYOffset);
+		}
+		return null;
+	}
+
 	private @Nullable Point findNearestLand() {
+		Point result = null;
 		// Tiles nearby
-		int xt = x >> Tile.TILE_SIZE_SHIFT;
-		int yt = y >> Tile.TILE_SIZE_SHIFT;
 		if (dir.getX() != 0) { // x-axis
 			// orthogonal to the direction pointing to
-			if (isTileForLand(level, xt, yt - 1))
-				return new Point(xt, yt - 1);
-			if (isTileForLand(level, xt, yt + 1))
-				return new Point(xt, yt + 1);
+			if ((result = tileForLand(0, -1)) != null) return result;
+    		if ((result = tileForLand(0,  1)) != null) return result;
 			// parallel to the direction pointing to
-			if (isTileForLand(level, xt - 1, yt))
-				return new Point(xt - 1, yt);
-			if (isTileForLand(level, xt + 1, yt))
-				return new Point(xt + 1, yt);
+    		if ((result = tileForLand(-1, 0)) != null) return result;
+    		if ((result = tileForLand( 1, 0)) != null) return result;
 		} else { // y-axis
 			// orthogonal to the direction pointing to
-			if (isTileForLand(level, xt - 1, yt))
-				return new Point(xt - 1, yt);
-			if (isTileForLand(level, xt + 1, yt))
-				return new Point(xt + 1, yt);
+			if ((result = tileForLand(-1, 0)) != null) return result;
+    		if ((result = tileForLand( 1, 0)) != null) return result;
 			// parallel to the direction pointing to
-			if (isTileForLand(level, xt, yt - 1))
-				return new Point(xt, yt - 1);
-			if (isTileForLand(level, xt, yt + 1))
-				return new Point(xt, yt + 1);
+    		if ((result = tileForLand(0, -1)) != null) return result;
+    		if ((result = tileForLand(0,  1)) != null) return result;
 		}
 
 		// Cross-nearby
-		if (isTileForLand(level, xt - 1, yt - 1))
-			return new Point(xt - 1, yt - 1);
-		if (isTileForLand(level, xt + 1, yt - 1))
-			return new Point(xt + 1, yt - 1);
-		if (isTileForLand(level, xt + 1, yt + 1))
-			return new Point(xt + 1, yt + 1);
-		if (isTileForLand(level, xt - 1, yt + 1))
-			return new Point(xt - 1, yt + 1);
-
-		return null;
+		if ((result = tileForLand(-1, -1)) != null) return result;
+    	if ((result = tileForLand(1,  -1)) != null) return result;
+		if ((result = tileForLand(1, 1)) != null) return result;
+    	if ((result = tileForLand(-1,  1)) != null) return result;
+		
+		return result;
 	}
 
 	private Point tryOffset(int newX, int newY) {
@@ -691,17 +687,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		switch (dir) {
 			case DOWN:
 			case UP:
-				result = tryOffset(x - PIXEL_OFFSET, y);
-				if (result != null) return result;
-				result = tryOffset(x + PIXEL_OFFSET, y);
-				if (result != null) return result;
+				if ((result = tryOffset(x - PIXEL_OFFSET, y)) != null) return result;
+				if ((result = tryOffset(x + PIXEL_OFFSET, y)) != null) return result;
 				break;
 			case LEFT:
 			case RIGHT:
-				result = tryOffset(x, y - PIXEL_OFFSET);
-            	if (result != null) return result;
-            	result = tryOffset(x, y + PIXEL_OFFSET);
-            	if (result != null) return result;
+				if ((result = tryOffset(x, y - PIXEL_OFFSET)) != null) return result;
+				if ((result = tryOffset(x, y + PIXEL_OFFSET)) != null) return result;
 				break;
 		}
 
@@ -989,44 +981,23 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		carrySprites = selectedSkin[1];
 	}
 
-	private void renderSwimming(Screen screen, int xo, int yo) {
-		yo += 4; // y offset is moved up by 4
-		if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("water")) {
-
-			// animation effect
-			if (tickTime / 8 % 2 == 0) {
-				screen.render(xo + 0, yo + 3, 5, 0, 0, hudSheet.getSheet()); // Render the water graphic
-				screen.render(xo + 8, yo + 3, 5, 0, 1, hudSheet.getSheet()); // Render the mirrored water graphic to the right.
-			} else {
-				screen.render(xo + 0, yo + 3, 5, 1, 0, hudSheet.getSheet());
-				screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
-			}
-
-		} else if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("lava")) {
-
-			if (tickTime / 8 % 2 == 0) {
-				screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic
-				screen.render(xo + 8, yo + 3, 6, 0, 0, hudSheet.getSheet()); // Render the mirrored lava graphic to the right.
-			} else {
-				screen.render(xo + 0, yo + 3, 6, 1, 1, hudSheet.getSheet());
-				screen.render(xo + 8, yo + 3, 6, 1, 0, hudSheet.getSheet());
-			}
-		}
-	}
-
 	private void renderItemPlacementIndicator(Screen screen) {
 		Point t = getInteractionTile();
-		screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS, 3, 2, 0, hudSheet.getSheet());
-		screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_PIXELS, 3, 2, 1, hudSheet.getSheet());
-		screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS + Tile.TILE_CENTER, 3, 2, 2, hudSheet.getSheet());
-		screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_CENTER + Tile.TILE_PIXELS, 3, 2, 3, hudSheet.getSheet());
+		int px = t.x * Tile.TILE_PIXELS;
+		int py = t.y * Tile.TILE_PIXELS;
+		
+		screen.render(px, py, 3, 2, 0, hudSheet.getSheet());
+		screen.render(px + Tile.TILE_CENTER, py, 3, 2, 1, hudSheet.getSheet());
+		screen.render(px, py + Tile.TILE_CENTER, 3, 2, 2, hudSheet.getSheet());
+		screen.render(px + Tile.TILE_CENTER, py + Tile.TILE_CENTER, 3, 2, 3, hudSheet.getSheet());
 	}
 
-	private void renderSlashes(Screen screen, int baseX, int xOffsetLeft, int xOffsetRight, int xOffsetItem, int baseY, int yOffsetLeft, int yOffsetRight, int yOffsetItem, int tileX, int tileY, int leftFlags, int rightFlags, int itemMirror, boolean isFullBright) {
-		screen.render(baseX + xOffsetLeft, baseY - yOffsetLeft, tileX, tileY, leftFlags, hudSheet.getSheet()); // Render left half-slash
-		screen.render(baseX + xOffsetRight, baseY - yOffsetRight, tileX, tileY, rightFlags, hudSheet.getSheet()); // Render right half-slash (mirror of left).
-		if (attackItem != null && !(attackItem instanceof PowerGloveItem)) { // If the player had an item when they last attacked...
-			screen.render(baseX + xOffsetItem, baseY - yOffsetItem, attackItem.sprite.getSprite(), itemMirror, isFullBright); // Then render the icon of the item, mirrored
+	private void renderSlashes(Screen screen, int leftX, int leftY, int rightX, int rightY, int itemX, int itemY, int tileX, int tileY, int leftFlags, int rightFlags, int itemMirror, boolean isFullBright) {
+		screen.render(leftX, leftY, tileX, tileY, leftFlags, hudSheet.getSheet());
+		screen.render(rightX, rightY, tileX, tileY, rightFlags, hudSheet.getSheet());
+
+		if (attackItem != null && !(attackItem instanceof PowerGloveItem)) {
+			screen.render(itemX, itemY, attackItem.sprite.getSprite(), itemMirror, isFullBright);
 		}
 	}
 
@@ -1038,7 +1009,28 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		// Renders swimming
 		if (isSwimming() && onFallDelay <= 0 && ride == null) {
-			renderSwimming(screen, xo, yo);
+			yo += 4; // y offset is moved up by 4
+			if (level.getTile(x >> 4, y >> 4) == Tiles.get("water")) {
+
+				// animation effect
+				if (tickTime / 8 % 2 == 0) {
+					screen.render(xo + 0, yo + 3, 5, 0, 0, hudSheet.getSheet()); // Render the water graphic
+					screen.render(xo + 8, yo + 3, 5, 0, 1, hudSheet.getSheet()); // Render the mirrored water graphic to the right.
+				} else {
+					screen.render(xo + 0, yo + 3, 5, 1, 0, hudSheet.getSheet());
+					screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
+				}
+
+			} else if (level.getTile(x >> 4, y >> 4) == Tiles.get("lava")) {
+
+				if (tickTime / 8 % 2 == 0) {
+					screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic
+					screen.render(xo + 8, yo + 3, 6, 0, 0, hudSheet.getSheet()); // Render the mirrored lava graphic to the right.
+				} else {
+					screen.render(xo + 0, yo + 3, 6, 1, 1, hudSheet.getSheet());
+					screen.render(xo + 8, yo + 3, 6, 1, 0, hudSheet.getSheet());
+				}
+			}
 		}
 
 		// Renders indicator for what tile the item will be placed on
@@ -1085,16 +1077,16 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		if (attackTime > 0) {
 			switch (attackDir) {
 				case UP:  // If currently attacking upwards...
-					renderSlashes(screen, xo, 0, 8, 4, yo, 4, 4, 4, 3, 0, 0, 1, 1, false);
+					renderSlashes(screen, xo + 0, yo - 4, xo + 8, yo - 4, xo + 4, yo - 4, 3, 0, 0, 1, 1, false);
 					break;
 				case LEFT:  // Attacking to the left... (Same as above)
-					renderSlashes(screen, xo, -4, -4, -4, yo, 0, 8, 4, 4, 0, 1, 3, 1, false);
+					renderSlashes(screen, xo - 4, yo + 0, xo - 4, yo + 8, xo - 4, yo + 4, 4, 0, 1, 3, 1, false);
 					break;
 				case RIGHT:  // Attacking to the right (Same as above)
-					renderSlashes(screen, xo, 12, 12, 12, yo, 0, 8, 4, 4, 0, 0, 2, 0, true);
+					renderSlashes(screen, xo + 12, yo + 0, xo + 12, yo + 8, xo + 12, yo + 4, 4, 0, 0, 2, 0, true);
 					break;
 				case DOWN:  // Attacking downwards (Same as above)
-					renderSlashes(screen, xo, 0, 8, 4, yo, 12, 12, 12, 3, 0, 2, 3, 0, true);
+					renderSlashes(screen, xo + 0, yo + 12, xo + 8, yo + 12, xo + 4, yo + 12, 3, 0, 2, 3, 0, true);
 					break;
 				case NONE:
 					break;
