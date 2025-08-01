@@ -82,6 +82,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 	// These 2 ints are ints saved from the first spawn - this way the spawn pos is always saved.
 	public int spawnX = 0, spawnY = 0; // These are stored as tile coordinates, not entity coordinates.
+	private static final int PIXEL_OFFSET = 12; // For findAlternativeLandingPoint.
 
 	// The maximum stats that the player can have.
 	public static final int MAX_STAT = 10;
@@ -399,26 +400,26 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			}
 		}
 
-		int diffIdx = Settings.getIdx("diff");
+		int diffIDx = Settings.getIdx("diff");
 
 		if (hunger < 0) hunger = 0; // Error correction
 
 		if (stamina < MAX_STAMINA) {
-			stamHungerTicks -= diffIdx; // Affect hunger if not at full stamina; this is 2 levels away from a hunger "burger".
-			if (stamina == 0) stamHungerTicks -= diffIdx; // Double effect if no stamina at all.
+			stamHungerTicks -= diffIDx; // Affect hunger if not at full stamina; this is 2 levels away from a hunger "burger".
+			if (stamina == 0) stamHungerTicks -= diffIDx; // Double effect if no stamina at all.
 		}
 
 		// This if statement encapsulates the hunger system
 		if (!Bed.inBed(this)) {
 			if (hungerChargeDelay > 0) { // If the hunger is recharging health...
-				stamHungerTicks -= 2 + diffIdx; // Penalize the hunger
-				if (hunger == 0) stamHungerTicks -= diffIdx; // Further penalty if at full hunger
+				stamHungerTicks -= 2 + diffIDx; // Penalize the hunger
+				if (hunger == 0) stamHungerTicks -= diffIDx; // Further penalty if at full hunger
 			}
 
-			if (Updater.tickCount % Player.HUNGER_TICK_COUNT[diffIdx] == 0)
+			if (Updater.tickCount % Player.HUNGER_TICK_COUNT[diffIDx] == 0)
 				stamHungerTicks--; // hunger due to time.
 
-			if (stepCount >= Player.HUNGER_STEP_COUNT[diffIdx]) {
+			if (stepCount >= Player.HUNGER_STEP_COUNT[diffIDx]) {
 				stamHungerTicks--; // hunger due to exercise.
 				stepCount = 0; // reset.
 			}
@@ -430,7 +431,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 			while (hungerStamCnt <= 0) {
 				hunger--; // Reached burger level.
-				hungerStamCnt += MAX_HUNGER_STAMS[diffIdx];
+				hungerStamCnt += MAX_HUNGER_STAMS[diffIDx];
 			}
 
 			/// System that heals you depending on your hunger
@@ -446,7 +447,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				hungerStarveDelay = 120;
 			}
 
-			if (hunger == 0 && health > MIN_STARVE_HEALTH[diffIdx]) {
+			if (hunger == 0 && health > MIN_STARVE_HEALTH[diffIDx]) {
 				if (hungerStarveDelay > 0) hungerStarveDelay--;
 				if (hungerStarveDelay == 0) {
 					directHurt(1, Direction.NONE); // Do 1 damage to the player
@@ -675,42 +676,32 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		return null;
 	}
 
+	private Point tryOffset(int newX, int newY) {
+		int xt = newX >> Tile.TILE_SIZE_SHIFT;
+		int yt = newY >> Tile.TILE_SIZE_SHIFT;
+		if (level.getTile(xt, yt).mayPass(level, xt, yt, this)) {
+			return new Point(newX, newY);
+		}
+		return null;
+	}
+
 	private Point findAlternativeLandingPoint() {
-		int xt = x >> Tile.TILE_SIZE_SHIFT;
-		int yt = y >> Tile.TILE_SIZE_SHIFT;
+		Point result = null;
 		// Right-hand-side or left-hand-side tile
 		switch (dir) {
 			case DOWN:
-				xt = (x - 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x - 12, y);
-				xt = (x + 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x + 12, y);
-				break;
 			case UP:
-				xt = (x + 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x + 12, y);
-				xt = (x - 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x - 12, y);
+				result = tryOffset(x - PIXEL_OFFSET, y);
+				if (result != null) return result;
+				result = tryOffset(x + PIXEL_OFFSET, y);
+				if (result != null) return result;
 				break;
 			case LEFT:
-				yt = (y - 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x, y - 12);
-				yt = (y + 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x, y + 12);
-				break;
 			case RIGHT:
-				yt = (y + 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x, y + 12);
-				yt = (y - 12) >> Tile.TILE_SIZE_SHIFT;
-				if (level.getTile(xt, yt).mayPass(level, xt, yt, this))
-					return new Point(x, y - 12);
+				result = tryOffset(x, y - PIXEL_OFFSET);
+            	if (result != null) return result;
+            	result = tryOffset(x, y + PIXEL_OFFSET);
+            	if (result != null) return result;
 				break;
 		}
 
@@ -998,6 +989,47 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		carrySprites = selectedSkin[1];
 	}
 
+	private void renderSwimming(Screen screen, int xo, int yo) {
+		yo += 4; // y offset is moved up by 4
+		if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("water")) {
+
+			// animation effect
+			if (tickTime / 8 % 2 == 0) {
+				screen.render(xo + 0, yo + 3, 5, 0, 0, hudSheet.getSheet()); // Render the water graphic
+				screen.render(xo + 8, yo + 3, 5, 0, 1, hudSheet.getSheet()); // Render the mirrored water graphic to the right.
+			} else {
+				screen.render(xo + 0, yo + 3, 5, 1, 0, hudSheet.getSheet());
+				screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
+			}
+
+		} else if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("lava")) {
+
+			if (tickTime / 8 % 2 == 0) {
+				screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic
+				screen.render(xo + 8, yo + 3, 6, 0, 0, hudSheet.getSheet()); // Render the mirrored lava graphic to the right.
+			} else {
+				screen.render(xo + 0, yo + 3, 6, 1, 1, hudSheet.getSheet());
+				screen.render(xo + 8, yo + 3, 6, 1, 0, hudSheet.getSheet());
+			}
+		}
+	}
+
+	private void renderItemPlacementIndicator(Screen screen) {
+		Point t = getInteractionTile();
+		screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS, 3, 2, 0, hudSheet.getSheet());
+		screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_PIXELS, 3, 2, 1, hudSheet.getSheet());
+		screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS + Tile.TILE_CENTER, 3, 2, 2, hudSheet.getSheet());
+		screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_CENTER + Tile.TILE_PIXELS, 3, 2, 3, hudSheet.getSheet());
+	}
+
+	private void renderSlashes(Screen screen, int baseX, int xOffsetLeft, int xOffsetRight, int xOffsetItem, int baseY, int yOffsetLeft, int yOffsetRight, int yOffsetItem, int tileX, int tileY, int leftFlags, int rightFlags, int itemMirror, boolean isFullBright) {
+		screen.render(baseX + xOffsetLeft, baseY - yOffsetLeft, tileX, tileY, leftFlags, hudSheet.getSheet()); // Render left half-slash
+		screen.render(baseX + xOffsetRight, baseY - yOffsetRight, tileX, tileY, rightFlags, hudSheet.getSheet()); // Render right half-slash (mirror of left).
+		if (attackItem != null && !(attackItem instanceof PowerGloveItem)) { // If the player had an item when they last attacked...
+			screen.render(baseX + xOffsetItem, baseY - yOffsetItem, attackItem.sprite.getSprite(), itemMirror, isFullBright); // Then render the icon of the item, mirrored
+		}
+	}
+
 	@Override
 	public void render(Screen screen) {
 		/* Offset locations to start drawing the sprite relative to our position */
@@ -1006,37 +1038,12 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		// Renders swimming
 		if (isSwimming() && onFallDelay <= 0 && ride == null) {
-			yo += 4; // y offset is moved up by 4
-			if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("water")) {
-
-				// animation effect
-				if (tickTime / 8 % 2 == 0) {
-					screen.render(xo + 0, yo + 3, 5, 0, 0, hudSheet.getSheet()); // Render the water graphic
-					screen.render(xo + 8, yo + 3, 5, 0, 1, hudSheet.getSheet()); // Render the mirrored water graphic to the right.
-				} else {
-					screen.render(xo + 0, yo + 3, 5, 1, 0, hudSheet.getSheet());
-					screen.render(xo + 8, yo + 3, 5, 1, 1, hudSheet.getSheet());
-				}
-
-			} else if (level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT) == Tiles.get("lava")) {
-
-				if (tickTime / 8 % 2 == 0) {
-					screen.render(xo + 0, yo + 3, 6, 0, 1, hudSheet.getSheet()); // Render the lava graphic
-					screen.render(xo + 8, yo + 3, 6, 0, 0, hudSheet.getSheet()); // Render the mirrored lava graphic to the right.
-				} else {
-					screen.render(xo + 0, yo + 3, 6, 1, 1, hudSheet.getSheet());
-					screen.render(xo + 8, yo + 3, 6, 1, 0, hudSheet.getSheet());
-				}
-			}
+			renderSwimming(screen, xo, yo);
 		}
 
 		// Renders indicator for what tile the item will be placed on
 		if (activeItem instanceof TileItem && !isSwimming()) {
-			Point t = getInteractionTile();
-			screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS, 3, 2, 0, hudSheet.getSheet());
-			screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_PIXELS, 3, 2, 1, hudSheet.getSheet());
-			screen.render(t.x * Tile.TILE_PIXELS, t.y * Tile.TILE_PIXELS + Tile.TILE_CENTER, 3, 2, 2, hudSheet.getSheet());
-			screen.render(t.x * Tile.TILE_PIXELS + Tile.TILE_CENTER, t.y * Tile.TILE_CENTER + Tile.TILE_PIXELS, 3, 2, 3, hudSheet.getSheet());
+			renderItemPlacementIndicator(screen);
 		}
 
 		// Makes the player white if they have just gotten hurt
@@ -1078,32 +1085,16 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		if (attackTime > 0) {
 			switch (attackDir) {
 				case UP:  // If currently attacking upwards...
-					screen.render(xo + 0, yo - 4, 3, 0, 0, hudSheet.getSheet()); // Render left half-slash
-					screen.render(xo + 8, yo - 4, 3, 0, 1, hudSheet.getSheet()); // Render right half-slash (mirror of left).
-					if (attackItem != null && !(attackItem instanceof PowerGloveItem)) { // If the player had an item when they last attacked...
-						screen.render(xo + 4, yo - 4, attackItem.sprite.getSprite(), 1, false); // Then render the icon of the item, mirrored
-					}
+					renderSlashes(screen, xo, 0, 8, 4, yo, 4, 4, 4, 3, 0, 0, 1, 1, false);
 					break;
 				case LEFT:  // Attacking to the left... (Same as above)
-					screen.render(xo - 4, yo, 4, 0, 1, hudSheet.getSheet());
-					screen.render(xo - 4, yo + 8, 4, 0, 3, hudSheet.getSheet());
-					if (attackItem != null && !(attackItem instanceof PowerGloveItem)) {
-						screen.render(xo - 4, yo + 4, attackItem.sprite.getSprite(), 1, false);
-					}
+					renderSlashes(screen, xo, -4, -4, -4, yo, 0, 8, 4, 4, 0, 1, 3, 1, false);
 					break;
 				case RIGHT:  // Attacking to the right (Same as above)
-					screen.render(xo + 8 + 4, yo, 4, 0, 0, hudSheet.getSheet());
-					screen.render(xo + 8 + 4, yo + 8, 4, 0, 2, hudSheet.getSheet());
-					if (attackItem != null && !(attackItem instanceof PowerGloveItem)) {
-						screen.render(xo + 8 + 4, yo + 4, attackItem.sprite.getSprite());
-					}
+					renderSlashes(screen, xo, 12, 12, 12, yo, 0, 8, 4, 4, 0, 0, 2, 0, true);
 					break;
 				case DOWN:  // Attacking downwards (Same as above)
-					screen.render(xo + 0, yo + 8 + 4, 3, 0, 2, hudSheet.getSheet());
-					screen.render(xo + 8, yo + 8 + 4, 3, 0, 3, hudSheet.getSheet());
-					if (attackItem != null && !(attackItem instanceof PowerGloveItem)) {
-						screen.render(xo + 4, yo + 8 + 4, attackItem.sprite.getSprite());
-					}
+					renderSlashes(screen, xo, 0, 8, 4, yo, 12, 12, 12, 3, 0, 2, 3, 0, true);
 					break;
 				case NONE:
 					break;
