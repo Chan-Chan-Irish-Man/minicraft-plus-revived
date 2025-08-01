@@ -286,6 +286,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		return potionEffects;
 	}
 
+	private void healthOverflowCheck() {
+		if ((baseHealth + extraHealth) > MAX_HEALTH) {
+			extraHealth = MAX_HEALTH - 10;
+			Logging.PLAYER.warn("Current Max Health is greater than Max Health, downgrading.");
+		}
+	}
+
 	private void tickPlayerPotionEffect() {
 		for (PotionType potionType : potionEffects.keySet().toArray(new PotionType[0])) {
 			if (potionEffects.get(potionType) <= 1) // If time is zero (going to be set to 0 in a moment)...
@@ -443,6 +450,33 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 	}
 
+	private void expandQuestLogic() {
+		if (questExpanding > 0) questExpanding--;
+
+		if (input.inputPressed("expandQuestDisplay")) questExpanding = 30;
+	}
+
+	private void potionCooldownLogic() {
+		if (cooldownInfo > 0) cooldownInfo--;
+
+		if (input.inputPressed("potionEffects") && cooldownInfo == 0) {
+			cooldownInfo = 10;
+			showPotionEffects = !showPotionEffects;
+		}
+
+		if (input.inputPressed("simpPotionEffects")) simpPotionEffects = !simpPotionEffects;
+	}
+
+	private Vector2 handlePlayerMovement(Vector2 vec) {
+		// controlInput.buttonPressed is used because otherwise the player will move one even if held down.
+		if (input.inputDown("move-up")) vec.y--;
+		if (input.inputDown("move-down")) vec.y++;
+		if (input.inputDown("move-left")) vec.x--;
+		if (input.inputDown("move-right")) vec.x++;
+
+		return vec;
+	}
+
 	@Override
 	public void tick() {
 		if (level == null || isRemoved()) return;
@@ -462,38 +496,17 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		tickMultiplier();
 
-		if ((baseHealth + extraHealth) > MAX_HEALTH) {
-			extraHealth = MAX_HEALTH - 10;
-			Logging.PLAYER.warn("Current Max Health is greater than Max Health, downgrading.");
-		}
+		healthOverflowCheck();
 
-		if (potionEffects.size() > 0 && !Bed.inBed(this)) {
-			tickPlayerPotionEffect();
-		}
+		if (potionEffects.size() > 0 && !Bed.inBed(this)) tickPlayerPotionEffect();
 
-		if (isFishing) {
-			playerFishing();
-		}
+		if (isFishing) playerFishing();
 
-		if (cooldownInfo > 0) cooldownInfo--;
-		if (questExpanding > 0) questExpanding--;
+		expandQuestLogic();
 
-		if (input.inputPressed("potionEffects") && cooldownInfo == 0) {
-			cooldownInfo = 10;
-			showPotionEffects = !showPotionEffects;
-		}
+		potionCooldownLogic();
 
-		if (input.inputPressed("simpPotionEffects")) {
-			simpPotionEffects = !simpPotionEffects;
-		}
-
-		if (input.inputPressed("toggleHUD")) {
-			renderGUI = !renderGUI;
-		}
-
-		if (input.inputPressed("expandQuestDisplay")) {
-			questExpanding = 30;
-		}
+		if (input.inputPressed("toggleHUD")) renderGUI = !renderGUI;
 
 		Tile onTile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT); // Gets the current tile the player is on.
 		
@@ -515,9 +528,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		regenerateHealth();
 
-		if (Updater.saveCooldown > 0 && !Updater.saving)
-			Updater.saveCooldown--;
-
+		if (Updater.saveCooldown > 0 && !Updater.saving) Updater.saveCooldown--;
 
 		// Handle player input. Input is handled by the menu if we are in one.
 		if (Game.getDisplay() == null && !Bed.inBed(this)) {
@@ -526,11 +537,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 			// Move while we are not falling.
 			if (onFallDelay <= 0) {
-				// controlInput.buttonPressed is used because otherwise the player will move one even if held down.
-				if (input.inputDown("move-up")) vec.y--;
-				if (input.inputDown("move-down")) vec.y++;
-				if (input.inputDown("move-left")) vec.x--;
-				if (input.inputDown("move-right")) vec.x++;
+				vec = handlePlayerMovement(vec);
 			}
 
 			// Executes if not saving; and... essentially halves speed if out of stamina.
@@ -538,7 +545,6 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				Entity ride = null;
 				playerRidingVehicle(ride, vec);
 			}
-
 
 			if (isSwimming() && tickTime % 60 == 0 && !potionEffects.containsKey(PotionType.Swim) && ride == null) { // If drowning... :P
 				if (stamina > 0) payStamina(1); // Take away stamina
