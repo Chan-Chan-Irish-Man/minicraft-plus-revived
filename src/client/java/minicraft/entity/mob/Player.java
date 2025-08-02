@@ -861,6 +861,10 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 	}
 
+	private int coordinateGenerate(int coordinate, int paraMultiplier, int perpMultiplier) {
+		return coordinate + dir.getX() * paraMultiplier + dir.getY() * perpMultiplier;
+	}
+
 	private Rectangle getInteractionBox(int range) {
 		int x = this.x, y = this.y - 2;
 
@@ -868,10 +872,10 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		int paraClose = 4, paraFar = range;
 		int perpClose = 0, perpFar = 8;
 
-		int xClose = x + dir.getX() * paraClose + dir.getY() * perpClose;
-		int yClose = y + dir.getY() * paraClose + dir.getX() * perpClose;
-		int xFar = x + dir.getX() * paraFar + dir.getY() * perpFar;
-		int yFar = y + dir.getY() * paraFar + dir.getX() * perpFar;
+		int xClose = coordinateGenerate(x, paraClose, perpClose);
+		int yClose = coordinateGenerate(y, paraClose, perpClose);
+		int xFar = coordinateGenerate(x, paraFar, perpFar);
+		int yFar = coordinateGenerate(y, paraFar, perpFar);
 
 		return new Rectangle(Math.min(xClose, xFar), Math.min(yClose, yFar), Math.max(xClose, xFar), Math.max(yClose, yFar), Rectangle.CORNERS);
 	}
