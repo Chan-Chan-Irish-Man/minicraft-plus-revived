@@ -67,6 +67,41 @@ public class Inventory {
 		return remaining;
 	}
 
+	private @Nullable Item stackableItem(Item item) {
+		StackableItem toTake = (StackableItem) item; // ...convert it into a StackableItem object.
+		for (Item value : items) {
+			if (toTake.stacksWith(value)) {
+				StackableItem stack = (StackableItem) value;
+				if (unlimited) {
+					stack.count += toTake.count;
+					return null;
+				}
+
+				int availableSpace = stack.maxCount - stack.count;
+				if (availableSpace > 0) {
+					int added = Math.min(availableSpace, toTake.count);
+					stack.count += added;
+					toTake.count -= added;
+					if (toTake.count == 0) return null;
+				}
+			}
+		}
+
+		if (unlimited) {
+			items.add(toTake);
+			return null;
+		}
+
+		while (toTake.count > 0 && items.size() < maxItem) {
+			StackableItem adding = toTake.copy();
+			adding.count = Math.min(toTake.count, toTake.maxCount);
+			items.add(adding);
+			toTake.count -= adding.count;
+		}
+
+		return toTake.count > 0 ? toTake : null;
+	}
+
 	/**
 	 * Adds an item at the end of the inventory.
 	 * @param item Item to be added.
@@ -74,66 +109,22 @@ public class Inventory {
 	 */
 	public @Nullable Item add(@Nullable Item item) {
 		if (item == null) return null;
-		// Do not add to inventory if it is a PowerGlove
+
 		if (item instanceof PowerGloveItem) {
 			Logging.INVENTORY.warn("Tried to add power glove to inventory. stack trace:", new Exception());
 			return null;
 		}
 
-		if (item instanceof StackableItem) { // If the item is a item...
-			StackableItem toTake = (StackableItem) item; // ...convert it into a StackableItem object.
-			for (Item value : items) {
-				if (toTake.stacksWith(value)) {
-					StackableItem stack = (StackableItem) value;
-					if (!unlimited) {
-						if (stack.count < stack.maxCount) {
-							int r = stack.maxCount - stack.count;
-							if (r >= toTake.count) {
-								// Matching implies that the other item is stackable, too.
-								stack.count += toTake.count;
-								return null;
-							} else {
-								toTake.count -= r;
-								stack.count += r;
-							}
-						}
-					} else {
-						stack.count += toTake.count;
-						return null;
-					}
-				}
-			}
-
-			if (!unlimited) {
-				if (items.size() < maxItem) {
-					while (toTake.count > 0) {
-						if (items.size() == maxItem) return toTake;
-						StackableItem adding = toTake.copy();
-						adding.count = Math.min(toTake.count, toTake.maxCount);
-						items.add(adding); // Add the item to the items list
-						toTake.count -= adding.count;
-					}
-					return null;
-				} else {
-					return toTake;
-				}
-			} else {
-				items.add(toTake);
-				return null;
-			}
+		if (item instanceof StackableItem) { // If the item is a stackable item...
+			return stackableItem((StackableItem) item);
 		}
 
-		if (!unlimited) {
-			if (items.size() < maxItem) {
-				items.add(item); // Add the item to the items list
-				return null;
-			} else {
-				return item;
-			}
-		} else {
+		if (unlimited || items.size() < maxItem) {
 			items.add(item);
 			return null;
 		}
+
+		return item;
 	}
 
 	/**
