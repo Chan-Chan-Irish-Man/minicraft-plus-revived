@@ -742,6 +742,8 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				if ((result = tryOffset(x, y - PIXEL_OFFSET)) != null) return result;
 				if ((result = tryOffset(x, y + PIXEL_OFFSET)) != null) return result;
 				break;
+			case NONE:
+				break;
 		}
 
 		return new Point(x, y); // Same position
@@ -1072,6 +1074,23 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 	}
 
+	private void renderMovingSprite(Screen screen, int xOffset, int yOffset, int onFallDelay, LinkedSprite curSprite) {
+		screen.render(xOffset, yOffset - 4 * onFallDelay, curSprite.setColor(shirtColor));
+	}
+
+	private void getFallingSprite(LinkedSprite curSprite, Screen screen, int xOffset, int yOffset, int onFallDelay) {
+		// This makes falling look really cool.
+		int spriteToUse = Math.round(onFallDelay / 2f) % carrySprites.length;
+		curSprite = carrySprites[spriteToUse][(walkDist >> 3) & 1];
+		renderMovingSprite(screen, xOffset, yOffset, onFallDelay, curSprite);
+	}
+
+	private void renderSprite(LinkedSprite curSprite, Screen screen, int xOffset, int xOffsetTop, int xOffsetBottom, int yOffset, int yOffsetTop, int yOffsetBottom) {
+		Sprite sprite = curSprite.getSprite();
+		screen.render(xOffset + xOffsetTop, yOffset + yOffsetTop, sprite.spritePixels[0][0], shirtColor);
+		screen.render(xOffset + xOffsetBottom, yOffset + yOffsetBottom, sprite.spritePixels[0][1], shirtColor);
+	}
+
 	@Override
 	public void render(Screen screen) {
 		/* Offset locations to start drawing the sprite relative to our position */
@@ -1101,30 +1120,23 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		LinkedSprite[][] spriteSet = activeItem instanceof FurnitureItem ? carrySprites : sprites;
 
 		// Renders falling
-		LinkedSprite curSprite;
+		LinkedSprite curSprite = null;
 		if (onFallDelay > 0) {
-			// This makes falling look really cool.
-			int spriteToUse = Math.round(onFallDelay / 2f) % carrySprites.length;
-			curSprite = carrySprites[spriteToUse][(walkDist >> 3) & 1];
-			screen.render(xo, yo - 4 * onFallDelay, curSprite.setColor(shirtColor));
+			getFallingSprite(curSprite, screen, xo, yo, yo);
 		} else {
 			curSprite = spriteSet[dir.getDir()][(walkDist >> 3) & 1]; // Gets the correct sprite to render.
 			// Render each corner of the sprite
 			if (isSwimming() && ride == null) { // Don't render the bottom half if swimming.
-				Sprite sprite = curSprite.getSprite();
-				screen.render(xo, yo, sprite.spritePixels[0][0], shirtColor);
-				screen.render(xo + 8, yo, sprite.spritePixels[0][1], shirtColor);
+				renderSprite(curSprite, screen, xo, 0, 8, yo, 0, 0);
 			} else if (ride != null) { // If we are riding an entity
 				if (dir.getX() != 0) { // if direction is x-axis (left/right)
-					Sprite sprite = curSprite.getSprite();
-					screen.render(xo, yo + 2, sprite.spritePixels[0][0], shirtColor);
-					screen.render(xo + 8, yo + 2, sprite.spritePixels[0][1], shirtColor);
+					renderSprite(curSprite, screen, xo, 0, 8, yo, 2, 2);
 				} else if (dir.getY() != 0) { // if direction is y-axis (up/down)
 					screen.render(xo, yo, curSprite.setColor(shirtColor));
 				} else // Other direction is invalid
 					throw new UnsupportedOperationException("dir should not be NONE");
 			} else {
-				screen.render(xo, yo - 4 * onFallDelay, curSprite.setColor(shirtColor));
+				renderMovingSprite(screen, xo, yo, onFallDelay, curSprite);
 			}
 		}
 
