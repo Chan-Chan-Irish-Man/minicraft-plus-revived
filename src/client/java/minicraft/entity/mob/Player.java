@@ -141,6 +141,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 	public int shirtColor = Color.get(1, 51, 51, 0); // Player shirt color.
 
 	public boolean isFishing = false;
+	private static final int FISHING_RAND_RANGE = 100;
 	public int maxFishingTicks = 120;
 	public int fishingTicks = maxFishingTicks;
 	public int fishingLevel;
@@ -309,9 +310,13 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 				goFishing();
 			}
 		} else {
-			isFishing = false;
-			fishingTicks = maxFishingTicks;
+			stopFishing();
 		}
+	}
+
+	private void stopFishing() {
+		isFishing = false;
+		fishingTicks = maxFishingTicks;
 	}
 
 	private boolean playerOnStairs(Tile onTile) {
@@ -467,6 +472,66 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		if (input.inputPressed("simpPotionEffects")) simpPotionEffects = !simpPotionEffects;
 	}
 
+	private void handlePlayerInput(Vector2 vec) {
+		// Move while we are not falling.
+		if (onFallDelay <= 0) {
+			vec = handlePlayerMovement(vec);
+		}
+
+		// Executes if not saving; and... essentially halves speed if out of stamina.
+		if ((vec.x != 0 || vec.y != 0) && (staminaRechargeDelay % 2 == 0 || isSwimming()) && !Updater.saving) {
+			Entity ride = null;
+			playerRidingVehicle(ride, vec);
+		}
+
+		if (isSwimming() && tickTime % 60 == 0 && !potionEffects.containsKey(PotionType.Swim) && ride == null) { // If drowning... :P
+			if (stamina > 0) payStamina(1); // Take away stamina
+			else directHurt(1, Direction.NONE); // If no stamina, take damage.
+		}
+
+		if (activeItem != null && (input.inputPressed("drop-one") || input.inputPressed("drop-stack"))) {
+			Item drop = activeItem.copy();
+
+			if (!input.inputPressed("drop-stack") || !(drop instanceof StackableItem) || ((StackableItem) drop).count <= 1) {
+				activeItem = null; // Remove it from the "inventory"
+				if (isFishing) {
+					stopFishing();
+				}
+			} else {
+				// Drop one from stack
+				((StackableItem) activeItem).count--;
+				((StackableItem) drop).count = 1;
+			}
+
+			level.dropItem(x, y, drop);
+		}
+
+		if ((activeItem == null || !activeItem.used_pending) && (input.inputPressed("attack")) && stamina != 0 && onFallDelay <= 0) { // This only allows attacks when such action is possible.
+			if (!potionEffects.containsKey(PotionType.Energy)) stamina--;
+			staminaRecharge = 0;
+
+			attack();
+		}
+
+		if ((input.inputPressed("menu") || input.inputPressed("craft")) && activeItem != null) {
+			tryAddToInvOrDrop(activeItem);
+
+			activeItem = null;
+			if (isFishing) {
+				stopFishing();
+			}
+		}
+
+		if (Game.getDisplay() == null) {
+			handlePlayerMenu();
+		}
+
+		if (attackTime > 0) {
+			attackTime--;
+			if (attackTime == 0) attackItem = null; // null the attackItem once we are done attacking.
+		}
+	}
+
 	private Vector2 handlePlayerMovement(Vector2 vec) {
 		// controlInput.buttonPressed is used because otherwise the player will move one even if held down.
 		if (input.inputDown("move-up")) vec.y--;
@@ -475,6 +540,46 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		if (input.inputDown("move-right")) vec.x++;
 
 		return vec;
+	}
+
+	private void handlePlayerMenu() {
+		if (input.inputPressed("craft") && !use()) {
+			Game.setDisplay(new CraftingDisplay(Recipes.CRAFT_RECIPES, "minicraft.displays.crafting", this, true));
+			return;
+		} else if (input.inputPressed("menu") && !use()) { // !use() = no furniture in front of the player; this prevents player inventory from opening (will open furniture inventory instead)
+			Game.setDisplay(new PlayerInvDisplay(this));
+			return;
+		} else if (input.inputPressed("pause")) {
+			Game.setDisplay(new PauseDisplay());
+			return;
+		} else if (input.inputDown("info")) {
+			Game.setDisplay(new InfoDisplay());
+			return;
+		}
+
+		if (input.inputDown("quicksave") && !Updater.saving) {
+			Updater.saving = true;
+			LoadingDisplay.setPercentage(0);
+			new Save(WorldSelectDisplay.getWorldName());
+		}
+		//debug feature:
+		if (input.inputDown("F3-p")) { // Remove all potion effects
+			for (PotionType potionType : potionEffects.keySet()) {
+				PotionItem.applyPotion(this, potionType, false);
+			}
+		}
+
+		if (input.inputPressed("pickup") && (activeItem == null || !activeItem.used_pending)) {
+			if (!(activeItem instanceof PowerGloveItem)) { // If you are not already holding a power glove (aka in the middle of a separate interaction)...
+				prevItem = activeItem; // Then save the current item...
+				if (isFishing) {
+					stopFishing();
+				}
+				activeItem = new PowerGloveItem(); // and replace it with a power glove.
+			}
+			attack(); // Attack (with the power glove)
+			resolveHeldItem();
+		}
 	}
 
 	@Override
@@ -535,102 +640,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			// Create the raw movement vector.
 			Vector2 vec = new Vector2(0, 0);
 
-			// Move while we are not falling.
-			if (onFallDelay <= 0) {
-				vec = handlePlayerMovement(vec);
-			}
-
-			// Executes if not saving; and... essentially halves speed if out of stamina.
-			if ((vec.x != 0 || vec.y != 0) && (staminaRechargeDelay % 2 == 0 || isSwimming()) && !Updater.saving) {
-				Entity ride = null;
-				playerRidingVehicle(ride, vec);
-			}
-
-			if (isSwimming() && tickTime % 60 == 0 && !potionEffects.containsKey(PotionType.Swim) && ride == null) { // If drowning... :P
-				if (stamina > 0) payStamina(1); // Take away stamina
-				else directHurt(1, Direction.NONE); // If no stamina, take damage.
-			}
-
-			if (activeItem != null && (input.inputPressed("drop-one") || input.inputPressed("drop-stack"))) {
-				Item drop = activeItem.copy();
-
-				if (!input.inputPressed("drop-stack") || !(drop instanceof StackableItem) || ((StackableItem) drop).count <= 1) {
-					activeItem = null; // Remove it from the "inventory"
-					if (isFishing) {
-						isFishing = false;
-						fishingTicks = maxFishingTicks;
-					}
-				} else {
-					// Drop one from stack
-					((StackableItem) activeItem).count--;
-					((StackableItem) drop).count = 1;
-				}
-
-				level.dropItem(x, y, drop);
-			}
-
-			if ((activeItem == null || !activeItem.used_pending) && (input.inputPressed("attack")) && stamina != 0 && onFallDelay <= 0) { // This only allows attacks when such action is possible.
-				if (!potionEffects.containsKey(PotionType.Energy)) stamina--;
-				staminaRecharge = 0;
-
-				attack();
-			}
-
-			if ((input.inputPressed("menu") || input.inputPressed("craft")) && activeItem != null) {
-				tryAddToInvOrDrop(activeItem);
-
-				activeItem = null;
-				if (isFishing) {
-					isFishing = false;
-					fishingTicks = maxFishingTicks;
-				}
-			}
-
-			if (Game.getDisplay() == null) {
-				if (input.inputPressed("craft") && !use()) {
-					Game.setDisplay(new CraftingDisplay(Recipes.CRAFT_RECIPES, "minicraft.displays.crafting", this, true));
-					return;
-				} else if (input.inputPressed("menu") && !use()) { // !use() = no furniture in front of the player; this prevents player inventory from opening (will open furniture inventory instead)
-					Game.setDisplay(new PlayerInvDisplay(this));
-					return;
-				} else if (input.inputPressed("pause")) {
-					Game.setDisplay(new PauseDisplay());
-					return;
-				} else if (input.inputDown("info")) {
-					Game.setDisplay(new InfoDisplay());
-					return;
-				}
-
-				if (input.inputDown("quicksave") && !Updater.saving) {
-					Updater.saving = true;
-					LoadingDisplay.setPercentage(0);
-					new Save(WorldSelectDisplay.getWorldName());
-				}
-				//debug feature:
-				if (input.inputDown("F3-p")) { // Remove all potion effects
-					for (PotionType potionType : potionEffects.keySet()) {
-						PotionItem.applyPotion(this, potionType, false);
-					}
-				}
-
-				if (input.inputPressed("pickup") && (activeItem == null || !activeItem.used_pending)) {
-					if (!(activeItem instanceof PowerGloveItem)) { // If you are not already holding a power glove (aka in the middle of a separate interaction)...
-						prevItem = activeItem; // Then save the current item...
-						if (isFishing) {
-							isFishing = false;
-							fishingTicks = maxFishingTicks;
-						}
-						activeItem = new PowerGloveItem(); // and replace it with a power glove.
-					}
-					attack(); // Attack (with the power glove)
-					resolveHeldItem();
-				}
-			}
-
-			if (attackTime > 0) {
-				attackTime--;
-				if (attackTime == 0) attackItem = null; // null the attackItem once we are done attacking.
-			}
+			handlePlayerInput(vec);
 		}
 	}
 
@@ -750,8 +760,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		}
 
 		if (isFishing) {
-			isFishing = false;
-			fishingTicks = maxFishingTicks;
+			stopFishing();
 		}
 
 		if (activeItem != null && !activeItem.interactsWithWorld()) {
@@ -761,8 +770,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 			if (activeItem.isDepleted()) {
 				activeItem = null;
 				if (isFishing) {
-					isFishing = false;
-					fishingTicks = maxFishingTicks;
+					stopFishing();
 				}
 			}
 			return;
@@ -827,8 +835,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 					// If the activeItem has 0 items left, then "destroy" it.
 					activeItem = null;
 					if (isFishing) {
-						isFishing = false;
-						fishingTicks = maxFishingTicks;
+						stopFishing();
 					}
 				}
 			// }
@@ -878,58 +885,61 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		return new Point(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT);
 	}
 
+	private List<String> getFishData(int fCatch) {
+		if (fCatch > FishingRodItem.getChance(0, fishingLevel)) {
+			return FishingData.FISH_DATA;
+		} else if (fCatch > FishingRodItem.getChance(1, fishingLevel)) {
+			return FishingData.JUNK_DATA;
+		} else if (fCatch > FishingRodItem.getChance(2, fishingLevel)) {
+			return FishingData.TOOL_DATA;
+		} else if (fCatch >= FishingRodItem.getChance(3, fishingLevel)) {
+			return FishingData.RARE_DATA;
+		} else {
+			return null;
+		}
+	}
+
+	private boolean didCatch(List<String> data) {
+		for (String line : data) {
+			// Check all the entries in the data
+			// The number is a percent, if one fails, it moves down the list
+			// For entries with a "," it chooses between the options
+
+			int chance = Integer.parseInt(line.split(":")[0]);
+			String itemData = line.split(":")[1];
+			if (random.nextInt(FISHING_RAND_RANGE) + 1 <= chance) {
+				if (itemData.contains(",")) { // If it has multiple items choose between them
+					String[] extendedData = itemData.split(",");
+					int randomChance = random.nextInt(extendedData.length);
+					itemData = extendedData[randomChance];
+				}
+				if (itemData.startsWith(";")) {
+					// For secret messages :=)
+					Game.notifications.add(itemData.substring(1));
+				} else {
+					if (Items.get(itemData).equals(Items.get("Raw Fish"))) {
+						AchievementsDisplay.setAchievement("minicraft.achievement.fish", true);
+					}
+					level.dropItem(x, y, Items.get(itemData));
+					return true; // Don't let people catch more than one thing with one use
+				}
+			}
+		}
+
+		return false;
+	}
+
 	private void goFishing() {
-		int fCatch = random.nextInt(100);
+		int fCatch = random.nextInt(FISHING_RAND_RANGE);
 
 		boolean caught = false;
 
 		// Figure out which table to roll for
-		List<String> data = null;
-		if (fCatch > FishingRodItem.getChance(0, fishingLevel)) {
-			data = FishingData.FISH_DATA;
-		} else if (fCatch > FishingRodItem.getChance(1, fishingLevel)) {
-			data = FishingData.JUNK_DATA;
-		} else if (fCatch > FishingRodItem.getChance(2, fishingLevel)) {
-			data = FishingData.TOOL_DATA;
-		} else if (fCatch >= FishingRodItem.getChance(3, fishingLevel)) {
-			data = FishingData.RARE_DATA;
-		}
+		List<String> data = getFishData(fCatch);
 
-		if (data != null) { // If you've caught something
-			for (String line : data) {
+		if (data != null) caught = didCatch(data); // If true, end fishing session; if false, continue fishing session.
 
-				// Check all the entries in the data
-				// The number is a percent, if one fails, it moves down the list
-				// For entries with a "," it chooses between the options
-
-				int chance = Integer.parseInt(line.split(":")[0]);
-				String itemData = line.split(":")[1];
-				if (random.nextInt(100) + 1 <= chance) {
-					if (itemData.contains(",")) { // If it has multiple items choose between them
-						String[] extendedData = itemData.split(",");
-						int randomChance = random.nextInt(extendedData.length);
-						itemData = extendedData[randomChance];
-					}
-					if (itemData.startsWith(";")) {
-						// For secret messages :=)
-						Game.notifications.add(itemData.substring(1));
-					} else {
-						if (Items.get(itemData).equals(Items.get("Raw Fish"))) {
-							AchievementsDisplay.setAchievement("minicraft.achievement.fish", true);
-						}
-						level.dropItem(x, y, Items.get(itemData));
-						caught = true;
-						break; // Don't let people catch more than one thing with one use
-					}
-				}
-			}
-		} else {
-			caught = true; // End this fishing session
-		}
-
-		if (caught) {
-			isFishing = false;
-		}
+		if (caught) isFishing = false;
 		fishingTicks = maxFishingTicks; // If you didn't catch anything, try again in 120 ticks
 	}
 
