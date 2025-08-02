@@ -319,7 +319,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		fishingTicks = maxFishingTicks;
 	}
 
-	private boolean playerOnStairs(Tile onTile) {
+	private boolean isPlayerOnStairs(Tile onTile) {
 		if (onTile == Tiles.get("Stairs Down") || onTile == Tiles.get("Stairs Up")) {
 			if (onStairDelay <= 0) { // When the delay time has passed...
 				World.scheduleLevelChange((onTile == Tiles.get("Stairs Up")) ? 1 : -1); // Decide whether to go up or down.
@@ -331,7 +331,7 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 		return false;
 	}
 
-	private boolean playerOnInfiniteFalling(Tile onTile) {
+	private boolean isPlayerOnInfiniteFallingTile(Tile onTile) {
 		if (onTile == Tiles.get("Infinite Fall") && !Game.isMode("minicraft.settings.mode.creative")) {
 			if (onFallDelay <= 0) {
 				World.scheduleLevelChange(-1);
@@ -615,9 +615,9 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 
 		Tile onTile = level.getTile(x >> Tile.TILE_SIZE_SHIFT, y >> Tile.TILE_SIZE_SHIFT); // Gets the current tile the player is on.
 		
-		if (playerOnStairs(onTile)) return;
+		if (isPlayerOnStairs(onTile)) return;
 		else if (onStairDelay > 0) onStairDelay--;
-		if (playerOnInfiniteFalling(onTile)) return;
+		if (isPlayerOnInfiniteFallingTile(onTile)) return;
 		else if (onFallDelay > 0) onFallDelay--;
 
 		if (Game.isMode("minicraft.settings.mode.creative")) {
@@ -1150,10 +1150,10 @@ public class Player extends Mob implements ItemHolder, ClientTickable {
 					renderSlashes(screen, xo - 4, yo + 0, xo - 4, yo + 8, xo - 4, yo + 4, 4, 0, 1, 3, 1, false);
 					break;
 				case RIGHT:  // Attacking to the right (Same as above)
-					renderSlashes(screen, xo + 12, yo + 0, xo + 12, yo + 8, xo + 12, yo + 4, 4, 0, 0, 2, 0, true);
+					renderSlashes(screen, xo + 12, yo + 0, xo + 12, yo + 8, xo + 12, yo + 4, 4, 0, 0, 2, 0, false);
 					break;
 				case DOWN:  // Attacking downwards (Same as above)
-					renderSlashes(screen, xo + 0, yo + 12, xo + 8, yo + 12, xo + 4, yo + 12, 3, 0, 2, 3, 0, true);
+					renderSlashes(screen, xo + 0, yo + 12, xo + 8, yo + 12, xo + 4, yo + 12, 3, 0, 2, 3, 0, false);
 					break;
 				case NONE:
 					break;

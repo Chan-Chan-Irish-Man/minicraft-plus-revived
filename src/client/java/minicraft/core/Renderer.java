@@ -216,39 +216,31 @@ public class Renderer extends Game {
 		}
 	}
 
-
-	/**
-	 * Renders the main game GUI (hearts, Stamina bolts, name of the current item, etc.)
-	 */
-	private static void renderGui() {
-		// This draws the black square where the selected item would be if you were holding it
+	private static void renderSelectedEmptyItem() {
 		if (!isMode("minicraft.settings.mode.creative") || player.activeItem != null) {
 			for (int x = 10; x < 26; x++) {
 				screen.render(x * 8, Screen.H - 8, 5, 2, 0, hudSheet.getSheet());
 			}
 		}
+	}
 
-		// Shows active item sprite and name in bottom toolbar.
+	private static void renderSelectedItem() {
 		if (player.activeItem != null) {
 			player.activeItem.renderHUD(screen, 10 * 8, Screen.H - 8, Color.WHITE);
 		}
+	}
 
+	private static void renderArrowCounter(int ac) {
+		// "^" is an infinite symbol.
+		if (isMode("minicraft.settings.mode.creative") || ac >= 10000)
+			Font.drawBackground("	x" + "^", screen, 84, Screen.H - 16);
+		else
+			Font.drawBackground("	x" + ac, screen, 84, Screen.H - 16);
+		// Displays the arrow icon
+		screen.render(10 * 8 + 4, Screen.H - 16, 4, 1, 0, hudSheet.getSheet());
+	}
 
-		// This checks if the player is holding a bow, and shows the arrow counter accordingly.
-		if (player.activeItem instanceof ToolItem) {
-			if (((ToolItem) player.activeItem).type == ToolType.Bow) {
-				int ac = player.getInventory().count(Items.arrowItem);
-				// "^" is an infinite symbol.
-				if (isMode("minicraft.settings.mode.creative") || ac >= 10000)
-					Font.drawBackground("	x" + "^", screen, 84, Screen.H - 16);
-				else
-					Font.drawBackground("	x" + ac, screen, 84, Screen.H - 16);
-				// Displays the arrow icon
-				screen.render(10 * 8 + 4, Screen.H - 16, 4, 1, 0, hudSheet.getSheet());
-			}
-		}
-
-		ArrayList<String> permStatus = new ArrayList<>();
+	private static ArrayList<String> getPermStatus(ArrayList<String> permStatus) {
 		if (Updater.saving)
 			permStatus.add(Localization.getLocalized("minicraft.display.gui.perm_status.saving", Math.round(LoadingDisplay.getPercentage())));
 		if (Bed.sleeping()) permStatus.add(Localization.getLocalized("minicraft.display.gui.perm_status.sleeping"));
@@ -256,16 +248,18 @@ public class Renderer extends Game {
 			permStatus.add(Localization.getLocalized("minicraft.display.gui.perm_status.sleep_cancel", input.getMapping("exit")));
 		}
 
-		if (permStatus.size() > 0) {
-			FontStyle style = new FontStyle(Color.WHITE).setYPos(Screen.H / 2 - 25)
+		return permStatus;
+	}
+
+	private static void applyFontStyleAndDraw(ArrayList<String> permStatus) {
+		FontStyle style = new FontStyle(Color.WHITE).setYPos(Screen.H / 2 - 25)
 				.setRelTextPos(RelPos.TOP)
 				.setShadowType(Color.DARK_GRAY, false);
 
-			Font.drawParagraph(permStatus, screen, style, 1);
-		}
+		Font.drawParagraph(permStatus, screen, style, 1);
+	}
 
-		// NOTIFICATIONS
-
+	private static void renderNotifications(ArrayList<String> permStatus) {
 		Updater.updateNoteTick = false;
 		if (permStatus.size() == 0 && notifications.size() > 0) {
 			Updater.updateNoteTick = true;
@@ -288,7 +282,50 @@ public class Renderer extends Game {
 				.setYPos(Screen.H * 2 / 5).setRelTextPos(RelPos.TOP, false);
 			Font.drawParagraph(print, screen, style, 0);
 		}
+	}
 
+	private static void renderToolDurability() {
+		// Draws the text
+		ToolItem tool = (ToolItem) player.activeItem;
+		int dura = tool.dur * 100 / (tool.type.durability * (tool.level + 1));
+		int green = (int) (dura * 2.55f); // Let duration show as normal.
+		Font.drawBackground(dura + "%", screen, 164, Screen.H - 16, Color.get(1, 255 - green, green, 0));
+	}
+
+	private static void renderWateringCanStatus() {
+		// Draws the text
+		WateringCanItem tin = (WateringCanItem) player.activeItem;
+		int dura = tin.content * 100 / tin.CAPACITY;
+		int green = (int) (dura * 2.55f); // Let duration show as normal.
+		Font.drawBackground(dura + "%", screen, 164, Screen.H - 16, Color.get(1, 255 - green, green, 0));
+	}
+
+	/**
+	 * Renders the main game GUI (hearts, Stamina bolts, name of the current item, etc.)
+	 */
+	private static void renderGui() {
+		// This draws the black square where the selected item would be if you were holding it
+		renderSelectedEmptyItem();
+
+		// Shows active item sprite and name in bottom toolbar.
+		renderSelectedItem();
+
+		// This checks if the player is holding a bow, and shows the arrow counter accordingly.
+		if (player.activeItem instanceof ToolItem && 
+		((ToolItem) player.activeItem).type == ToolType.Bow) {
+			int ac = player.getInventory().count(Items.arrowItem);
+			renderArrowCounter(ac);
+		}
+
+		ArrayList<String> permStatus = new ArrayList<>();
+		permStatus = getPermStatus(permStatus);
+
+		if (permStatus.size() > 0) {
+			applyFontStyleAndDraw(permStatus);
+		}
+
+		// NOTIFICATIONS
+		renderNotifications(permStatus);
 
 		// SCORE MODE ONLY:
 		if (isMode("minicraft.settings.mode.score")) {
@@ -317,20 +354,12 @@ public class Renderer extends Game {
 
 		// TOOL DURABILITY STATUS
 		if (player.activeItem instanceof ToolItem) {
-			// Draws the text
-			ToolItem tool = (ToolItem) player.activeItem;
-			int dura = tool.dur * 100 / (tool.type.durability * (tool.level + 1));
-			int green = (int) (dura * 2.55f); // Let duration show as normal.
-			Font.drawBackground(dura + "%", screen, 164, Screen.H - 16, Color.get(1, 255 - green, green, 0));
+			renderToolDurability();
 		}
 
 		// WATERING CAN CONTAINER STATUS
 		if (player.activeItem instanceof WateringCanItem) {
-			// Draws the text
-			WateringCanItem tin = (WateringCanItem) player.activeItem;
-			int dura = tin.content * 100 / tin.CAPACITY;
-			int green = (int) (dura * 2.55f); // Let duration show as normal.
-			Font.drawBackground(dura + "%", screen, 164, Screen.H - 16, Color.get(1, 255 - green, green, 0));
+			renderWateringCanStatus();
 		}
 
 		// This renders the potions overlay
@@ -435,7 +464,6 @@ public class Renderer extends Game {
 		int INACTIVE_BOSSBAR = 4; // sprite x position
 		int ACTIVE_BOSSBAR = 5; // sprite x position
 
-
 		screen.render(x + (max_bar_length * 2), y, 0, INACTIVE_BOSSBAR, 1, hudSheet.getSheet()); // left corner
 
 		// The middle
@@ -537,6 +565,37 @@ public class Renderer extends Game {
 		}
 	}
 
+	private static void renderFocusCorners(int xx, int yy, int w, int h) {
+		screen.render(xx - 8, yy - 8, 0, 6, 0, hudSheet.getSheet());
+		screen.render(xx + w * 8, yy - 8, 0, 6, 1, hudSheet.getSheet());
+		screen.render(xx - 8, yy + 8, 0, 6, 2, hudSheet.getSheet());
+		screen.render(xx + w * 8, yy + 8, 0, 6, 3, hudSheet.getSheet());
+	}
+
+	private static void renderFocusBox(int xx, int yy, int w, int h) {
+		for (int x = 0; x < w; x++) {
+			screen.render(xx + x * 8, yy - 8, 1, 6, 0, hudSheet.getSheet()); // ...Top part
+			screen.render(xx + x * 8, yy + 8, 1, 6, 2, hudSheet.getSheet()); // ...Bottom part
+		}
+		for (int y = 0; y < h; y++) {
+			screen.render(xx - 8, yy + y * 8, 2, 6, 0, hudSheet.getSheet()); // ...Left part
+			screen.render(xx + w * 8, yy + y * 8, 2, 6, 1, hudSheet.getSheet()); // ...Right part
+		}
+	}
+
+	private static void renderFocusMiddle(int xx, int yy, int w) {
+		for (int x = 0; x < w; x++) {
+			screen.render(xx + x * 8, yy, 3, 6, 0, hudSheet.getSheet());
+		}
+	}
+
+	private static void renderFocusFlashing(String msg, int xx, int yy) {
+		if ((Updater.tickCount / 20) % 2 == 0) // ...Medium yellow color
+			Font.draw(msg, screen, xx, yy, Color.get(1, 153));
+		else // ...Bright yellow color
+			Font.draw(msg, screen, xx, yy, Color.get(5, 255));
+	}
+
 	/**
 	 * Renders the "Click to focus" box when you click off the screen.
 	 */
@@ -551,33 +610,17 @@ public class Renderer extends Game {
 		int h = 1;
 
 		// Renders the four corners of the box
-		screen.render(xx - 8, yy - 8, 0, 6, 0, hudSheet.getSheet());
-		screen.render(xx + w * 8, yy - 8, 0, 6, 1, hudSheet.getSheet());
-		screen.render(xx - 8, yy + 8, 0, 6, 2, hudSheet.getSheet());
-		screen.render(xx + w * 8, yy + 8, 0, 6, 3, hudSheet.getSheet());
+		renderFocusCorners(xx, yy, w, h);
 
 		// Renders each part of the box...
-		for (int x = 0; x < w; x++) {
-			screen.render(xx + x * 8, yy - 8, 1, 6, 0, hudSheet.getSheet()); // ...Top part
-			screen.render(xx + x * 8, yy + 8, 1, 6, 2, hudSheet.getSheet()); // ...Bottom part
-		}
-		for (int y = 0; y < h; y++) {
-			screen.render(xx - 8, yy + y * 8, 2, 6, 0, hudSheet.getSheet()); // ...Left part
-			screen.render(xx + w * 8, yy + y * 8, 2, 6, 1, hudSheet.getSheet()); // ...Right part
-		}
+		renderFocusBox(xx, yy, w, h);
 
 		// The middle
-		for (int x = 0; x < w; x++) {
-			screen.render(xx + x * 8, yy, 3, 6, 0, hudSheet.getSheet());
-		}
+		renderFocusMiddle(xx, yy, w);
 
 		// Renders the focus nagger text with a flash effect...
-		if ((Updater.tickCount / 20) % 2 == 0) // ...Medium yellow color
-			Font.draw(msg, screen, xx, yy, Color.get(1, 153));
-		else // ...Bright yellow color
-			Font.draw(msg, screen, xx, yy, Color.get(5, 255));
+		renderFocusFlashing(msg, xx, yy);
 	}
-
 
 	static java.awt.Dimension getWindowSize() {
 		return new java.awt.Dimension((int) (WIDTH * SCALE), (int) (HEIGHT * SCALE));
